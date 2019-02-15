@@ -12,3 +12,4 @@ Study Chums is a web application that connects students of the same major to com
 
 # Weekly Progress Reports
 [Week 3](https://drive.google.com/open?id=1QVxDU5RZyI7p2hXnUCiYWmLB1qcIW19_)
+[Week 4](https://drive.google.com/open?id=1HvCRwCqAQ44xAJ0y5V1_ulth1rHbH_Qv)
