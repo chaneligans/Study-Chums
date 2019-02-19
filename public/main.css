@@ -1,23 +1,112 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
 body{
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: url(images/cherryblossombg.jpg) no-repeat;
-    background-size: cover;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url(images/cherryblossombg.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
 }
 .login-box{
-    width: 280px;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    color: white;
+  width: 280px;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: white;
 }
 .login-box h1{
-    font-size: 40px;
-    border-bottom: 6px solid #FFA5DF;
-    margin-bottom: 50px;
-    padding: 13px 0;
+  font-size: 40px;
+  border-bottom: 6px solid #FFA5DF;
+  margin-bottom: 50px;
+  padding: 13px 0;
+}
+#wrapper{
+  width: 90%;
+  background-color: white;
+  margin: 20px 5%;
+  border-radius: 25px;
+  text-align: center;
+}
+nav {
+  line-height: 30px;
+  font-family: sans-serif;
+  font-weight: bold;
+  top: 0;
+  width: 95%;
+  width: 95%;
+  display: flex;
+  padding: 10px;
+}
+
+nav ul {
+  list-style: none;
+  width: 95%;
+  text-align:right;
+}
+
+@media screen and (min-width: 600px) {
+  .navbar-toggle {
+    display: none;
+  }
+  
+  .main-nav {
+    display: block;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 0;
+    font-size: 2.25vmin;
+    color: #B5B5B5;
+    background: #FFFFFF;
+  } 
+}
+@media screen and (max-width: 600px){
+  section {
+    margin: 7%;
+    padding: 5%;
+  }
+  .unhide {
+    display: block;
+  }
+  .navbar-toggle {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer; 
+    color: rgba(0,0,0,0.8);
+    font-size: 24px;
+  }
+    
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0;
+    height: 70px;
+    align-items: center;
+  }
+  
+  .main-nav {
+    display: none;
+    margin-top: 200px;
+    margin-right: 20px;
+    right: 20px;
+  }
+  
+  .nav-item {
+    margin-left: 40px;
+    display: inline;
+    background-color: #FFFFFF;
+  }
+  
+  nav ul li {
+    width: 100%;
+  }
+}
+
+footer {
+  padding: 20px;
 }

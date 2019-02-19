@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Study Chums</title>
+    <link rel="stylesheet" href="main.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+      $('.navbar-toggle').click(function() {
+        $('#nav').toggle('.unhide');
+      });
+    });
+    </script>
+    
+  </head> 
+  <body>
+    
+    <div id="wrapper">
+      
+      <!-- NAVIGATION MENU -->
+      <nav class="navbar">
+        <span class="navbar-toggle" id="js-navbar-toggle">
+          &#x2630;
+        </span>
+
+        <ul id="nav" class="main-nav">
+          <li><a href="home.html" class="nav-item">Home</a></li>
+          <li><a href="profile.html" class="nav-item">Profile</a></li>
+          <li><a href="#experience" class="nav-item">Messages</a></li>
+          <li><a href="#projects" class="nav-item">Matches</a></li>
+          <li><a href="#contact" class="nav-item">Applications</a></li>
+          <li><a href="" class="nav-item">Sign Out</a></li>
+        </ul>
+      </nav>
+      <!-- END OF NAVIGATION MENU -->
+      
+      <!-- CONTENT (description, profiles) -->
+      <div id="description">
+        <h1>Find your study buddy!</h1>
+      </div>
+      
+      <div id="profiles">
+        <p>the profiles go here</p>
+      </div>
+      <!-- END CONTENT-->
+      
+      <!-- FOOTER -->
+      <footer>
+        Designed and Developed by Team Motivation 2019
+      </footer>
+      <!-- END FOOTER -->
+      
+    </div>
+  </body>
+</html>
