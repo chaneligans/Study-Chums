@@ -3,8 +3,12 @@
   <head>
     <meta charset=utf-8>
     <title>Study Chums</title>
+    <link rel="stylesheet" href="main.css">
   </head> 
   <body>
+    <div class="login-box">
+      <h1>Welcome To Study Chums</h1>
+    </div>
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script>
       // Initialize Firebase
@@ -40,13 +44,12 @@
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
     </script>
-    <p>hello</p>
-    
-    <fb:login-button 
+
+    <fb:login-button>
       scope="public_profile,email"
       onlogin="checkLoginState();">
     </fb:login-button>
-    
+
     <script> // sign up with popup window
           
             var provider = new firebase.auth.FacebookAuthProvider();
@@ -81,7 +84,7 @@
           
         <!--        <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div>-->
       
-        <button class = "fbbutton" onclick = "facebookSignIn()">Facebook Sign In</button>
-        <button class = "fbbutton" onclick = "facebookSignOut()">Facebook Sign Out</button>
+        <!-- <button class = "fbbutton" onclick = "facebookSignIn()">Facebook Sign In</button>
+        <button class = "fbbutton" onclick = "facebookSignOut()">Facebook Sign Out</button> -->
   </body>
 </html>
