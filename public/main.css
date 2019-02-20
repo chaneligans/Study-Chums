@@ -74,8 +74,8 @@ nav ul {
   }
   .navbar-toggle {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 25px;
+    right: 40px;
     cursor: pointer; 
     color: rgba(0,0,0,0.8);
     font-size: 24px;
@@ -94,6 +94,7 @@ nav ul {
     margin-top: 200px;
     margin-right: 20px;
     right: 20px;
+    background-color: white;
   }
   
   .nav-item {
