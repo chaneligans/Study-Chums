@@ -8,7 +8,9 @@
   <body>
     <div class="login-box" style="text-align:center;">
       <h1>Welcome To Study Chums</h1>
-      <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div>
+      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+      </fb:login-button> 
+      <!-- <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div> -->
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
@@ -26,6 +28,33 @@
     </script>
     
     <script>
+      // This is called with the results from from FB.getLoginStatus().
+      function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+        // Logged into your app and Facebook
+          window.location.href = "home.html";
+
+       } else {
+          // The person is not logged into your app or we are unable to tell.
+          document.getElementById('status').innerHTML = 'Please log ' +
+          'into this app.';
+       }
+      }
+       // This function is called when someone finishes with the Login
+      // Button.  See the onlogin handler attached to it in the sample
+      // code below.
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+      }
+
       window.fbAsyncInit = function() {
         FB.init({
           appId      : '803620283323357',
@@ -35,6 +64,21 @@
         });
 
         FB.AppEvents.logPageView();   
+        // Now that we've initialized the JavaScript SDK, we call 
+        // FB.getLoginStatus().  This function gets the state of the
+        // person visiting this page and can return one of three states to
+        // the callback you provide.  They can be:
+        //
+        // 1. Logged into your app ('connected')
+        // 2. Logged into Facebook, but not your app ('not_authorized')
+        // 3. Not logged into Facebook and can't tell if they are logged into
+        //    your app or not.
+        //
+        // These three cases are handled in the callback function.
+
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
 
       };
 
@@ -47,10 +91,7 @@
        }(document, 'script', 'facebook-jssdk'));
     </script>
 
-  <!-- <fb:login-button>
-    scope="public_profile,email"
-    onlogin="checkLoginState();"
-  </fb:login-button> -->
+
 
     <script> // sign up with popup window
           
@@ -63,7 +104,7 @@
                 // The signed-in user info.
                 var user = result.user;
                     console.log("Successfully signed in " + user.displayName)
-                    // ...
+
                 }).catch(function(error) {
                     // Handle Errors here.
                     var errorCode = error.code;
