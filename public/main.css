@@ -1,4 +1,5 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+@import "@material/card/mdc-card";
 
 body{
   margin: 0;
@@ -109,6 +110,16 @@ nav ul {
   }
 }
 
+.my-card-content {
+  padding: 16px;
+}
+.my-card {
+  height: 350px;
+  width: 350px;
+}
+.my-card__media {
+  background-image: url("sakura.jpg");
+}
 footer {
   padding: 20px;
 }
