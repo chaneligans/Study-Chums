@@ -110,16 +110,7 @@ nav ul {
   }
 }
 
-.my-card-content {
-  padding: 16px;
-}
-.my-card {
-  height: 350px;
-  width: 350px;
-}
-.my-card__media {
-  background-image: url("sakura.jpg");
-}
+
 footer {
   padding: 20px;
 }
