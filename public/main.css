@@ -8,7 +8,6 @@ body{
   background: url(images/cherryblossombg.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-  height: 100vh;
 }
 .login-box{
   width: 280px;
@@ -64,6 +63,8 @@ nav ul {
     font-size: 2.25vmin;
     color: #B5B5B5;
     background: #FFFFFF;
+    border-radius: 25px;
+    padding: 5px;
   } 
 }
 @media screen and (max-width: 600px){
@@ -108,6 +109,10 @@ nav ul {
   nav ul li {
     width: 100%;
   }
+}
+
+#content {
+  margin: auto;
 }
 
 
