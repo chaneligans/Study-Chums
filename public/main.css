@@ -119,3 +119,16 @@ nav ul {
 footer {
   padding: 20px;
 }
+
+
+<style>
+.demo-card-square.mdl-card {
+    width: 320px;
+    height: 320px;
+}
+.demo-card-square > .mdl-card__title {
+    color: #fff;
+    background:
+    url('https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16') bottom right 15% no-repeat #46B6AC;
+}
+</style>
