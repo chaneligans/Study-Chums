@@ -1,4 +1,5 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+@import "@material/card/mdc-card";
 
 body{
   margin: 0;
@@ -7,7 +8,6 @@ body{
   background: url(images/cherryblossombg.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-  height: 100vh;
 }
 .login-box{
   width: 280px;
@@ -26,9 +26,10 @@ body{
 #wrapper{
   width: 90%;
   background-color: rgba(255, 255, 255, 0.8);
-  margin: 20px 5%;
+  margin: 20px auto;
   border-radius: 25px;
   text-align: center;
+  max-width: 800px;
 }
 nav {
   line-height: 30px;
@@ -62,6 +63,8 @@ nav ul {
     font-size: 2.25vmin;
     color: #B5B5B5;
     background: #FFFFFF;
+    border-radius: 25px;
+    padding: 5px;
   } 
 }
 @media screen and (max-width: 600px){
@@ -108,6 +111,22 @@ nav ul {
   }
 }
 
+#content {
+  margin: auto;
+}
+
+
 footer {
   padding: 20px;
+}
+
+.demo-card-square.mdl-card {
+    width: 320px;
+    height: 320px;
+    margin: auto;
+}
+.demo-card-square > .mdl-card__title {
+    color: #fff;
+    background:
+    url('https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16') bottom right 15% no-repeat #46B6AC;
 }
