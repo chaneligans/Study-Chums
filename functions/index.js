@@ -71,7 +71,6 @@ const functions = require('firebase-functions');
 //         if ((_username === username_) && (_pass === pass_)) {
 //           console.log("This user is who they say they are.");
 //           // proceed with stuff (good end)
-
 //         } else {
 //           console.log("The given username and/or password is incorrect.");
 //           // (bad end)
@@ -84,3 +83,4 @@ const functions = require('firebase-functions');
 //   }
 //   }
 // }
+
