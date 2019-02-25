@@ -82,5 +82,3 @@ function writeNewUserData(uid, _username, _email, _name, _pass) {
       }
     });
   }
-  }
-}
