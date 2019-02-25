@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-admin.initializeApp();
+// const admin = require('firebase-admin');
+// admin.initializeApp();
 
 // var config = {
 //   apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
@@ -30,57 +30,57 @@ admin.initializeApp();
 // });
 
 //write new user data to firebase
-function writeNewUserData(uid, _username, _email, _name, _pass) {
-  firebase.database().ref('users/' + uid).set({
-    currentlyActive: false,
-    email: _email,
-    name: _name,
-    pass: _pass,
-    username: _username
-    // encrypt items later, and figure out keys for them later
-  }, function(error) {
-    if (error) {
-      //write failed...
-      console.log("Write to database failed!");
-      // leave them where they are
-      // maybe highlight incorrect input lines?
-    } else {
-      //write succeeded!
-      console.log("Write to database succeeded!");
-      // send them back to the login page afterward
-    }
-  });
-}
+// function writeNewUserData(uid, _username, _email, _name, _pass) {
+//   firebase.database().ref('users/' + uid).set({
+//     currentlyActive: false,
+//     email: _email,
+//     name: _name,
+//     pass: _pass,
+//     username: _username
+//     // encrypt items later, and figure out keys for them later
+//   }, function(error) {
+//     if (error) {
+//       //write failed...
+//       console.log("Write to database failed!");
+//       // leave them where they are
+//       // maybe highlight incorrect input lines?
+//     } else {
+//       //write succeeded!
+//       console.log("Write to database succeeded!");
+//       // send them back to the login page afterward
+//     }
+//   });
+// }
 
-  // delete user data from firebase
-  function removeUserData(uid) {
-    firebase.database().ref('users/' + uid).remove().then(function() {
-      console.log("Data deletion for uid:" + uid + " successful!");
-    }).catch(function(error) {
-      console.error("Error in data deletion for uid:" + uid);
-    });
-  }
+//   // delete user data from firebase
+//   function removeUserData(uid) {
+//     firebase.database().ref('users/' + uid).remove().then(function() {
+//       console.log("Data deletion for uid:" + uid + " successful!");
+//     }).catch(function(error) {
+//       console.error("Error in data deletion for uid:" + uid);
+//     });
+//   }
 
-  // find the user's data within firebase and determine the input's validity.
-  function locateUserWithinDatabase(uid, _username, _pass) {
-    firebase.database().ref('users/' + uid).once('value').then(function(snapshot) {
-      if (snapshot.exists()) {
-        console.log("This uid exists in the database.");
-        var username_ = (snapshot.val() && snapshot.val().username);
-        var pass_ = (snapshot.val() && snapshot.val().pass);
-        if ((_username === username_) && (_pass === pass_)) {
-          console.log("This user is who they say they are.");
-          // proceed with stuff (good end)
+//   // find the user's data within firebase and determine the input's validity.
+//   function locateUserWithinDatabase(uid, _username, _pass) {
+//     firebase.database().ref('users/' + uid).once('value').then(function(snapshot) {
+//       if (snapshot.exists()) {
+//         console.log("This uid exists in the database.");
+//         var username_ = (snapshot.val() && snapshot.val().username);
+//         var pass_ = (snapshot.val() && snapshot.val().pass);
+//         if ((_username === username_) && (_pass === pass_)) {
+//           console.log("This user is who they say they are.");
+//           // proceed with stuff (good end)
 
-        } else {
-          console.log("The given username and/or password is incorrect.");
-          // (bad end)
-        }
-      } else {
-        console.log("This uid does not exist in the database.");
-        // (bad end)
-      }
-    });
-  }
-  }
-}
+//         } else {
+//           console.log("The given username and/or password is incorrect.");
+//           // (bad end)
+//         }
+//       } else {
+//         console.log("This uid does not exist in the database.");
+//         // (bad end)
+//       }
+//     });
+//   }
+//   }
+// }
