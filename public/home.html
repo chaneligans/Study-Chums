@@ -65,11 +65,25 @@
       </div>
       <div id= "profileview">
         <script>
-            function NextUser(){
-                
-            }
+            var database = firebase.database();
+            function NextUser(id){
+                var userDataRef = firebase.database().ref('users/User'+id);
+                return userDataRef.once("value").then(function(snapshot){
+                                               var userId = (snapshot.val() &&snapshot.val().id) || '0';
+                                               });
+            };
             function ProfilePhoto(){
-                
+                //id is random number
+                var usersRef = db.collection('users');
+                var allUsers = usersRef.get().then(snapshot => {
+                    snapshot.forEach(doc => {
+                        console.log(doc.id '=>', doc.data());
+                    });
+                })
+                .catch(err => {
+                    console.log('Error getting documents', err);
+                });
+                var userId = NextUser(1);
             }
         </script>
         <style>
