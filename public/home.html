@@ -65,6 +65,9 @@
       </div>
       <div id= "profileview">
         <script>
+              document.getElementById("demo").innerHTML = 5 + 6;
+        </script>
+        <script>
             var database = firebase.database();
             function NextUser(id){
                 var userDataRef = firebase.database().ref('users/User'+id);
@@ -87,19 +90,37 @@
                 });
                 //random pick a user number
                 var randomid = Math.floor((Math.random * count)+1);
+                document.getElementById("demo").innerHTML = 5;
             
                 //try use gathering to collect the 
                 var userId = NextUser(randomid);
             };
+            document.getElementById("demo").innerHTML = 5;
+            ProfilePhoto();
         </script>
-        <style>
-            .demo-card-square > .mdl-card__title {
-                color: #fff;
-                background:
-                url('https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16') bottom right 15% no-repeat #46B6AC;
-                }
-        </style>
         <div class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <script>
+                    function showimage() {
+                        var storageRef = firebase.storage().ref();
+                        var spaceRef = storageRef.child('sakura.jpg');
+                        storageRef.child('sakura.jpg').getDownloadURL().then(function(url) {
+                            var test = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16';
+                            alert(url);
+                            document.querySelector('img').src = test;
+                        }).catch(function(error) {
+                            
+                        });
+                    }
+                </script>
+                <style>
+                    .demo-card-square > .mdl-card__title {
+                        color: #fff;
+                        background:
+                        url(test) bottom right 15% no-repeat #46B6AC;
+                    }
+                </style>
+            </div>
             <div class="mdl-card__title mdl-card--expand">
                 <h2 class="mdl-card__title-text">Name(read Stroage)</h2>
             </div>
