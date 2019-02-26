@@ -73,18 +73,24 @@
                                                });
             };
             function ProfilePhoto(){
-                //id is random number
+                //count the number of users
                 var usersRef = db.collection('users');
+                var count = 0;
                 var allUsers = usersRef.get().then(snapshot => {
                     snapshot.forEach(doc => {
                         console.log(doc.id '=>', doc.data());
+                        count =(count || 0)+1;
                     });
                 })
                 .catch(err => {
                     console.log('Error getting documents', err);
                 });
-                var userId = NextUser(1);
-            }
+                //random pick a user number
+                var randomid = Math.floor((Math.random * count)+1);
+            
+                //try use gathering to collect the 
+                var userId = NextUser(randomid);
+            };
         </script>
         <style>
             .demo-card-square > .mdl-card__title {
