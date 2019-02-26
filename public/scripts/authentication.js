@@ -9,7 +9,10 @@ var config = {
     messagingSenderId: "644812797355"
 };
 firebase.initializeApp(config);
-    
+
+// const db = firebase.firestore();
+// db.settings({timestampsInSnapshots: true});
+
 
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
@@ -46,8 +49,8 @@ window.fbAsyncInit = function() {
         version    : 'v3.2'
     });
 
-    FB.AppEvents.logPageView();   
-    // Now that we've initialized the JavaScript SDK, we call 
+    FB.AppEvents.logPageView();
+    // Now that we've initialized the JavaScript SDK, we call
     // FB.getLoginStatus().  This function gets the state of the
     // person visiting this page and can return one of three states to
     // the callback you provide.  They can be:
@@ -72,14 +75,11 @@ window.fbAsyncInit = function() {
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
- 
-
 
 
 // sign up with popup window
-          
 var provider = new firebase.auth.FacebookAuthProvider();
-          
+
 function facebookSignIn() {
     firebase.auth().signInWithPopup(provider).then(function(result) {
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -98,13 +98,11 @@ function facebookSignIn() {
         var credential = error.credential;
         });
 }
-          
+
 function facebookSignOut() {
     firebase.auth().signOut().then(function() {
-    console.log('Signout successful');                 
+    console.log('Signout successful');
     }, function(error) {
         console.log('Signout failed')
     });
 }
-
-          

@@ -6,7 +6,7 @@
 
     <title>Study Chums</title>
     <link rel="stylesheet" href="main.css">
-      
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"><script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -17,12 +17,12 @@
       });
     });
     </script>
-    
-  </head> 
+
+  </head>
   <body>
-    
+
     <div id="wrapper">
-      
+
       <!-- NAVIGATION MENU -->
       <nav class="navbar">
         <span class="navbar-toggle" id="js-navbar-toggle">
@@ -39,15 +39,15 @@
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
-      
+
       <!-- CONTENT (description, profiles) -->
       <div id="description">
         <h1>Find your study buddy!</h1>
       </div>
-      
+
       <div id="content">
-        <script>
-          //set the configuration 
+        <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js">
+          //set the configuration
           var config = {
             apiKey: 'AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A',
             authDomain: 'study-chums.firebaseapp.com',
@@ -55,13 +55,13 @@
             storageBucket: 'study-chums.appspot.com'
           };
           firebase.initializeApp(config);
-            
+
           // Get a reference to the storage service, which is used to create references in your storage bucket
           var storage = firebase.storage();
           // Create a storage reference from our storage service
           var storageRef = storage.ref();
         </script>
-          
+
       </div>
       <div id= "profileview">
         <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -76,17 +76,17 @@
                     Next
                 </a>
             </div>
-        </div> 
+        </div>
       </div>
 
       <!-- END CONTENT-->
-      
+
       <!-- FOOTER -->
       <footer>
         Designed and Developed by Team Motivation 2019
       </footer>
       <!-- END FOOTER -->
-      
+
     </div>
   </body>
 </html>
