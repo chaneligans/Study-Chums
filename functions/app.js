@@ -20,16 +20,17 @@
 //  // ...
 //});
     
+
     //get elements
     const preObject = document.getElementById('Users');
-    
+
     //Create reference
+
     const dbRefObject = firebase.database().ref().child('Users/1');
     
     //Sync object changes
     dbRefObject.on('value',snap =>{
         preObject.innerText = JSON.stringify(snap.val(),null, 3);
     });
-    
     
 }());
