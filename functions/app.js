@@ -27,11 +27,15 @@
 
     //Create reference
 
-    const dbRefObject = firebase.database().ref().child('Users/1');
+    const dbRefObject = firebase.database().ref().child('Users');
 
     //Sync object changes
     dbRefObject.on('value',snap =>{
-        preObject.innerText = JSON.stringify(snap.val(),null, 3);
+      snap.forEach(item => {
+        preObject.innerText += JSON.stringify(item.val(),null, 3);
+        console.log("Object id:", item.key);
+      })
+
     });
 
     //firestore
@@ -42,5 +46,7 @@
         console.log(doc.id, "=>", doc.data());
       });
     });
+
+
 
 }());
