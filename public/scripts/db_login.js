@@ -14,7 +14,7 @@ db.settings({timestampsInSnapshots: true});
 
 const form = document.querySelector('#login-form'); // a login html?
 
-form.addEventListener('submit', e = > {
+form.addEventListener('submit', e => {
   db.collection('users').get().then(snapshot => {
     snapshot.doc.forEach(doc => {
       if (form.username === doc.username
