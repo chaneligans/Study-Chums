@@ -12,15 +12,24 @@
     };
     firebase.initializeApp(config);
     
+//    var database = firebase.database();
+//    
+//    var userId = firebase.auth().currentUser.uid;
+//    return firebase.database().ref('/S/' + userId).once('value').then(function(snapshot) {
+//  var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+//  // ...
+//});
+    
     //get elements
     const preObject = document.getElementById('Users');
     
     //Create reference
-    const dbRefObject = firebase.database().ref().child('Users');
+    const dbRefObject = firebase.database().ref().child('Users/1');
     
     //Sync object changes
-    console.log('hello');
-    dbRefObject.on('value', snap => console.log(snap.val()));
+    dbRefObject.on('value',snap =>{
+        preObject.innerText = JSON.stringify(snap.val(),null, 3);
+    });
     
     
 }());
