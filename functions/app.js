@@ -1,4 +1,6 @@
 //test the cloud
+
+
 (function(){
     //var firebase = require("firebase");
     //Initialize Firebase
@@ -17,6 +19,7 @@
     const dbRefObject = firebase.database().ref().child('Users');
     
     //Sync object changes
+    console.log('hello');
     dbRefObject.on('value', snap => console.log(snap.val()));
     
     
