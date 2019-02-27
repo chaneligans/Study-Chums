@@ -29,7 +29,7 @@
 
     const dbRefObject = firebase.database().ref().child('Users/1');
 
-    //Sync object changes
+    //Sync object changes // for realtime
     dbRefObject.on('value',snap =>{
         preObject.innerText = JSON.stringify(snap.val(),null, 3);
     });
