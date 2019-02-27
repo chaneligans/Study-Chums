@@ -74,11 +74,12 @@
           </script>
           <script>
               var database = firebase.database();
+
               function writeUserData(userId, name, email, imageUrl) {
                   firebase.database().ref('users/' + userId).set({
-                      username: lili,
-                      email: 290884384@qq.com,
-                      profile_picture : https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16
+                      username: "lili",
+                      email: "290884384@qq.com",
+                      profile_picture : "https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16"
                   });
               };
 

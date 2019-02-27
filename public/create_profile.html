@@ -13,6 +13,11 @@
     <body>
         <div class="create-profile-box">
             <h1>Create Profile</h1>
+            <label class="upload-photo">
+                Upload Profile Photo 
+                <input type="file" class="upload-photo" id="file">
+            </label>
+            <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
             <div class="textbox">
                 <i class="fas fa-user"></i>
                 <input type="text" placeholder="Name" name="" value="">
@@ -22,8 +27,7 @@
                 <i class="fas fa-align-justify"></i>
                 <input type="text" placeholder="Biography" name="" value="">
             </div> 
-
-        <input class="create-profile-btn" type="button" name="" value="Add To Profile" onclick="location.href='home.html';">
+         <input class="create-profile-btn" type="button" name="" value="Add To Profile" onclick="location.href='home.html';"> <!--//onclick should call function that saves new user data, which then redirects page to home.html -->
         </div>
     </body>
     </head>

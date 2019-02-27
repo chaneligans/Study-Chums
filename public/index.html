@@ -85,7 +85,7 @@
               var user = result.user;
               // writeUserData(user);         // HERE?
               if(result.additionalUserInfo.isNewUser) {
-                // writeNewUserData(user);    // OR HERE?
+                // writeNewUserData(user);    // OR HERE? 
                 window.location.href = "create_profile.html";
               } else {
                 window.location.href = "home.html";
@@ -110,8 +110,8 @@
             let uid = user.uid;
             let u_name = user.displayName;
             let u_email = user.email;
-            let u_photoURL = ""; // leaving these be for now
-            let u_bio = "";
+            let u_photoURL = ""; // **Comes from file in create profile
+            let u_bio = ""; // ** Comes from input text field of create_profile
 
             // writing to firestore, but i should be able to change it later
             firestore = firebase.firestore();
