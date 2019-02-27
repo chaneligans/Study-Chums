@@ -9,15 +9,20 @@
         storageBucket: "study-chums.appspot.com"
     };
     firebase.initializeApp(config);
-    
+
     //get elements
     const preObject = document.getElementById('Users');
-    
+
     //Create reference
-    const dbRefObject = firebase.database().ref().child('Users');
-    
+    const dbRefObject = firebase.database().ref('study-chums/1');
+
+    console.log("Hello");
+
     //Sync object changes
-    dbRefObject.on('value', snap => console.log(snap.val()));
-    
-    
+    dbRefObject.once('value').then(function(snapshot) {
+      console.log("Hello again");
+      console.log(snapshot.val())
+    });
+
+
 }());
