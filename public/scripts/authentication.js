@@ -106,5 +106,4 @@ function facebookSignOut() {
         console.log('Signout failed')
     });
 }
-
-          
+       
