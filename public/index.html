@@ -25,7 +25,7 @@
   <body>
     <div class="login-box" style="text-align:center;">
       <h1>Welcome To Study Chums</h1>
-      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();" onclick="FacebookSignIn();"></fb:login-button>
+      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
       <!-- <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div> -->
     </div>
 
@@ -40,8 +40,8 @@
           // for FB.getLoginStatus().
           if (response.status === 'connected') {
           // Logged into your app and Facebook
-              window.location.href = "home.html";
-
+            console.log('Signed In');
+            facebookSignIn();
           } else {
               // The person is not logged into your app or we are unable to tell.
               document.getElementById('status').innerHTML = 'Please log ' +
@@ -85,6 +85,11 @@
           function facebookSignIn() {
               firebase.auth().signInWithPopup(provider).then(function(result) {
               // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+              if(result.additionalUserInfo.isNewUser) {
+                window.location.href = "create_profile.html";
+              } else {
+                window.location.href = "home.html";
+              }
               var token = result.credential.accessToken;
               // The signed-in user info.
               var user = result.user;
@@ -103,6 +108,9 @@
         
           function facebookSignOut() {
               firebase.auth().signOut().then(function() {
+                FB.logout(function(response) {
+                // user is now logged out
+                });
                   console.log('Signout successful');                 
               }, function(error) {
                   console.log('Signout failed')
