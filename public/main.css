@@ -2,6 +2,10 @@
 @import "@material/card/mdc-card";
 @import url('https://fonts.googleapis.com/css?family=Sniglet|Source+Sans+Pro');
 
+::selection {
+  background: #FFBD33;
+}
+
 body{
   margin: 0;
   padding: 0;
@@ -17,7 +21,7 @@ body{
   transform: translate(-50%,-50%);
   background-color: white;
   border-radius: 25px;
-} 
+}
 .login-box h1{
   font-family: 'Sniglet', sans-serif;
   font-size: 40px;
@@ -79,7 +83,8 @@ body{
   margin: 12px 0;
 }
 
-h1 {
+h1, h2, h3, h4, h5 {
+  font-family: 'Sniglet', sans-serif;
   font-weight: bold;
 }
 
@@ -123,11 +128,11 @@ a:hover {
   .navbar-toggle {
     display: none;
   }
-  
+
   .main-nav {
     display: block;
   }
-  
+
   nav ul li {
     display: inline;
     margin-right: 0;
@@ -136,7 +141,7 @@ a:hover {
     background: #FFFFFF;
     border-radius: 25px;
     padding: 5px;
-  } 
+  }
 }
 @media screen and (max-width: 600px){
   section {
@@ -150,11 +155,11 @@ a:hover {
     position: absolute;
     top: 25px;
     right: 40px;
-    cursor: pointer; 
+    cursor: pointer;
     color: rgba(0,0,0,0.8);
     font-size: 24px;
   }
-    
+
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -162,7 +167,7 @@ a:hover {
     height: 70px;
     align-items: center;
   }
-  
+
   .main-nav {
     display: none;
     margin-top: 50px;
@@ -170,13 +175,13 @@ a:hover {
     right: 20px;
     background-color: white;
   }
-  
+
   .nav-item {
     margin-left: 40px;
     display: inline;
     background-color: #FFFFFF;
   }
-  
+
   nav ul li {
     width: 100%;
   }

@@ -6,10 +6,17 @@
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
 
-    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+  </head>
+  <body>
+    <div class="login-box" style="text-align:center;">
+      <h1>Welcome To Study Chums</h1>
+      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+      <!-- <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div> -->
+    </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script type="text/javascript">
-            // Initialize Firebase
+      // Initialize Firebase
       var config = {
           apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
           authDomain: "study-chums.firebaseapp.com",
@@ -20,16 +27,6 @@
       };
       firebase.initializeApp(config);
     </script>
-
-    
-  </head> 
-  <body>
-    <div class="login-box" style="text-align:center;">
-      <h1>Welcome To Study Chums</h1>
-      <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-      <!-- <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="true"></div> -->
-    </div>
-
     <script type="text/javascript">
           // This is called with the results from from FB.getLoginStatus().
       function statusChangeCallback(response) {
@@ -65,13 +62,12 @@
           xfbml      : true,
           version    : 'v3.2'
         });
-        FB.AppEvents.logPageView();  
-        
+        FB.AppEvents.logPageView();
+
         FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
         });
       };
-
 
       (function(d, s, id){
          var js, fjs = d.getElementsByTagName(s)[0];
@@ -80,21 +76,23 @@
          js.src = "https://connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
-    
+
        var provider = new firebase.auth.FacebookAuthProvider();
-          
+
           function facebookSignIn() {
               firebase.auth().signInWithPopup(provider).then(function(result) {
-              // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+
+              var user = result.user;
+
               if(result.additionalUserInfo.isNewUser) {
                 window.location.href = "create_profile.html";
               } else {
                 window.location.href = "home.html";
               }
+              // This gives you a Facebook Access Token. You can use it to access the Facebook API.
               var token = result.credential.accessToken;
               // The signed-in user info.
-              var user = result.user;
-                  console.log("Successfully signed in " + user.displayName)
+              console.log("Successfully signed in " + user.displayName)
                   // ...
               }).catch(function(error) {
                   // Handle Errors here.
@@ -106,20 +104,38 @@
                   var credential = error.credential;
               });
           }
-        
-          function facebookSignOut() {
-              firebase.auth().signOut().then(function() {
-                FB.logout(function(response) {
-                // user is now logged out
-                });
-                  console.log('Signout successful');                 
-              }, function(error) {
-                  console.log('Signout failed')
-              });
+
+          function writeNewUserData(user) {
+            let uid = user.uid;
+            let u_name = user.displayName;
+            let u_email = user.email;
+            let u_photoURL = ""; // leaving these be for now
+            let u_bio = "";
+
+            // writing to firestore, but i should be able to change it later
+            db = firebase.firestore();
+            db.collection('users').doc(uid).set({
+              name: u_name,
+              email: u_email,
+              photoURL: u_photoURL,
+              bio: u_bio
+            }, {merge: true});
+
           }
 
+          // function facebookSignOut() {
+          //     firebase.auth().signOut().then(function() {
+          //       FB.logout(function(response) {
+          //       // user is now logged out
+          //       });
+          //         console.log('Signout successful');
+          //     }, function(error) {
+          //         console.log('Signout failed')
+          //     });
+          // }
+
       </script>
-      
+
       <!-- <button class = "fbbutton" onclick = "facebookSignIn()">Facebook Sign In</button>
       <button class = "fbbutton" onclick = "facebookSignOut()">Facebook Sign Out</button> -->
 
