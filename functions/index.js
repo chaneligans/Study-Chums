@@ -1,4 +1,7 @@
 const functions = require('firebase-functions');
+var firebase = require("firebase");
+
+
 // const admin = require('firebase-admin');
 // admin.initializeApp();
 

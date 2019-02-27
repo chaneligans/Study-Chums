@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@material/card": "^0.44.1",
+    "firebase": "^5.8.4",
     "firebase-admin": "~7.0.0",
     "firebase-functions": "^2.2.0"
   },
