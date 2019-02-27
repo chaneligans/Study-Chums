@@ -83,8 +83,9 @@
               firebase.auth().signInWithPopup(provider).then(function(result) {
 
               var user = result.user;
-
+              // writeUserData(user);         // HERE?
               if(result.additionalUserInfo.isNewUser) {
+                // writeNewUserData(user);    // OR HERE?
                 window.location.href = "create_profile.html";
               } else {
                 window.location.href = "home.html";
@@ -113,13 +114,22 @@
             let u_bio = "";
 
             // writing to firestore, but i should be able to change it later
-            db = firebase.firestore();
-            db.collection('users').doc(uid).set({
+            firestore = firebase.firestore();
+            firestore.collection('users').doc(uid).set({
               name: u_name,
               email: u_email,
               photoURL: u_photoURL,
               bio: u_bio
             }, {merge: true});
+
+            // i think this is the realtime db version of it
+            realtime = firebase.database();
+            realtime.ref('users/' + uid).set({
+              name: u_name,
+              email: u_email,
+              photoURL: u_photoURL,
+              bio: u_bio
+            });
 
           }
 
