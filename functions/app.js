@@ -33,7 +33,8 @@
     dbRefObject.on('value',snap =>{
       snap.forEach(item => {
         preObject.innerText += JSON.stringify(item.val(),null, 3);
-        console.log("Object id:", item.key);
+        var ids = item.key;
+        console.log("Object id:", ids);
       })
 
     });
