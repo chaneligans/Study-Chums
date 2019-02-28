@@ -90,12 +90,11 @@
 
             <!-- child -->
           <div class="card">
-            <img src="images/sampleimage.jpg" style="width:100%">
-            <h2 id="Name"></h2>
+            <img src="" id="imageBox" style="width:100%">
             <script language="javascript">
                 //set the configuration
               (function(){
-                  var config = {
+                var config = {
                     apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
                     authDomain: "study-chums.firebaseapp.com",
                     databaseURL: "https://study-chums.firebaseio.com/",
@@ -103,6 +102,32 @@
                     storageBucket: "study-chums.appspot.com"
                 };
                 firebase.initializeApp(config);
+                var image_val;
+                var userDataRef = firebase.database().ref();
+                var imageRef = userDataRef.child("Users/2")
+                imageRef.once("value").then(function(snapshot){
+                        var key = snapshot.key;
+                        var childData = snapshot.val();              
+
+                        image_val = snapshot.val().p1Url;
+                        console.log(image_val);
+                        $("#image").append(image_val);
+                        document.getElementById('imageBox').src = image_val;
+                });
+              }());
+            </script>
+            <h2 id="Name"></h2>
+            <script language="javascript">
+                //set the configuration
+              (function(){
+//                  var config = {
+//                    apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+//                    authDomain: "study-chums.firebaseapp.com",
+//                    databaseURL: "https://study-chums.firebaseio.com/",
+//                    projectId: 'study-chums',
+//                    storageBucket: "study-chums.appspot.com"
+//                };
+//                firebase.initializeApp(config);
                 //get elements
 //                const preObject = document.getElementById('Users');
 //                //Create reference
