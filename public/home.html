@@ -15,6 +15,7 @@
     
     <script type="text/javascript" src="scripts/db_login.js"></script>
     <script type="text/javascript" src="scripts/db_register.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     
     <script>
     $(document).ready(function(){
@@ -29,10 +30,11 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js">
       //set the configuration
       var config = {
-        apiKey: 'AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A',
-        authDomain: 'study-chums.firebaseapp.com',
-        databaseURL: 'https://study-chums.firebaseio.com',
-        storageBucket: 'study-chums.appspot.com'
+        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+        authDomain: "study-chums.firebaseapp.com",
+        databaseURL: "https://study-chums.firebaseio.com/",
+        projectId: 'study-chums',
+        storageBucket: "study-chums.appspot.com"
       };
       firebase.initializeApp(config);
 
@@ -82,39 +84,47 @@
         </div>
 
         <div id= "profileview">
-          <script>
-                document.getElementById("demo").innerHTML = 5 + 6;
-          </script>
-          <script>
-              var database = firebase.database();
+            <!-- Value -->
 
-              function writeUserData(userId, name, email, imageUrl) {
-                  firebase.database().ref('users/' + userId).set({
-                      username: "lili",
-                      email: "290884384@qq.com",
-                      profile_picture : "https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/sakura.jpg?alt=media&token=903df6f5-d38a-41d8-b84a-ee2a4c470b16"
-                  });
-              };
+          <pre id="Users"></pre>
 
-              function NextUser(id){
-                  var userId = firebase.auth().currentUser.uid;
-                  return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-                      var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-                      // ...
-                  });
-              };
-              function ProfilePhoto(){
-                  //count the number of users
-
-                  //try use gathering to collect the 
-                  var userId = NextUser(randomid);
-              };
-              document.getElementById("demo").innerHTML = 5;
-              ProfilePhoto();
-          </script>
+            <!-- child -->
           <div class="card">
             <img src="images/sampleimage.jpg" style="width:100%">
-            <h2>John Smith</h2>
+            <h2 id="Name"></h2>
+            <script language="javascript">
+                //set the configuration
+              (function(){
+                  var config = {
+                    apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+                    authDomain: "study-chums.firebaseapp.com",
+                    databaseURL: "https://study-chums.firebaseio.com/",
+                    projectId: 'study-chums',
+                    storageBucket: "study-chums.appspot.com"
+                };
+                firebase.initializeApp(config);
+                //get elements
+//                const preObject = document.getElementById('Users');
+//                //Create reference
+//                const dbRefObject = firebase.database().ref().child('Users/1');
+                var name_val;
+                var userDataRef = firebase.database().ref("Users").orderByKey();
+                userDataRef.once("value").then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+
+                        name_val = childSnapshot.val().name;
+                        var id_val = childSnapshot.val().email;
+                        console.log(name_val);
+                        $("#name").append(name_val);
+                       // $("#id").append(id_val);
+                        document.getElementById("Name").innerHTML=name_val; 
+                        });
+                    });
+              }());
+                  
+          </script>
             <p class="title">Major: Computer Science</p>
             <p>I love my school!</p>
               <div style="margin: 24px 0;">
