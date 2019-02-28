@@ -157,6 +157,25 @@
                 });
               }());
             </script>
+            <p id="email"></p>
+            <script language="javascript">
+                //set the configuration
+              (function(){
+                var email_val;
+                var userDataRef = firebase.database().ref();
+                var emailRef = userDataRef.child("Users/1")
+                emailRef.once("value").then(function(snapshot){
+                        var key = snapshot.key;
+                        var childData = snapshot.val();              
+
+                        email_val = snapshot.val().email;
+                        console.log(email_val);
+                        $("#email").append(email_val);
+                       // $("#id").append(id_val);
+                        document.getElementById("email").innerHTML="email: " + email_val; 
+                });
+              }());
+            </script>
             <p id = "bio"></p>
             <script language="javascript">
                 //set the configuration
@@ -170,7 +189,7 @@
 
                         bio_val = snapshot.val().bio;
                         console.log(bio_val);
-                        $("#Major").append(bio_val);
+                        $("#bio").append(bio_val);
                        // $("#id").append(id_val);
                         document.getElementById("bio").innerHTML=bio_val; 
                 });
