@@ -18,10 +18,12 @@
         let name_in = document.getElementById("name");
         let bio_in = document.getElementById("bio");
 
+        let uid = user.uid;
+
         // execute only if something is there
-        if (photo_in != null)     updatePhotoURL(user, photo_in);
-        if (!name_in.equals(""))  updateName(user, name_in);
-        if (!bio_in.equals(""))   updateBio(user, bio_in);
+        if (photo_in != null)     updatePhotoURL(uid, photo_in);
+        if (!name_in.equals(""))  updateName(uid, name_in);
+        if (!bio_in.equals(""))   updateBio(uid, bio_in);
 
         console.log("Updates sent to database.");
         location.href='home.html';
@@ -30,30 +32,62 @@
       }
     }
 
-    function updatePhotoURL(user, photo) {
+    function updatePhotoURL(uid, photo) {
       console.log("Updating photo for user id ", user.userId);
       // update photo for this 'user' with file_in
 
       let rt = firebase.database();
       let fs = firebase.firestore();
 
+      //realtime database
+      rt.ref('Users/' + uid).update({
+        p1Url: photo
+      }, function(error) {
+        if (error) {
+          console.log("Update failed - p1Url");
+        } else {
+          console.log("Update succeeded - p1Url");
+        }
+      });
     }
 
-    function updateName(user, name) {
+    function updateName(user, name_in) {
       console.log("Updating name for user id ", name.userId);
       // update name for this 'user' with name_in
 
       let rt = firebase.database();
       let fs = firebase.firestore();
 
+      //realtime database
+      rt.ref('Users/' + uid).update({
+        name: name_in
+      }, function(error) {
+        if (error) {
+          console.log("Update failed - name");
+        } else {
+          console.log("Update suceeded - name");
+        }
+      });
+
     }
 
-    function updateBio(user, bio) {
+    function updateBio(user, bio_in) {
       console.log("Updating bio for user id ", user.userId);
       // update bio for this 'user' with bio_in
 
       let rt = firebase.database();
       let fs = firebase.firestore();
+
+      //realtime database
+      rt.ref('Users/' + uid).update({
+        bio: bio_in
+      }, function(error){
+        if (error) {
+          console.log("Update failed - bio");
+        } else {
+          console.log("Update succeeded - bio")
+        }
+      });
 
     }
     </script>
