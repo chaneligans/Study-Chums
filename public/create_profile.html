@@ -11,12 +11,52 @@
     <!-- <script type="text/javascript" src="scripts/db_login.js"></script>
     <script type="text/javascript" src="scripts/db_register.js"></script> -->
     <script type="text/javascript">
-    function update() {
+    function updateProfile() {
+      let user = firebase.auth().currentUser;
+      if (user) {
+        let photo_in = document.getElementById("file");
+        let name_in = document.getElementById("name");
+        let bio_in = document.getElementById("bio");
+
+        // execute only if something is there
+        if (photo_in != null)     updatePhotoURL(user, photo_in);
+        if (!name_in.equals(""))  updateName(user, name_in);
+        if (!bio_in.equals(""))   updateBio(user, bio_in);
+
+        console.log("Updates sent to database.");
+        location.href='home.html';
+      } else {
+        console.log("who are you? And why do you have access to this?");
+      }
+    }
+
+    function updatePhotoURL(user, photo) {
+      console.log("Updating photo for user id ", user.userId);
+      // update photo for this 'user' with file_in
+
+      let rt = firebase.database();
+      let fs = firebase.firestore();
 
     }
 
-    </script>
+    function updateName(user, name) {
+      console.log("Updating name for user id ", name.userId);
+      // update name for this 'user' with name_in
 
+      let rt = firebase.database();
+      let fs = firebase.firestore();
+
+    }
+
+    function updateBio(user, bio) {
+      console.log("Updating bio for user id ", user.userId);
+      // update bio for this 'user' with bio_in
+
+      let rt = firebase.database();
+      let fs = firebase.firestore();
+
+    }
+    </script>
 
     <body>
         <div class="create-profile-box">
@@ -36,7 +76,10 @@
                 <i class="fas fa-align-justify"></i>
                 <input type="text" placeholder="Tell Us About You" name="" value="">
             </div>
-         <input class="create-profile-btn" type="button" name="" value="Add To Profile" onclick="location.href='home.html';"> <!--//onclick should call function that saves new user data, which then redirects page to home.html -->
+         <input class="create-profile-btn" type="button" name=""
+         value="Add To Profile" onclick="updateProfile();">
+          <!--//onclick should call function that saves new user data,
+          which then redirects page to home.html -->
         </div>
     </body>
     </head>
