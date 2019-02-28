@@ -25,22 +25,32 @@
     <script type="text/javascript" src="scripts/db_register.js"></script> -->
     <script>
       //let user = firebase.auth().currentUser;
+      
       function updateProfile() {
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-            let photo_in = document.getElementById("file");
-            let name_in = document.getElementById("name");
-            let bio_in = document.getElementById("bio");
+            let photo_in = document.getElementById("file").value;
+            let name_in = document.getElementById("name").value;
+            let major_in = document.getElementById("major").value;
+            let bio_in = document.getElementById("bio").value;
 
-            let uid = user.uid;
-
+            this.userId = user.uid;
+            
             // execute only if something is there
-            if (photo_in != null)     updatePhotoURL(uid, photo_in);
-            if (!name_in.equals(""))  updateName(uid, name_in);
-            if (!bio_in.equals(""))   updateBio(uid, bio_in);
+            if (photo_in !== null)    {updatePhotoURL(this.userId, photo_in);}
+            else {setPhotoURL(this.userId, photo_in);}
+            
+            if (name_in !== "") {updateName(this.userId, name_in);}
+            else {setName(this.userId, name_in);}
+            
+            if (major_in !== "")   {updateMajor(this.userId, major_in);}
+            else {setMajor(this.userId, major_in);}
+            
+            if (bio_in !== "")   {updateBio(this.userId, bio_in);}
+            else {setBio(this.userId, bio_in);}
 
             console.log("Updates sent to database.");
-            location.href='home.html';
+            //location.href='home.html';
           } else {
             console.log("who are you? And why do you have access to this?");
           }                              
@@ -49,41 +59,68 @@
 
       function updatePhotoURL(uid, photo) {
         firebase.auth().onAuthStateChanged(function(user) {
-          console.log("Updating photo for user id ", user.userId);
+          console.log("Updating photo for user id ", user.uid);
           // update photo for this 'user' with file_in
 
-          let rt = firebase.database();
+          let ref = firebase.database().ref("Users/" + this.userId);
           let fs = firebase.firestore();
+          
+          this.userId = user.uid;
 
           //realtime database
-          rt.ref('Users/' + uid).update({
-            p1Url: photo
+          ref.update({
+            p1Url: photo,
+            "p1Url": photo
           }, function(error) {
             if (error) {
-              console.log("Update failed - p1Url");
+              console.log("Update failed - p1Url to " + photo);
             } else {
-              console.log("Update succeeded - p1Url");
+              console.log("Update succeeded - p1Url to " + photo);
             }
           });
         });
       }
-
+      
       function updateName(user, name_in) {
         firebase.auth().onAuthStateChanged(function(user) {
-          console.log("Updating name for user id ", name.userId);
+          console.log("Updating name for user id ", user.uid);
           // update name for this 'user' with name_in
 
-          let rt = firebase.database();
+          let ref = firebase.database().ref("Users/" + this.userId);
           let fs = firebase.firestore();
+          this.userId = user.uid;
 
           //realtime database
-          rt.ref('Users/' + uid).update({
-            name: name_in
+          ref.update({
+            name: name_in,
+            "name": name_in
           }, function(error) {
             if (error) {
-              console.log("Update failed - name");
+              console.log("Update failed - name to " + name_in);
             } else {
-              console.log("Update suceeded - name");
+              console.log("Update suceeded - name to " + name_in);
+            }
+          });
+        });
+      }      
+      
+      function updateMajor(user, major_in) {
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.log("Updating major for user id ", user.uid);
+          // update major for this 'user' with major_in
+
+          let ref = firebase.database().ref("Users/" + this.userId);
+          let fs = firebase.firestore();
+          this.userId = user.uid;
+          //realtime database
+          ref.update({
+            Major: major_in,
+            "Major": major_in
+          }, function(error){
+            if (error) {
+              console.log("Update failed - major to " + major_in);
+            } else {
+              console.log("Update succeeded - major to " + major_in)
             }
           });
         });
@@ -91,20 +128,21 @@
 
       function updateBio(user, bio_in) {
         firebase.auth().onAuthStateChanged(function(user) {
-          console.log("Updating bio for user id ", user.userId);
+          console.log("Updating bio for user id ", user.uid);
           // update bio for this 'user' with bio_in
 
-          let rt = firebase.database();
+          let ref = firebase.database().ref("Users/" + this.userId);
           let fs = firebase.firestore();
-
+          this.userId = user.uid;
           //realtime database
-          rt.ref('Users/' + uid).update({
-            bio: bio_in
+          ref.update({
+            bio: bio_in,
+            "bio": bio_in
           }, function(error){
             if (error) {
-              console.log("Update failed - bio");
+              console.log("Update failed - bio to " + bio_in);
             } else {
-              console.log("Update succeeded - bio")
+              console.log("Update succeeded - bio to " + bio_in)
             }
           });
         });
@@ -119,18 +157,23 @@
 
       <label class="upload-photo">
         Upload Profile Photo
-        <input type="file" class="upload-photo" id="file">
+        <input id="file" type="file" class="upload-photo" id="file">
       </label>
         <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
+       <div class="textbox">
+          <!-- <i class="fas fa-user"></i> -->
+          <i class="fas fa-glasses"></i>
+          <input id="name" type="text" placeholder="Name" name="" value="">
+        </div>
         <div class="textbox">
           <!-- <i class="fas fa-user"></i> -->
           <i class="fas fa-glasses"></i>
-          <input type="text" placeholder="Major" name="" value="">
+          <input id="major" type="text" placeholder="Major" name="" value="">
         </div>
 
         <div class="textbox">
           <i class="fas fa-align-justify"></i>
-          <input type="text" placeholder="Tell Us About You" name="" value="">
+          <input id="bio" type="text" placeholder="Tell Us About Yourself" name="" value="">
         </div>
         <input class="create-profile-btn" type="button" name=""
          value="Add To Profile" onclick="updateProfile();">
