@@ -157,7 +157,25 @@
                 });
               }());
             </script>
-            <p>I love my school!</p>
+            <p id = "bio"></p>
+            <script language="javascript">
+                //set the configuration
+              (function(){
+                var bio_val;
+                var userDataRef = firebase.database().ref();
+                var bioRef = userDataRef.child("Users/1")
+                bioRef.once("value").then(function(snapshot){
+                        var key = snapshot.key;
+                        var childData = snapshot.val();              
+
+                        bio_val = snapshot.val().bio;
+                        console.log(bio_val);
+                        $("#Major").append(bio_val);
+                       // $("#id").append(id_val);
+                        document.getElementById("bio").innerHTML=bio_val; 
+                });
+              }());
+            </script>
               <div style="margin: 24px 0;">
                 <a href="#"><i class="fa fa-dribbble"></i></a> 
                 <a href="#"><i class="fa fa-twitter"></i></a>  
