@@ -30,6 +30,15 @@ body{
   margin-bottom: 40px;
   padding: 13px 0;
 }
+.fbbutton {
+  background-color: #3b5998;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 15px;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 15px;
+}
 
 /* Create Profile */
 .create-profile-box{
