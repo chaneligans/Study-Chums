@@ -1,122 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+  <head>
+    <title>Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
+      
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script>
+      //set the configuration
+      var config = {
+        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+        authDomain: "study-chums.firebaseapp.com",
+        databaseURL: "https://study-chums.firebaseio.com/",
+        projectId: 'study-chums',
+        storageBucket: "study-chums.appspot.com"
+      };
+      firebase.initializeApp(config);
+    </script>
+      
     <!-- <script type="text/javascript" src="scripts/db_login.js"></script>
     <script type="text/javascript" src="scripts/db_register.js"></script> -->
-    <script type="text/javascript">
-    function updateProfile() {
-      let user = firebase.auth().currentUser;
-      if (user) {
-        let photo_in = document.getElementById("file");
-        let name_in = document.getElementById("name");
-        let bio_in = document.getElementById("bio");
+    <script>
+      //let user = firebase.auth().currentUser;
+      function updateProfile() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            let photo_in = document.getElementById("file");
+            let name_in = document.getElementById("name");
+            let bio_in = document.getElementById("bio");
 
-        let uid = user.uid;
+            let uid = user.uid;
 
-        // execute only if something is there
-        if (photo_in != null)     updatePhotoURL(uid, photo_in);
-        if (!name_in.equals(""))  updateName(uid, name_in);
-        if (!bio_in.equals(""))   updateBio(uid, bio_in);
+            // execute only if something is there
+            if (photo_in != null)     updatePhotoURL(uid, photo_in);
+            if (!name_in.equals(""))  updateName(uid, name_in);
+            if (!bio_in.equals(""))   updateBio(uid, bio_in);
 
-        console.log("Updates sent to database.");
-        location.href='home.html';
-      } else {
-        console.log("who are you? And why do you have access to this?");
+            console.log("Updates sent to database.");
+            location.href='home.html';
+          } else {
+            console.log("who are you? And why do you have access to this?");
+          }                              
+        });
       }
-    }
 
-    function updatePhotoURL(uid, photo) {
-      console.log("Updating photo for user id ", user.userId);
-      // update photo for this 'user' with file_in
+      function updatePhotoURL(uid, photo) {
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.log("Updating photo for user id ", user.userId);
+          // update photo for this 'user' with file_in
 
-      let rt = firebase.database();
-      let fs = firebase.firestore();
+          let rt = firebase.database();
+          let fs = firebase.firestore();
 
-      //realtime database
-      rt.ref('Users/' + uid).update({
-        p1Url: photo
-      }, function(error) {
-        if (error) {
-          console.log("Update failed - p1Url");
-        } else {
-          console.log("Update succeeded - p1Url");
-        }
-      });
-    }
+          //realtime database
+          rt.ref('Users/' + uid).update({
+            p1Url: photo
+          }, function(error) {
+            if (error) {
+              console.log("Update failed - p1Url");
+            } else {
+              console.log("Update succeeded - p1Url");
+            }
+          });
+        });
+      }
 
-    function updateName(user, name_in) {
-      console.log("Updating name for user id ", name.userId);
-      // update name for this 'user' with name_in
+      function updateName(user, name_in) {
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.log("Updating name for user id ", name.userId);
+          // update name for this 'user' with name_in
 
-      let rt = firebase.database();
-      let fs = firebase.firestore();
+          let rt = firebase.database();
+          let fs = firebase.firestore();
 
-      //realtime database
-      rt.ref('Users/' + uid).update({
-        name: name_in
-      }, function(error) {
-        if (error) {
-          console.log("Update failed - name");
-        } else {
-          console.log("Update suceeded - name");
-        }
-      });
+          //realtime database
+          rt.ref('Users/' + uid).update({
+            name: name_in
+          }, function(error) {
+            if (error) {
+              console.log("Update failed - name");
+            } else {
+              console.log("Update suceeded - name");
+            }
+          });
+        });
+      }
 
-    }
+      function updateBio(user, bio_in) {
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.log("Updating bio for user id ", user.userId);
+          // update bio for this 'user' with bio_in
 
-    function updateBio(user, bio_in) {
-      console.log("Updating bio for user id ", user.userId);
-      // update bio for this 'user' with bio_in
+          let rt = firebase.database();
+          let fs = firebase.firestore();
 
-      let rt = firebase.database();
-      let fs = firebase.firestore();
-
-      //realtime database
-      rt.ref('Users/' + uid).update({
-        bio: bio_in
-      }, function(error){
-        if (error) {
-          console.log("Update failed - bio");
-        } else {
-          console.log("Update succeeded - bio")
-        }
-      });
-
-    }
+          //realtime database
+          rt.ref('Users/' + uid).update({
+            bio: bio_in
+          }, function(error){
+            if (error) {
+              console.log("Update failed - bio");
+            } else {
+              console.log("Update succeeded - bio")
+            }
+          });
+        });
+      }
     </script>
+  </head>
 
-    <body>
-        <div class="create-profile-box">
-            <h1>Create Profile</h1>
-            <button onclick="location.href='profile.html';">Back to Profile</button>
+  <body>
+    <div class="create-profile-box">
+      <h1>Create Profile</h1>
+      <button onclick="location.href='profile.html';">Back to Profile</button>
 
-            <label class="upload-photo">
-                Upload Profile Photo
-                <input type="file" class="upload-photo" id="file">
-            </label>
-            <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
-            <div class="textbox">
-                <!-- <i class="fas fa-user"></i> -->
-                <i class="fas fa-glasses"></i>
-                <input type="text" placeholder="Major" name="" value="">
-            </div>
-
-            <div class="textbox">
-                <i class="fas fa-align-justify"></i>
-                <input type="text" placeholder="Tell Us About You" name="" value="">
-            </div>
-         <input class="create-profile-btn" type="button" name=""
-         value="Add To Profile" onclick="updateProfile();">
-          <!--//onclick should call function that saves new user data,
-          which then redirects page to home.html -->
+      <label class="upload-photo">
+        Upload Profile Photo
+        <input type="file" class="upload-photo" id="file">
+      </label>
+        <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
+        <div class="textbox">
+          <!-- <i class="fas fa-user"></i> -->
+          <i class="fas fa-glasses"></i>
+          <input type="text" placeholder="Major" name="" value="">
         </div>
-    </body>
-    </head>
+
+        <div class="textbox">
+          <i class="fas fa-align-justify"></i>
+          <input type="text" placeholder="Tell Us About You" name="" value="">
+        </div>
+        <input class="create-profile-btn" type="button" name=""
+         value="Add To Profile" onclick="updateProfile();">
+        <!--//onclick should call function that saves new user data,
+          which then redirects page to home.html -->
+    </div>
+  </body>
 </html>
