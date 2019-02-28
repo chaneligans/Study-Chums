@@ -42,6 +42,19 @@
       var storageRef = storage.ref();
     </script>
     
+        <script>
+               function facebookSignOut() {
+               firebase.auth().signOut().then(function() {
+                 FB.logout(function(response) {
+                 // user is now logged out
+                 });
+                   console.log('Signout successful');
+               }, function(error) {
+                   console.log('Signout failed')
+               });
+           }
+    </script>
+    
     <div id="wrapper">
 
       <!-- NAVIGATION MENU -->
@@ -56,7 +69,7 @@
           <li><a href="messages.html" class="nav-item">Messages</a></li>
           <li><a href="chums.html" class="nav-item">Chums</a></li>
           <li><a href="applications.html" class="nav-item">Applications</a></li>
-          <li><a href="index.html" class="nav-item" onclick="FacebookSignOut();">Sign Out</a></li>
+          <li><a href="index.html" class="nav-item" onclick="facebookSignOut();">Sign Out</a></li>
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
@@ -122,20 +135,6 @@
         Designed and Developed by Team Motivation 2019
       </footer>
       <!-- END FOOTER -->
-
-      <script>
-          function facebookSignOut() {
-            firebase.auth().signOut().then(function() {
-              FB.logout(function(response) {
-              // user is now logged out
-              });
-              window.location.href = "index.html";
-              console.log('Signout successful');                 
-            }, function(error) {
-                console.log('Signout failed')
-            });
-          }
-      </script>
 
     </div>
   </body>
