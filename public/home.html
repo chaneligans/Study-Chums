@@ -108,24 +108,55 @@
 //                //Create reference
 //                const dbRefObject = firebase.database().ref().child('Users/1');
                 var name_val;
-                var userDataRef = firebase.database().ref("Users").orderByKey();
-                userDataRef.once("value").then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
+                var userDataRef = firebase.database().ref();
+                var NameRef = userDataRef.child("Users/1")
+                NameRef.once("value").then(function(snapshot){
+                        var key = snapshot.key;
+                        var childData = snapshot.val();              
 
-                        name_val = childSnapshot.val().name;
-                        var id_val = childSnapshot.val().email;
+                        name_val = snapshot.val().name;
+                        //var id_val = snapshot.val().email;
                         console.log(name_val);
                         $("#name").append(name_val);
                        // $("#id").append(id_val);
                         document.getElementById("Name").innerHTML=name_val; 
-                        });
-                    });
+                });
+                
+//                userDataRef.once("value").then(function(snapshot) {
+//                    snapshot.forEach(function(childSnapshot) {
+//                        var key = childSnapshot.key;
+//                        var childData = childSnapshot.val();              
+//
+//                        name_val = childSnapshot.val().name;
+//                        var id_val = childSnapshot.val().email;
+//                        console.log(name_val);
+//                        $("#name").append(name_val);
+//                       // $("#id").append(id_val);
+//                        document.getElementById("Name").innerHTML=name_val; 
+//                        });
+//                    });
               }());
                   
           </script>
-            <p class="title">Major: Computer Science</p>
+            <p id="Major"></p>
+            <script language="javascript">
+                //set the configuration
+              (function(){
+                var Major_val;
+                var userDataRef = firebase.database().ref();
+                var MajorRef = userDataRef.child("Users/1")
+                MajorRef.once("value").then(function(snapshot){
+                        var key = snapshot.key;
+                        var childData = snapshot.val();              
+
+                        Major_val = snapshot.val().Major;
+                        console.log(Major_val);
+                        $("#Major").append(Major_val);
+                       // $("#id").append(id_val);
+                        document.getElementById("Major").innerHTML="Major: " + Major_val; 
+                });
+              }());
+            </script>
             <p>I love my school!</p>
               <div style="margin: 24px 0;">
                 <a href="#"><i class="fa fa-dribbble"></i></a> 
