@@ -14,6 +14,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
 
+    <script type="text/javascript" src="scripts/db_login.js"></script>
+    <script type="text/javascript" src="scripts/db_register.js"></script>
+
     <script>
     $(document).ready(function(){
       $('.navbar-toggle').click(function() {
@@ -22,6 +25,23 @@
     });
     </script>
   <body>
+    
+    <!-- FIREBASE INITIALIZATION -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+        authDomain: "study-chums.firebaseapp.com",
+        databaseURL: "https://study-chums.firebaseio.com",
+        projectId: "study-chums",
+        storageBucket: "study-chums.appspot.com",
+        messagingSenderId: "644812797355"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <!-- END FIREBASE INITIALIZATION -->
+    
     <div id="wrapper">
 
       <!-- NAVIGATION MENU -->
@@ -40,162 +60,128 @@
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
+      
+      <!-- Retrieve data-->
+      <script>
+        function getUserMajor() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              var db = firebase.database().ref("Users/" + user.uid);
+              db.child(user.uid).child("Major").on("value", function(userMajorSnapshot) {
+                var userMajor = userMajorSnapshot.val();
+                console.log("User with id: " + user.uid + "'s major is: " + userMajor);
+                return userMajor;
+              }); 
+            }
+            else {
+              console.log('Something went wrong!');
+            }
+          });
+        }
+        
+        function getUserBio() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              var db = firebase.database();
+              this.userId = user.uid;
+              var ref = db.ref("Users/" + this.userId);
+              ref.child(this.userId).child("bio").on("value", function(userBioSnapshot) {
+                var userBio = userBioSnapshot.val();
+                console.log("User with id: " + this.userId + "'s bio is: " + userBio);
+                return userBio;
+              }); 
+            }
+             else {
+              console.log('Something went wrong!');
+            }
+          });
+        }
+        
+        function getUserEmail() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              var db = firebase.database();
+              this.userId = user.uid;
+              var ref = db.ref("Users/" + this.userId);
+              ref.child(this.userId).child("email").on("value", function(userEmailSnapshot) {
+                var userEmail = userEmailSnapshot.val();
+                console.log("User with id: " + this.userId + "'s email is: " + userEmail);
+                return userEmail;
+              }); 
+            }
+             else {
+              console.log('Something went wrong!');
+            }
+          });
+        }
+        
+        function getUserName() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                var db = firebase.database();
+                this.userId = user.uid;
+                var ref = db.ref("Users/" + this.userId);
+                ref.child(this.userId).child("name").on("value", function(userNameSnapshot) {
+                var userName = userNameSnapshot.val();
+                console.log("User with id: " + this.userId + "'s name is: " + userName);
+                return userName;
+            });
+            }
+            else {
+              console.log('Something went wrong');
+            }
+
+          });
+        }
+        
+        function getUserP1Url() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              var db = firebase.database();
+              this.userId = user.uid;
+              var ref = db.ref("Users/" + this.userId);
+              ref.child(this.userId).child("p1Url").on("value", function(userP1UrlSnapshot) {
+                var userP1Url = userP1UrlSnapshot.val();
+                console.log("User with id: " + this.userId + "'s p1 is: " + userP1Url);
+                return userP1Url;
+              }); 
+            }
+            else {
+              console.log('Something went wrong');
+            }
+          });
+        }
+      </script>
 
       <!-- CONTENT (description, profiles) -->
       <div id="content">
-
-          <div id="description">
-            <h1>Find your Study Chums!</h1>
-          </div>
-
-          <div id= "profileview">
-              <!-- Value -->
-
-            <pre id="Users"></pre>
-
-              <!-- child -->
-            <div class="card">
-              <img src="" id="imageBox" style="width:100%">
-              <script language="javascript">
-                  //set the configuration
-                (function(){
-                  var config = {
-                      apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
-                      authDomain: "study-chums.firebaseapp.com",
-                      databaseURL: "https://study-chums.firebaseio.com/",
-                      projectId: 'study-chums',
-                      storageBucket: "study-chums.appspot.com"
-                  };
-                  firebase.initializeApp(config);
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    if(user) {
-                      var image_val;
-                      var userDataRef = firebase.database().ref();
-                      var uidRef = user.uid;
-                      var imageRef = userDataRef.child("Users/" + uidRef);
-                      imageRef.once("value").then(function(snapshot){
-                              var key = snapshot.key;
-                              var childData = snapshot.val();
-                          
-                              var image_val = snapshot.val().p1Url;
-                              console.log(image_val);
-                              $("#image").append(image_val);
-                              document.getElementById('imageBox').src = image_val;
-                      });
-                    }
-                  });
-                });
-              </script>
-              <h2 id="Name"></h2>
-              <script language="javascript">
-                  //set the configuration
-                (function(){
-
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    if(user) {
-                      var name_val;
-                      var userDataRef = firebase.database().ref();
-                      var uidRef = user.uid;
-                      var NameRef = userDataRef.child("Users/" + uidRef);
-                      NameRef.once("value").then(function(snapshot){
-                              var key = snapshot.key;
-                              var childData = snapshot.val();
-                          
-                              var name_val = snapshot.val().name;
-                              //var id_val = snapshot.val().email;
-                              console.log(name_val);
-                              $("#name").append(name_val);
-                            // $("#id").append(id_val);
-                              document.getElementById("Name").innerHTML=name_val;
-                      });
-                  }
-                  });
-
-                });
-            </script>
-              <p id="Major"></p>
-              <script language="javascript">
-                  //set the configuration
-                (function(){
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    if(user) {
-                      var Major_val;
-                      var userDataRef = firebase.database().ref();
-                      var uidRef = user.uid;
-                      var MajorRef = userDataRef.child("Users/" + uidRef);
-                      MajorRef.once("value").then(function(snapshot){
-                              var key = snapshot.key;
-                              var childData = snapshot.val();
-                          
-                              var Major_val = snapshot.val().Major;
-                              console.log(Major_val);
-                              $("#Major").append(Major_val);
-                            // $("#id").append(id_val);
-                              document.getElementById("Major").innerHTML="Major: " + Major_val;
-                      });
-                      }
-                    });
-                }());
-              </script>
-              <p id="email"></p>
-              <script language="javascript">
-                  //set the configuration
-                (function(){
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    if(user) {
-                      var email_val;
-                      var userDataRef = firebase.database().ref();
-                      var uidRef = user.uid;
-                      var emailRef = userDataRef.child("Users/" + uidRef);
-                      emailRef.once("value").then(function(snapshot){
-                              var key = snapshot.key;
-                              var childData = snapshot.val();
-                          
-                              var email_val = snapshot.val().email;
-                              console.log(email_val);
-                              $("#email").append(email_val);
-                            // $("#id").append(id_val);
-                              document.getElementById("email").innerHTML="email: " + email_val;
-                      });
-                    }
-                  });
-                });
-              </script>
-              <p id = "bio"></p>
-              <script language="javascript">
-                  //set the configuration
-                (function(){
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    if(user) {
-                      var bio_val;
-                      var userDataRef = firebase.database().ref();
-                      var uidRef = user.uid;
-                      var bioRef = userDataRef.child("Users/" + uidRef);
-                      bioRef.once("value").then(function(snapshot){
-                              var key = snapshot.key;
-                              var childData = snapshot.val();
-                          
-                              var bio_val = snapshot.val().bio;
-                              console.log(bio_val);
-                              $("#bio").append(bio_val);
-                            // $("#id").append(id_val);
-                              document.getElementById("bio").innerHTML=bio_val;
-                      });
-                      }
-                   });
-                });
-              </script>
-                <div style="margin: 24px 0;">
-                  <a href="#"><i class="fa fa-dribbble"></i></a>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                  <a href="#"><i class="fa fa-facebook"></i></a>
-                </div>
-                <p><button>Next</button></p>
-            </div>
-
-          </div>
+        <div id="description">
+          <h1>Your Profile</h1>
+          <h3><a href="create_profile.html">Edit Profile</a></h3>
         </div>
+        <div id="profileview">
+          <div class="profilecard">
+            <script>
+              document.write(getUserMajor()); 
+              document.write(getUserBio()); 
+              document.write(getUserEmail()); 
+              document.write(getUserName()); 
+              document.write(getUserP1Url()); 
+              
+            </script>
+            <img src="images/sampleimage.jpg" style="width:100%">
+            <h2>John Smith</h2>
+            <p class="title">Major: Computer Science</p>
+            <p>I love my school!</p>
+              <div style="margin: 24px 0;">
+                <a href="#"><i class="fa fa-dribbble"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-linkedin"></i></a>
+                <a href="#"><i class="fa fa-facebook"></i></a>
+              </div>
+        </div>
+      </div>
+    </div>
       <!-- END CONTENT-->
 
       <!-- FOOTER -->

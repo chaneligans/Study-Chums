@@ -263,3 +263,11 @@ footer {
 #profileview button:hover, a:hover {
   opacity: 0.7;
 }
+
+#profileview .profilecard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
+}
