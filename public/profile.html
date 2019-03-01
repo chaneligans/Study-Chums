@@ -14,8 +14,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
 
-    <script type="text/javascript" src="scripts/db_login.js"></script>
-    <script type="text/javascript" src="scripts/db_register.js"></script>
+    <script src="scripts/db_login.js"></script>
+    <script src="scripts/db_register.js"></script>
 
     <script>
     $(document).ready(function(){
@@ -76,8 +76,7 @@
                 Major_val = snapshot.val().Major;
                 console.log(Major_val);
                 $("#Major").append(Major_val);
-                document.getElementById("major").innerHTML = 'Major: ' + Major_val;
-                return Major_val;
+                document.getElementById("major").innerHTML = "Major: " + Major_val;
               });
             }
             else {
@@ -89,16 +88,20 @@
         function getUserBio() {
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              var db = firebase.database();
-              this.userId = user.uid;
-              var ref = db.ref("Users/" + this.userId);
-              ref.child(this.userId).child("bio").on("value", function(userBioSnapshot) {
-                var userBio = userBioSnapshot.val();
-                console.log("User with id: " + this.userId + "'s bio is: " + userBio);
-                return userBio;
-              }); 
+              var db = firebase.database().ref("Users/" + user.uid);
+              var bio_val;
+              var userDataRef = firebase.database().ref();
+              var bioRef = userDataRef.child("Users/" + user.uid);
+              bioRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                bio_val = snapshot.val().bio;
+                console.log(bio_val);
+                $("#bio").append(bio_val);
+                document.getElementById("bio").innerHTML = bio_val;
+              });
             }
-             else {
+            else {
               console.log('Something went wrong!');
             }
           });
@@ -107,16 +110,20 @@
         function getUserEmail() {
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              var db = firebase.database();
-              this.userId = user.uid;
-              var ref = db.ref("Users/" + this.userId);
-              ref.child(this.userId).child("email").on("value", function(userEmailSnapshot) {
-                var userEmail = userEmailSnapshot.val();
-                console.log("User with id: " + this.userId + "'s email is: " + userEmail);
-                return userEmail;
-              }); 
+              var db = firebase.database().ref("Users/" + user.uid);
+              var email_val;
+              var userDataRef = firebase.database().ref();
+              var emailRef = userDataRef.child("Users/" + user.uid);
+              emailRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                email_val = snapshot.val().email;
+                console.log(email_val);
+                $("#email").append(email_val);
+                document.getElementById("email").innerHTML = email_val;
+              });
             }
-             else {
+            else {
               console.log('Something went wrong!');
             }
           });
@@ -125,36 +132,43 @@
         function getUserName() {
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-                var db = firebase.database();
-                this.userId = user.uid;
-                var ref = db.ref("Users/" + this.userId);
-                ref.child(this.userId).child("name").on("value", function(userNameSnapshot) {
-                var userName = userNameSnapshot.val();
-                console.log("User with id: " + this.userId + "'s name is: " + userName);
-                return userName;
-            });
+              var db = firebase.database().ref("Users/" + user.uid);
+              var name_val;
+              var userDataRef = firebase.database().ref();
+              var nameRef = userDataRef.child("Users/" + user.uid);
+              nameRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                name_val = snapshot.val().name;
+                console.log(name_val);
+                $("#name").append(name_val);
+                document.getElementById("name").innerHTML = name_val;
+              });
             }
             else {
-              console.log('Something went wrong');
+              console.log('Something went wrong!');
             }
-
           });
         }
         
         function getUserP1Url() {
           firebase.auth().onAuthStateChanged(function(user) {
+            console.log(user.uid);
             if (user) {
-              var db = firebase.database();
-              this.userId = user.uid;
-              var ref = db.ref("Users/" + this.userId);
-              ref.child(this.userId).child("p1Url").on("value", function(userP1UrlSnapshot) {
-                var userP1Url = userP1UrlSnapshot.val();
-                console.log("User with id: " + this.userId + "'s p1 is: " + userP1Url);
-                return userP1Url;
-              }); 
+              var db = firebase.database().ref("Users/" + user.uid);
+              var image_val;
+              var userDataRef = firebase.database().ref();
+              var imageRef = userDataRef.child("Users/"+ user.uid)
+              imageRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                image_val = snapshot.val().p1Url;                
+                $("#image").append(image_val);
+                document.getElementById('img').src = image_val;
+              });
             }
             else {
-              console.log('Something went wrong');
+              console.log('Something went wrong!');
             }
           });
         }
@@ -168,19 +182,19 @@
         </div>
         <div id="profileview">
           <div class="profilecard">
-            <img src="images/sampleimage.jpg" style="width:100%">
-            <h2>John Smith</h2>
-            <p id="major" class="title"><script>getUserMajor();</script></p>
-            <p>I love my school!</p>
+            <span id="img" style="width:100%"></span><script>getUserP1Url();</script>
+            <h2 id="name"></h2><script>getUserName();</script>
+            <p id="major" class="title"></p><script>getUserMajor();</script>
+            <p id="bio"></p><script>getUserBio();</script>
               <div style="margin: 24px 0;">
                 <a href="#"><i class="fa fa-dribbble"></i></a>
                 <a href="#"><i class="fa fa-twitter"></i></a>
                 <a href="#"><i class="fa fa-linkedin"></i></a>
                 <a href="#"><i class="fa fa-facebook"></i></a>
               </div>
+          </div>
         </div>
       </div>
-    </div>
       <!-- END CONTENT-->
 
       <!-- FOOTER -->
