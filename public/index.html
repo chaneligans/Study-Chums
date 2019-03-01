@@ -8,7 +8,7 @@
 
   </head>
   <body>
-    
+
     <!-- FIREBASE INITIALIZATION -->
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script>
@@ -24,9 +24,9 @@
       firebase.initializeApp(config);
     </script>
     <!-- END FIREBASE INITIALIZATION -->
-      
+
     <!-- ///////////////////////////// -->
-    
+
     <!-- FACEBOOK INITIALIZATION -->
     <script>
       window.fbAsyncInit = function() {
@@ -37,7 +37,7 @@
           version    : 'v3.2'
         });
 
-        FB.AppEvents.logPageView();   
+        FB.AppEvents.logPageView();
 
       };
 
@@ -50,30 +50,31 @@
        }(document, 'script', 'facebook-jssdk'));
     </script>
     <!-- END FACEBOOK INITIALIZATION-->
-    
+
     <!-- ///////////////////////////// -->
-    
+
     <!-- FACEBOOK SIGN IN-->
     <script>
       function facebookSignIn() {
         var provider = new firebase.auth.FacebookAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
           console.log("Result: ",result);
-          
+
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
           var token = result.credential.accessToken;
-          
+
           // The signed-in user info.
           var user = result.user;
-          console.log("Successfully signed in " + user.displayName)
-          
+          console.log("Successfully signed in " + user.displayName);
+
           // Redirect after signing in
           if(result.additionalUserInfo.isNewUser) {
+            createProfile();
             window.location.href = "create_profile.html";
           } else {
             window.location.href = "home.html";
           }
-          
+
         }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
@@ -88,13 +89,34 @@
     <!-- END FACEBOOK SIGN IN / SIGN OUT -->
 
     <!-- ///////////////////////////// -->
-    
+
     <!-- OTHER SCRIPTS / FUNCTIONS -->
-    
+    <script>
+      function createProfile() {
+        var rt = firebase.database();
+        var fs = firebase.firestore();
+        let user = firbase.auth().currentUser;
+
+        // realtime
+        rt.ref("Users/" + user.uid).set({
+          Major: "",
+          bio: "",
+          email: user.email,
+          name: user.displayName,
+          p1Url: ""
+        }, function(error) {
+          if (error) {
+            console.log("Account creation failed.");
+          } else {
+            console.log("Account creation succeeded.");
+          }
+        });
+      }
+    </script>
     <!-- END OTHER SCRIPTS / FUNCTIONS -->
-    
+
     <!-- ///////////////////////////// -->
-    
+
     <!-- (UI) LOGIN BOX -->
     <div class="login-box" style="text-align:center;">
       <h1>Welcome To Study Chums</h1>
