@@ -29,7 +29,7 @@
       function updateProfile() {
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-            let photo_in = document.getElementById("file").value;
+            let photo_in = document.getElementById("file");
             let name_in = document.getElementById("name").value;
             let major_in = document.getElementById("major").value;
             let bio_in = document.getElementById("bio").value;
@@ -62,21 +62,51 @@
           console.log("Updating photo for user id ", user.uid);
           // update photo for this 'user' with file_in
 
+          this.userId = user.uid;
+
           let ref = firebase.database().ref("Users/" + this.userId);
           let fs = firebase.firestore();
           
-          this.userId = user.uid;
-
-          //realtime database
-          ref.update({
-            p1Url: photo,
-            "p1Url": photo
-          }, function(error) {
-            if (error) {
-              console.log("Update failed - p1Url to " + photo);
-            } else {
-              console.log("Update succeeded - p1Url to " + photo);
+          var photoUrl = 'Something went wrong!!!';
+          
+          var file = photo.files[0];
+          var fileName = photo.files[0].name;
+          
+          console.log('Attempting to upload file ' + fileName);
+          var storageRef = firebase.storage().ref('img/'+this.userId);
+          var uploadTask = storageRef.put(file);    
+          
+          uploadTask.on('state_changed', function(snapshot) {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
             }
+          }, function(error) {
+            console.log('Unsuccessful file upload');
+          }, function() {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+              console.log('File available at', downloadURL);
+              photoUrl = downloadURL;
+              //realtime database
+              ref.update({
+                p1Url: photoUrl,
+                "p1Url": photoUrl
+              }, function(error) {
+                if (error) {
+                  console.log("Update failed - p1Url to " + photo);
+                } else {
+                  console.log("Update succeeded - p1Url to " + photo);
+                }
+              });
+            });
           });
         });
       }
@@ -157,7 +187,7 @@
 
       <label class="upload-photo">
         Upload Profile Photo
-        <input id="file" type="file" class="upload-photo" id="file">
+        <input id="file" type="file" class="upload-photo" value="image/png" id="file">
       </label>
         <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
        <div class="textbox">
@@ -165,6 +195,7 @@
           <input id="name" type="text" placeholder="Name" name="" value="">
         </div>
         <div class="textbox">
+          <!-- <i class="fas fa-user"></i> -->
           <i class="fas fa-glasses"></i>
           <input id="major" type="text" placeholder="Major" name="" value="">
         </div>
