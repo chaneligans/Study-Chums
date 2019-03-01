@@ -31,6 +31,7 @@
           if (user) {
             let photo_in = document.getElementById("file");
             let name_in = document.getElementById("name").value;
+            let email_in = document.getElementById("email").value;
             let major_in = document.getElementById("major").value;
             let bio_in = document.getElementById("bio").value;
 
@@ -38,21 +39,19 @@
             
             // execute only if something is there
             if (photo_in !== null)    {updatePhotoURL(this.userId, photo_in);}
-            else {setPhotoURL(this.userId, photo_in);}
             
             if (name_in !== "") {updateName(this.userId, name_in);}
-            else {setName(this.userId, name_in);}
+            
+            if (email_in !== "") {updateEmail(this.userId, email_in);}
             
             if (major_in !== "")   {updateMajor(this.userId, major_in);}
-            else {setMajor(this.userId, major_in);}
             
             if (bio_in !== "")   {updateBio(this.userId, bio_in);}
-            else {setBio(this.userId, bio_in);}
 
             console.log("Updates sent to database.");
             //location.href='home.html';
           } else {
-            console.log("who are you? And why do you have access to this?");
+            console.log("Who are you? And why do you have access to this?");
           }                              
         });
       }
@@ -132,7 +131,30 @@
             }
           });
         });
-      }      
+      } 
+      
+      function updateEmail(user, email_in) {
+        firebase.auth().onAuthStateChanged(function(user) {
+          console.log("Updating email for user id ", user.uid);
+          // update email for this 'user' with email_in
+
+          let ref = firebase.database().ref("Users/" + this.userId);
+          let fs = firebase.firestore();
+          this.userId = user.uid;
+
+          //realtime database
+          ref.update({
+            email: email_in,
+            "email": email_in
+          }, function(error) {
+            if (error) {
+              console.log("Update failed - email to " + email_in);
+            } else {
+              console.log("Update suceeded - email to " + email_in);
+            }
+          });
+        });
+      } 
       
       function updateMajor(user, major_in) {
         firebase.auth().onAuthStateChanged(function(user) {
@@ -194,6 +216,11 @@
           <i class="fas fa-user"></i>
           <input id="name" type="text" placeholder="Name" name="" value="">
         </div>
+        <div class="textbox">
+          <i class="fas fa-at"></i>
+          <input id="email" type="text" placeholder="Email" name="" value="">
+        </div>
+      
         <div class="textbox">
           <!-- <i class="fas fa-user"></i> -->
           <i class="fas fa-glasses"></i>
