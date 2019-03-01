@@ -67,11 +67,18 @@
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               var db = firebase.database().ref("Users/" + user.uid);
-              db.child(user.uid).child("Major").on("value", function(userMajorSnapshot) {
-                var userMajor = userMajorSnapshot.val();
-                console.log("User with id: " + user.uid + "'s major is: " + userMajor);
-                return userMajor;
-              }); 
+              var Major_val;
+              var userDataRef = firebase.database().ref();
+              var MajorRef = userDataRef.child("Users/" + user.uid);
+              MajorRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                Major_val = snapshot.val().Major;
+                console.log(Major_val);
+                $("#Major").append(Major_val);
+                document.getElementById("major").innerHTML = 'Major: ' + Major_val;
+                return Major_val;
+              });
             }
             else {
               console.log('Something went wrong!');
@@ -161,17 +168,9 @@
         </div>
         <div id="profileview">
           <div class="profilecard">
-            <script>
-              document.write(getUserMajor()); 
-              document.write(getUserBio()); 
-              document.write(getUserEmail()); 
-              document.write(getUserName()); 
-              document.write(getUserP1Url()); 
-              
-            </script>
             <img src="images/sampleimage.jpg" style="width:100%">
             <h2>John Smith</h2>
-            <p class="title">Major: Computer Science</p>
+            <p id="major" class="title"><script>getUserMajor();</script></p>
             <p>I love my school!</p>
               <div style="margin: 24px 0;">
                 <a href="#"><i class="fa fa-dribbble"></i></a>
