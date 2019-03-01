@@ -271,3 +271,8 @@ footer {
   text-align: center;
   font-family: 'Source Sans Pro', sans-serif;
 }
+
+#profileview #img {
+  max-height: 400px;
+  width: auto;
+}
