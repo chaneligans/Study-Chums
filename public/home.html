@@ -104,7 +104,7 @@
                 firebase.initializeApp(config);
                 var image_val;
                 var userDataRef = firebase.database().ref();
-                var imageRef = userDataRef.child("Users/1")
+                var imageRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
                 imageRef.once("value").then(function(snapshot){
                         var key = snapshot.key;
                         var childData = snapshot.val();              
