@@ -13,8 +13,6 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- Please not comment out this line!!! -->
     
-    <script type="text/javascript" src="scripts/db_login.js"></script>
-    <script type="text/javascript" src="scripts/db_register.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     
     <script>
@@ -92,6 +90,12 @@
           <div class="card">
             <img src="" id="imageBox" style="width:100%">
             <script language="javascript">
+              function getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+              }
+
+              var startIndex = getRandomInt(6);
+      
                 //set the configuration
               (function(){
                 var config = {
@@ -103,15 +107,19 @@
                 };
                 firebase.initializeApp(config);
                 var image_val;
-                var userDataRef = firebase.database().ref();
-                var imageRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
-                imageRef.once("value").then(function(snapshot){
-                        var key = snapshot.key;
-                        var childData = snapshot.val();              
-                        image_val = snapshot.val().p1Url;
+                console.log(startIndex);
+                var userDataRef = firebase.database().ref("Users");
+                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
+                    var key;
+
+                    snapshot.forEach(function (childSnapshot){
+                        key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+                        image_val = childSnapshot.val().p1Url;
                         console.log(image_val);
                         $("#image").append(image_val);
                         document.getElementById('imageBox').src = image_val;
+                    });
                 });
               }());
             </script>
@@ -119,21 +127,23 @@
             <script language="javascript">
                 //set the configuration
               (function(){
-
                 var name_val;
-                var userDataRef = firebase.database().ref();
-                var NameRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
-                NameRef.once("value").then(function(snapshot){
-                        var key = snapshot.key;
-                        var childData = snapshot.val();              
-                        name_val = snapshot.val().name;
+                userDataRef = firebase.database().ref("Users");
+                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                    var key;
+
+                    snapshot.forEach(function (childSnapshot){
+                        key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+                        name_val = childSnapshot.val().name;
                         //var id_val = snapshot.val().email;
                         console.log(name_val);
                         $("#name").append(name_val);
                        // $("#id").append(id_val);
                         document.getElementById("Name").innerHTML=name_val; 
+
+                    })
                 });
-                
               }());
                   
           </script>
@@ -142,16 +152,18 @@
                 //set the configuration
               (function(){
                 var Major_val;
-                var userDataRef = firebase.database().ref();
-                var MajorRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
-                MajorRef.once("value").then(function(snapshot){
-                        var key = snapshot.key;
-                        var childData = snapshot.val();              
-                        Major_val = snapshot.val().Major;
+                userDataRef = firebase.database().ref("Users");
+                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
+                    var key;
+                    snapshot.forEach(function(childSnapshot){
+                        key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+                        Major_val = childSnapshot.val().Major;
                         console.log(Major_val);
                         $("#Major").append(Major_val);
                        // $("#id").append(id_val);
                         document.getElementById("Major").innerHTML="Major: " + Major_val; 
+                    });
                 });
               }());
             </script>
@@ -160,16 +172,18 @@
                 //set the configuration
               (function(){
                 var email_val;
-                var userDataRef = firebase.database().ref();
-                var emailRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
-                emailRef.once("value").then(function(snapshot){
-                        var key = snapshot.key;
-                        var childData = snapshot.val();              
-                        email_val = snapshot.val().email;
+                userDataRef = firebase.database().ref("Users");
+                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                    var key;
+                    snapshot.forEach(function(childSnapshot){
+                        key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+                        email_val = childSnapshot.val().email;
                         console.log(email_val);
                         $("#email").append(email_val);
                        // $("#id").append(id_val);
                         document.getElementById("email").innerHTML="email: " + email_val; 
+                    });
                 });
               }());
             </script>
@@ -178,16 +192,18 @@
                 //set the configuration
               (function(){
                 var bio_val;
-                var userDataRef = firebase.database().ref();
-                var bioRef = userDataRef.child("Users/BksrKQvNX7ceyQPimH9jk8q0cPy1")
-                bioRef.once("value").then(function(snapshot){
-                        var key = snapshot.key;
-                        var childData = snapshot.val();              
-                        bio_val = snapshot.val().bio;
+                userDataRef = firebase.database().ref("Users");
+                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                    var key;
+                    snapshot.forEach(function(childSnapshot){
+                        key = childSnapshot.key;
+                        var childData = childSnapshot.val();              
+                        bio_val = childSnapshot.val().bio;
                         console.log(bio_val);
                         $("#bio").append(bio_val);
                        // $("#id").append(id_val);
                         document.getElementById("bio").innerHTML=bio_val; 
+                    });
                 });
               }());
             </script>
