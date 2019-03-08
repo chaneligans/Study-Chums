@@ -15,3 +15,4 @@ Study Chums is a web application that connects students of the same major to com
 [Week 4](https://drive.google.com/open?id=1HvCRwCqAQ44xAJ0y5V1_ulth1rHbH_Qv) <br>
 [Week 5](https://drive.google.com/open?id=1xKNeypAsaxDJdDux0-76fzIepgLX6slF) <br>
 [Week 6](https://drive.google.com/open?id=1DMeksfmqJn5uU-Eyw3rscMWAflrt27tY) <br>
+[Week 7](https://drive.google.com/open?id=1Kl0fqSSg__LMWHSiPqiJAjHMob4xBZqy) <br>
