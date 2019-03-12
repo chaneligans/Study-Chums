@@ -92,8 +92,7 @@
             <script language="javascript">
 
               function getRandomInt(max) {
-                const r = Math.random();
-                return Math.floor(r * Math.floor(max));
+                return Math.floor(Math.random() * Math.floor(max));
               }
 
                 //set the configuration
@@ -241,7 +240,7 @@
                 <a href="#"><i class="fa fa-linkedin"></i></a>  
                 <a href="#"><i class="fa fa-facebook"></i></a> 
               </div>
-              <p><button>Next</button></p>
+              <p><button onclick="loadProfile();">Next</button></p>
           </div>
 
         </div>
