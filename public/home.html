@@ -90,12 +90,11 @@
           <div class="card">
             <img src="" id="imageBox" style="width:100%">
             <script language="javascript">
+
               function getRandomInt(max) {
                 return Math.floor(Math.random() * Math.floor(max));
               }
 
-              var startIndex = getRandomInt(6);
-      
                 //set the configuration
               (function(){
                 var config = {
@@ -106,6 +105,24 @@
                     storageBucket: "study-chums.appspot.com"
                 };
                 firebase.initializeApp(config);
+              }());
+
+              //Add functionality so index chosen is not user
+              var startIndex = getRandomInt(6);
+
+              // var totalUsers;
+              // var startIndex;
+              // var index;
+              // var databaseRef = firebase.database().ref("TotalUsers");  
+              // startIndex = databaseRef.once("value", function(data) {
+              //   totalUsers = data.val().total;
+              //   index = getRandomInt(totalUsers);
+              //   return index;
+              // });
+              console.log(startIndex);
+              
+
+              (function(){
                 var image_val;
                 console.log(startIndex);
                 var userDataRef = firebase.database().ref("Users");

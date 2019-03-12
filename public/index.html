@@ -69,8 +69,39 @@
 
           // Redirect after signing in
           if(result.additionalUserInfo.isNewUser) {
-            //createProfile();
+              var totalUsers;
+              var totalRef = firebase.database().ref("TotalUsers");  
+              totalRef.once("value", function(data) {
+                totalUsers = data.val().total;
+                var index_in = totalUsers;
+                totalUsers = totalUsers + 1;
+
+                var userRef = firebase.database().ref("Users/" + user.uid);
+                userRef.update({
+                  index: index_in,
+                  "index": index_in
+                }, function(error) {
+                  if (error) {
+                    console.log("Update failed - index to " + index_in);
+                  } else {
+                    console.log("Update suceeded - index to " + index_in);
+                  }
+                });
+
+                totalRef.update({
+                  total: totalUsers,
+                  "total": totalUsers
+                }, function(error) {
+                  if (error) {
+                    console.log("Update failed - total to " + totalUsers);
+                  } else {
+                    console.log("Update suceeded - total to " + totalUsers);
+                  }
+                });
+              });
+              
             window.location.href = "create_profile.html";
+
 
           } else {
             window.location.href = "home.html";
@@ -90,31 +121,6 @@
     <!-- END FACEBOOK SIGN IN / SIGN OUT -->
 
     <!-- ///////////////////////////// -->
-
-    <!-- OTHER SCRIPTS / FUNCTIONS -->
-    <script>
-      function createProfile() {
-        var rt = firebase.database();
-        var fs = firebase.firestore();
-        let user = firbase.auth().currentUser;
-
-        // realtime
-        rt.ref("Users/" + user.uid).set({
-          Major: "",
-          bio: "",
-          email: user.email,
-          name: user.displayName,
-          p1Url: ""
-        }, function(error) {
-          if (error) {
-            console.log("Account creation failed.");
-          } else {
-            console.log("Account creation succeeded.");
-          }
-        });
-      }
-    </script>
-    <!-- END OTHER SCRIPTS / FUNCTIONS -->
 
     <!-- ///////////////////////////// -->
 
