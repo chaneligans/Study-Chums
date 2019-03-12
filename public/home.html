@@ -92,7 +92,8 @@
             <script language="javascript">
 
               function getRandomInt(max) {
-                return Math.floor(Math.random() * Math.floor(max));
+                const r = Math.random();
+                return Math.floor(r * Math.floor(max));
               }
 
                 //set the configuration
@@ -107,22 +108,32 @@
                 firebase.initializeApp(config);
               }());
 
+              function getTotalUsers() {
+                var databaseRef = firebase.database().ref("TotalUsers");  
+                return databaseRef.once("value", function(data) {
+                });
+              }
+
               //Add functionality so index chosen is not user
-              var startIndex = getRandomInt(6);
+              function loadProfile() {
+                var total;
+                var startIndex;
+                getTotalUsers().then((result)=> {
+                  total = result.val().total;
+                  startIndex = getRandomInt(total);
+                  console.log("Loading Profile of index: " + startIndex);
 
-              // var totalUsers;
-              // var startIndex;
-              // var index;
-              // var databaseRef = firebase.database().ref("TotalUsers");  
-              // startIndex = databaseRef.once("value", function(data) {
-              //   totalUsers = data.val().total;
-              //   index = getRandomInt(totalUsers);
-              //   return index;
-              // });
-              console.log(startIndex);
-              
+                  loadImage(startIndex);
+                  loadName(startIndex);
+                  loadMajor(startIndex);
+                  loadEmail(startIndex);
+                  loadBio(startIndex);
+                });
+              }
 
-              (function(){
+              loadProfile();
+
+              function loadImage(startIndex) {
                 var image_val;
                 console.log(startIndex);
                 var userDataRef = firebase.database().ref("Users");
@@ -138,12 +149,12 @@
                         document.getElementById('imageBox').src = image_val;
                     });
                 });
-              }());
+              }
             </script>
             <h2 id="Name"></h2>
             <script language="javascript">
                 //set the configuration
-              (function(){
+              function loadName(startIndex) {
                 var name_val;
                 userDataRef = firebase.database().ref("Users");
                 userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
@@ -161,13 +172,13 @@
 
                     })
                 });
-              }());
+              }
                   
           </script>
             <p id="Major"></p>
             <script language="javascript">
                 //set the configuration
-              (function(){
+              function loadMajor(startIndex) {
                 var Major_val;
                 userDataRef = firebase.database().ref("Users");
                 userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
@@ -182,12 +193,12 @@
                         document.getElementById("Major").innerHTML="Major: " + Major_val; 
                     });
                 });
-              }());
+              }
             </script>
             <p id="email"></p>
             <script language="javascript">
                 //set the configuration
-              (function(){
+              function loadEmail(startIndex){
                 var email_val;
                 userDataRef = firebase.database().ref("Users");
                 userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
@@ -202,12 +213,12 @@
                         document.getElementById("email").innerHTML="email: " + email_val; 
                     });
                 });
-              }());
+              }
             </script>
             <p id = "bio"></p>
             <script language="javascript">
                 //set the configuration
-              (function(){
+              function loadBio(startIndex){
                 var bio_val;
                 userDataRef = firebase.database().ref("Users");
                 userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
@@ -222,7 +233,7 @@
                         document.getElementById("bio").innerHTML=bio_val; 
                     });
                 });
-              }());
+              }
             </script>
               <div style="margin: 24px 0;">
                 <a href="#"><i class="fa fa-dribbble"></i></a> 
