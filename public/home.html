@@ -113,20 +113,35 @@
                 });
               }
 
-              //Add functionality so index chosen is not user
               function loadProfile() {
-                var total;
-                var startIndex;
-                getTotalUsers().then((result)=> {
-                  total = result.val().total;
-                  startIndex = getRandomInt(total);
-                  console.log("Loading Profile of index: " + startIndex);
+                firebase.auth().onAuthStateChanged(function(user) {
+                  if(user) {
+                    var userIndex;
+                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
+                      userIndex = snapshot.val().index;
 
-                  loadImage(startIndex);
-                  loadName(startIndex);
-                  loadMajor(startIndex);
-                  loadEmail(startIndex);
-                  loadBio(startIndex);
+                      var total;
+                      var startIndex = userIndex;
+                      getTotalUsers().then((result)=> {
+                        total = result.val().total;
+                        //Make sure profile shown is not user
+                        while(startIndex == userIndex) {
+                          startIndex = getRandomInt(total);
+                        }
+                        console.log("Loading Profile of index: " + startIndex);
+
+                        loadImage(startIndex);
+                        loadName(startIndex);
+                        loadMajor(startIndex);
+                        loadEmail(startIndex);
+                        loadBio(startIndex);
+                      });
+                    });
+
+                  } else {
+                    console.log("No user found.");
+                  }
+
                 });
               }
 
