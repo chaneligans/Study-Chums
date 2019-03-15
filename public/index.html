@@ -3,123 +3,32 @@
   <head>
     <meta charset=utf-8>
     <title>Study Chums</title>
+
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-  </head>
-  <body>
+
     <!-- FIREBASE INITIALIZATION -->
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
-        authDomain: "study-chums.firebaseapp.com",
-        databaseURL: "https://study-chums.firebaseio.com",
-        projectId: "study-chums",
-        storageBucket: "study-chums.appspot.com",
-        messagingSenderId: "644812797355"
-      };
-      firebase.initializeApp(config);
-    </script>
+    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script>firebase.initializeApp(config);</script><!-- Initialize Firebase -->
     <!-- END FIREBASE INITIALIZATION -->
-    <!-- ///////////////////////////// -->
+
     <!-- FACEBOOK INITIALIZATION -->
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '803620283323357',
-          cookie     : true,
-          xfbml      : true,
-          version    : 'v3.2'
-        });
-      
-        FB.AppEvents.logPageView();
-      
-      };
-      
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=803620283323357&autoLogAppEvents=1";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
+    <script type="text/javascript" src="scripts/facebook_init.js"></script>
     <!-- END FACEBOOK INITIALIZATION-->
-    <!-- ///////////////////////////// -->
+
     <!-- FACEBOOK SIGN IN-->
-    <script>
-      function facebookSignIn() {
-        var provider = new firebase.auth.FacebookAuthProvider();
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          console.log("Result: ",result);
-      
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-          var token = result.credential.accessToken;
-      
-          // The signed-in user info.
-          var user = result.user;
-          console.log("Successfully signed in " + user.displayName);
-      
-          // Redirect after signing in
-          if(result.additionalUserInfo.isNewUser) {
-              var totalUsers;
-              var totalRef = firebase.database().ref("TotalUsers");  
-              totalRef.once("value", function(data) {
-                totalUsers = data.val().total;
-                var index_in = totalUsers;
-                totalUsers = totalUsers + 1;
-      
-                var userRef = firebase.database().ref("Users/" + user.uid);
-                userRef.update({
-                  index: index_in,
-                  "index": index_in
-                }, function(error) {
-                  if (error) {
-                    console.log("Update failed - index to " + index_in);
-                  } else {
-                    console.log("Update suceeded - index to " + index_in);
-                  }
-                });
-      
-                totalRef.update({
-                  total: totalUsers,
-                  "total": totalUsers
-                }, function(error) {
-                  if (error) {
-                    console.log("Update failed - total to " + totalUsers);
-                  } else {
-                    console.log("Update suceeded - total to " + totalUsers);
-                  }
-                });
-              });
-              
-            window.location.href = "create_profile.html";
-      
-      
-          } else {
-            window.location.href = "home.html";
-          }
-      
-        }).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-        });
-      }
-    </script>
-    <!-- END FACEBOOK SIGN IN / SIGN OUT -->
-    <!-- ///////////////////////////// -->
-    <!-- ///////////////////////////// -->
+    <script type="text/javascript" src="scripts/site_login.js"></script>
+    <!-- END FACEBOOK SIGN IN -->
+
+  </head>
+  <body>
     <!-- (UI) LOGIN BOX -->
     <div class="login-box" style="text-align:center;">
       <h1>Welcome To Study Chums</h1>
-      <button class = "fbbutton" onclick = "facebookSignIn()">Facebook Sign In</button>
+      <button class="fbbutton" onclick="facebookSignIn()">Facebook Sign In</button>
     </div>
     <!-- END (UI) LOGIN BOX -->
+
   </body>
 </html>
