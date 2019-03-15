@@ -1,5 +1,6 @@
 # Study Chums by Team Motivation
 Project Site: https://study-chums.firebaseapp.com/
+Team website: https://chaneligans.github.io/Study-Chums/
 
 ## Members
 * Austin Tao
