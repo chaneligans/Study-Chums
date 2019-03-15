@@ -5,10 +5,8 @@
     <title>Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-
   </head>
   <body>
-
     <!-- FIREBASE INITIALIZATION -->
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script>
@@ -24,9 +22,7 @@
       firebase.initializeApp(config);
     </script>
     <!-- END FIREBASE INITIALIZATION -->
-
     <!-- ///////////////////////////// -->
-
     <!-- FACEBOOK INITIALIZATION -->
     <script>
       window.fbAsyncInit = function() {
@@ -36,11 +32,11 @@
           xfbml      : true,
           version    : 'v3.2'
         });
-
+      
         FB.AppEvents.logPageView();
-
+      
       };
-
+      
       (function(d, s, id){
          var js, fjs = d.getElementsByTagName(s)[0];
          if (d.getElementById(id)) {return;}
@@ -50,23 +46,21 @@
        }(document, 'script', 'facebook-jssdk'));
     </script>
     <!-- END FACEBOOK INITIALIZATION-->
-
     <!-- ///////////////////////////// -->
-
     <!-- FACEBOOK SIGN IN-->
     <script>
       function facebookSignIn() {
         var provider = new firebase.auth.FacebookAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
           console.log("Result: ",result);
-
+      
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
           var token = result.credential.accessToken;
-
+      
           // The signed-in user info.
           var user = result.user;
           console.log("Successfully signed in " + user.displayName);
-
+      
           // Redirect after signing in
           if(result.additionalUserInfo.isNewUser) {
               var totalUsers;
@@ -75,7 +69,7 @@
                 totalUsers = data.val().total;
                 var index_in = totalUsers;
                 totalUsers = totalUsers + 1;
-
+      
                 var userRef = firebase.database().ref("Users/" + user.uid);
                 userRef.update({
                   index: index_in,
@@ -87,7 +81,7 @@
                     console.log("Update suceeded - index to " + index_in);
                   }
                 });
-
+      
                 totalRef.update({
                   total: totalUsers,
                   "total": totalUsers
@@ -101,12 +95,12 @@
               });
               
             window.location.href = "create_profile.html";
-
-
+      
+      
           } else {
             window.location.href = "home.html";
           }
-
+      
         }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
@@ -119,17 +113,13 @@
       }
     </script>
     <!-- END FACEBOOK SIGN IN / SIGN OUT -->
-
     <!-- ///////////////////////////// -->
-
     <!-- ///////////////////////////// -->
-
     <!-- (UI) LOGIN BOX -->
     <div class="login-box" style="text-align:center;">
       <h1>Welcome To Study Chums</h1>
       <button class = "fbbutton" onclick = "facebookSignIn()">Facebook Sign In</button>
     </div>
     <!-- END (UI) LOGIN BOX -->
-
   </body>
 </html>

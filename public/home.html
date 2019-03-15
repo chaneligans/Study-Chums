@@ -3,28 +3,22 @@
   <head>
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Study Chums</title>
+    <title>Home | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- Please not comment out this line!!! -->
-    
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-    
     <script>
-    $(document).ready(function(){
-      $('.navbar-toggle').click(function() {
-        $('#nav').toggle('.unhide');
+      $(document).ready(function(){
+        $('.navbar-toggle').click(function() {
+          $('#nav').toggle('.unhide');
+        });
       });
-    });
     </script>
   </head>
   <body>
-
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js">
       //set the configuration
       var config = {
@@ -40,28 +34,24 @@
       // Create a storage reference from our storage service
       var storageRef = storage.ref();
     </script>
-    
-        <script>
-               function facebookSignOut() {
-               firebase.auth().signOut().then(function() {
-                 FB.logout(function(response) {
-                 // user is now logged out
-                 });
-                   console.log('Signout successful');
-               }, function(error) {
-                   console.log('Signout failed')
-               });
-           }
+    <script>
+      function facebookSignOut() {
+      firebase.auth().signOut().then(function() {
+        FB.logout(function(response) {
+        // user is now logged out
+        });
+          console.log('Signout successful');
+      }, function(error) {
+          console.log('Signout failed')
+      });
+      }
     </script>
-    
     <div id="wrapper">
-
       <!-- NAVIGATION MENU -->
       <nav class="navbar">
         <span class="navbar-toggle" id="js-navbar-toggle">
-          &#x2630;
+        &#x2630;
         </span>
-
         <ul id="nav" class="main-nav">
           <li><a href="home.html" class="nav-item">Home</a></li>
           <li><a href="discover.html" class="nav-item">Discover</a></li>
@@ -73,28 +63,22 @@
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
-
       <!-- CONTENT (description, profiles) -->
       <div id="content">
-
         <div id="description">
           <h1>Find your Study Chums!</h1>
         </div>
-
         <div id= "profileview">
-            <!-- Value -->
-
+          <!-- Value -->
           <pre id="Users"></pre>
-
-            <!-- child -->
+          <!-- child -->
           <div class="card">
             <img src="" id="imageBox" style="width:100%">
             <script language="javascript">
-
               function getRandomInt(max) {
                 return Math.floor(Math.random() * Math.floor(max));
               }
-
+              
                 //set the configuration
               (function(){
                 var config = {
@@ -106,20 +90,20 @@
                 };
                 firebase.initializeApp(config);
               }());
-
+              
               function getTotalUsers() {
                 var databaseRef = firebase.database().ref("TotalUsers");  
                 return databaseRef.once("value", function(data) {
                 });
               }
-
+              
               function loadProfile() {
                 firebase.auth().onAuthStateChanged(function(user) {
                   if(user) {
                     var userIndex;
                     firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
                       userIndex = snapshot.val().index;
-
+              
                       var total;
                       var startIndex = userIndex;
                       getTotalUsers().then((result)=> {
@@ -129,7 +113,7 @@
                           startIndex = getRandomInt(total);
                         }
                         console.log("Loading Profile of index: " + startIndex);
-
+              
                         loadImage(startIndex);
                         loadName(startIndex);
                         loadMajor(startIndex);
@@ -137,23 +121,23 @@
                         loadBio(startIndex);
                       });
                     });
-
+              
                   } else {
                     console.log("No user found.");
                   }
-
+              
                 });
               }
-
+              
               loadProfile();
-
+              
               function loadImage(startIndex) {
                 var image_val;
                 console.log(startIndex);
                 var userDataRef = firebase.database().ref("Users");
                 userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
                     var key;
-
+              
                     snapshot.forEach(function (childSnapshot){
                         key = childSnapshot.key;
                         var childData = childSnapshot.val();              
@@ -167,107 +151,104 @@
             </script>
             <h2 id="Name"></h2>
             <script language="javascript">
-                //set the configuration
+              //set the configuration
               function loadName(startIndex) {
-                var name_val;
-                userDataRef = firebase.database().ref("Users");
-                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                    var key;
-
-                    snapshot.forEach(function (childSnapshot){
-                        key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
-                        name_val = childSnapshot.val().name;
-                        //var id_val = snapshot.val().email;
-                        console.log(name_val);
-                        $("#name").append(name_val);
-                       // $("#id").append(id_val);
-                        document.getElementById("Name").innerHTML=name_val; 
-
-                    })
-                });
+              var name_val;
+              userDataRef = firebase.database().ref("Users");
+              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                  var key;
+              
+                  snapshot.forEach(function (childSnapshot){
+                      key = childSnapshot.key;
+                      var childData = childSnapshot.val();              
+                      name_val = childSnapshot.val().name;
+                      //var id_val = snapshot.val().email;
+                      console.log(name_val);
+                      $("#name").append(name_val);
+                     // $("#id").append(id_val);
+                      document.getElementById("Name").innerHTML=name_val; 
+              
+                  })
+              });
               }
-                  
-          </script>
+                
+            </script>
             <p id="Major"></p>
             <script language="javascript">
-                //set the configuration
+              //set the configuration
               function loadMajor(startIndex) {
-                var Major_val;
-                userDataRef = firebase.database().ref("Users");
-                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
-                    var key;
-                    snapshot.forEach(function(childSnapshot){
-                        key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
-                        Major_val = childSnapshot.val().Major;
-                        console.log(Major_val);
-                        $("#Major").append(Major_val);
-                       // $("#id").append(id_val);
-                        document.getElementById("Major").innerHTML="Major: " + Major_val; 
-                    });
-                });
+              var Major_val;
+              userDataRef = firebase.database().ref("Users");
+              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
+                  var key;
+                  snapshot.forEach(function(childSnapshot){
+                      key = childSnapshot.key;
+                      var childData = childSnapshot.val();              
+                      Major_val = childSnapshot.val().Major;
+                      console.log(Major_val);
+                      $("#Major").append(Major_val);
+                     // $("#id").append(id_val);
+                      document.getElementById("Major").innerHTML="Major: " + Major_val; 
+                  });
+              });
               }
             </script>
             <p id="email"></p>
             <script language="javascript">
-                //set the configuration
+              //set the configuration
               function loadEmail(startIndex){
-                var email_val;
-                userDataRef = firebase.database().ref("Users");
-                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                    var key;
-                    snapshot.forEach(function(childSnapshot){
-                        key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
-                        email_val = childSnapshot.val().email;
-                        console.log(email_val);
-                        $("#email").append(email_val);
-                       // $("#id").append(id_val);
-                        document.getElementById("email").innerHTML="email: " + email_val; 
-                    });
-                });
+              var email_val;
+              userDataRef = firebase.database().ref("Users");
+              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                  var key;
+                  snapshot.forEach(function(childSnapshot){
+                      key = childSnapshot.key;
+                      var childData = childSnapshot.val();              
+                      email_val = childSnapshot.val().email;
+                      console.log(email_val);
+                      $("#email").append(email_val);
+                     // $("#id").append(id_val);
+                      document.getElementById("email").innerHTML="email: " + email_val; 
+                  });
+              });
               }
             </script>
             <p id = "bio"></p>
             <script language="javascript">
-                //set the configuration
+              //set the configuration
               function loadBio(startIndex){
-                var bio_val;
-                userDataRef = firebase.database().ref("Users");
-                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                    var key;
-                    snapshot.forEach(function(childSnapshot){
-                        key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
-                        bio_val = childSnapshot.val().bio;
-                        console.log(bio_val);
-                        $("#bio").append(bio_val);
-                       // $("#id").append(id_val);
-                        document.getElementById("bio").innerHTML=bio_val; 
-                    });
-                });
+              var bio_val;
+              userDataRef = firebase.database().ref("Users");
+              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
+                  var key;
+                  snapshot.forEach(function(childSnapshot){
+                      key = childSnapshot.key;
+                      var childData = childSnapshot.val();              
+                      bio_val = childSnapshot.val().bio;
+                      console.log(bio_val);
+                      $("#bio").append(bio_val);
+                     // $("#id").append(id_val);
+                      document.getElementById("bio").innerHTML=bio_val; 
+                  });
+              });
               }
             </script>
-              <div style="margin: 24px 0;">
-                <a href="#"><i class="fa fa-dribbble"></i></a> 
-                <a href="#"><i class="fa fa-twitter"></i></a>  
-                <a href="#"><i class="fa fa-linkedin"></i></a>  
-                <a href="#"><i class="fa fa-facebook"></i></a> 
-              </div>
-              <p><button onclick="loadProfile();">Next</button></p>
+            <div style="margin: 24px 0;">
+              <a href="#"><i class="fa fa-dribbble"></i></a> 
+              <a href="#"><i class="fa fa-twitter"></i></a>  
+              <a href="#"><i class="fa fa-linkedin"></i></a>  
+              <a href="#"><i class="fa fa-facebook"></i></a> 
+            </div>
+            <p><button onclick="loadProfile();">Next</button></p>
           </div>
-
         </div>
       </div>
       <!-- END CONTENT-->
-
       <!-- FOOTER -->
       <footer>
         Designed and Developed by Team Motivation 2019
       </footer>
       <!-- END FOOTER -->
-
     </div>
   </body>
 </html>
