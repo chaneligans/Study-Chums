@@ -19,6 +19,9 @@
         });
       });
     </script>
+    <!-- FACEBOOK SIGN OUT-->
+    <script type="text/javascript" src="scripts/facebook_logout.js"></script>
+    <!-- END FACEBOOK SIGN OUT -->
   </head>
   <body>
     <!-- FIREBASE INITIALIZATION -->
@@ -49,7 +52,7 @@
           <li><a href="messages.html" class="nav-item">Messages</a></li>
           <li><a href="chums.html" class="nav-item">Chums</a></li>
           <li><a href="applications.html" class="nav-item">Applications</a></li>
-          <li><a href="index.html" class="nav-item" onclick="facebookSignOut()">Sign Out</a></li>
+          <li><a class="nav-item" onclick="facebookSignOut()">Sign Out</a></li>
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
@@ -169,7 +172,7 @@
       <div id="content">
         <div id="description">
           <h1>Your Profile</h1>
-          <h3><a href="create_profile.html">Edit Profile</a></h3>
+          <h3><a href="edit_profile.html">Edit Profile</a></h3>
         </div>
         <div id="profileview">
           <div class="profilecard">

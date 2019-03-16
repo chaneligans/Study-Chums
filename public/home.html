@@ -7,6 +7,7 @@
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- Please not comment out this line!!! -->
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
@@ -17,6 +18,10 @@
         });
       });
     </script>
+    
+    <!-- FACEBOOK SIGN OUT-->
+    <script type="text/javascript" src="scripts/facebook_logout.js"></script>
+    <!-- END FACEBOOK SIGN OUT -->
   </head>
   <body>
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js">
@@ -34,18 +39,9 @@
       // Create a storage reference from our storage service
       var storageRef = storage.ref();
     </script>
-    <script>
-      function facebookSignOut() {
-      firebase.auth().signOut().then(function() {
-        FB.logout(function(response) {
-        // user is now logged out
-        });
-          console.log('Signout successful');
-      }, function(error) {
-          console.log('Signout failed')
-      });
-      }
-    </script>
+    
+
+    
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
       <nav class="navbar">
@@ -59,7 +55,7 @@
           <li><a href="messages.html" class="nav-item">Messages</a></li>
           <li><a href="chums.html" class="nav-item">Chums</a></li>
           <li><a href="applications.html" class="nav-item">Applications</a></li>
-          <li><a href="index.html" class="nav-item" onclick="facebookSignOut();">Sign Out</a></li>
+          <li><a class="nav-item" onclick="facebookSignOut();">Sign Out</a></li>
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
@@ -68,6 +64,8 @@
         <div id="description">
           <h1>Find your Study Chums!</h1>
         </div>
+        <i id="leftbutton" class="far fa-hand-point-left"></i>
+        <i id="rightbutton" class="far fa-hand-point-right" onclick="loadProfile();"></i>
         <div id= "profileview">
           <!-- Value -->
           <pre id="Users"></pre>
@@ -233,13 +231,7 @@
               });
               }
             </script>
-            <div style="margin: 24px 0;">
-              <a href="#"><i class="fa fa-dribbble"></i></a> 
-              <a href="#"><i class="fa fa-twitter"></i></a>  
-              <a href="#"><i class="fa fa-linkedin"></i></a>  
-              <a href="#"><i class="fa fa-facebook"></i></a> 
-            </div>
-            <p><button onclick="loadProfile();">Next</button></p>
+            <p><button onclick="">Expand</button></p>
           </div>
         </div>
       </div>

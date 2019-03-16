@@ -168,10 +168,16 @@ a:hover {
     display: inline;
     margin-right: 0;
     font-size: 2.25vmin;
-    color: #B5B5B5;
+    color: cornflowerblue;
     background: #FFFFFF;
     border-radius: 25px;
     padding: 5px;
+  }
+  
+  nav ul li:hover{
+    text-decoration: none;
+    color: red;
+    cursor: pointer;
   }
 }
 @media screen and (max-width: 600px){
@@ -196,7 +202,6 @@ a:hover {
     justify-content: space-between;
     padding-bottom: 0;
     height: 70px;
-    align-items: center;
   }
 
   .main-nav {
@@ -204,13 +209,14 @@ a:hover {
     margin-top: 50px;
     margin-right: 20px;
     right: 20px;
+    color: cornflowerblue;
     background-color: white;
   }
 
   .nav-item {
     margin-left: 40px;
-    display: inline;
     background-color: #FFFFFF;
+    margin: 50%
   }
 
   nav ul li {
@@ -226,6 +232,25 @@ footer {
   padding: 20px;
   font-family: 'Sniglet', sans-serif;
   font-weight: bold;
+}
+
+#rightbutton {
+  float: right;
+  margin-top: 10%;
+  margin-right: 5%;
+  font-size: 50px;
+}
+
+#leftbutton {
+  float: left;
+  margin-top: 10%;
+  margin-left: 5%;
+  font-size: 50px;
+}
+
+#leftbutton:hover, #rightbutton:hover{
+  color: #B5B5B5;
+  cursor: pointer;
 }
 
 textarea {
