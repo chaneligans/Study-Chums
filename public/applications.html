@@ -20,6 +20,20 @@
           $('#nav').toggle('.unhide');
         });
       });
+      function checkLogin() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          if(user) {
+            console.log('Signed in');
+          }
+          else {
+            console.log('Not signed in: ' + user);
+            alert('You are not signed in. Please log in to continue.');
+            location.href = 'index.html';
+          }
+        });
+      }
+      
+      window.onload = checkLogin;
     </script>
   </head>
   <body>

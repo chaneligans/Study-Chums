@@ -18,6 +18,21 @@
         storageBucket: "study-chums.appspot.com"
       };
       firebase.initializeApp(config);
+      
+      function checkLogin() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          if(user) {
+            console.log('Signed in');
+          }
+          else {
+            console.log('Not signed in: ' + user);
+            alert('You are not signed in. Please log in to continue.');
+            location.href = 'index.html';
+          }
+        });
+      }
+      
+      window.onload = checkLogin;
     </script>
     <!-- <script type="text/javascript" src="scripts/db_login.js"></script>
       <script type="text/javascript" src="scripts/db_register.js"></script> -->
@@ -48,7 +63,7 @@
       
             if (photo_in.value === "") {
               if (name_in === "" || email_in === "" || major_in === "" || bio_in === "") {
-                alert("Please fill in all fields.")
+                alert("Please fill in all fields.");
               }
               else {
                 setTimeout(function() {

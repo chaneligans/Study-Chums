@@ -39,12 +39,15 @@ function facebookSignIn() {
           }, function(error) {
             if (error) {
               console.log("Update failed - total to " + totalUsers);
+              alert("Something went wrong! Please try again.\nError: " + error);
             } else {
               console.log("Update suceeded - total to " + totalUsers);
+              setTimeout(function() {
+                location.href = "create_profile.html";
+              }, 1000);
             }
           });
         });
-      window.location.href = "create_profile.html";
     } else {
       window.location.href = "home.html";
     }
