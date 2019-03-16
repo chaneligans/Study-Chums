@@ -130,7 +130,6 @@
                         loadImage(startIndex);
                         loadName(startIndex);
                         loadMajor(startIndex);
-                        loadEmail(startIndex);
                         loadBio(startIndex);
                       });
                     });
@@ -202,26 +201,6 @@
                       $("#Major").append(Major_val);
                      // $("#id").append(id_val);
                       document.getElementById("Major").innerHTML="Major: " + Major_val; 
-                  });
-              });
-              }
-            </script>
-            <p id="email"></p>
-            <script language="javascript">
-              //set the configuration
-              function loadEmail(startIndex){
-              var email_val;
-              userDataRef = firebase.database().ref("Users");
-              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                  var key;
-                  snapshot.forEach(function(childSnapshot){
-                      key = childSnapshot.key;
-                      var childData = childSnapshot.val();              
-                      email_val = childSnapshot.val().email;
-                      console.log(email_val);
-                      $("#email").append(email_val);
-                     // $("#id").append(id_val);
-                      document.getElementById("email").innerHTML="email: " + email_val; 
                   });
               });
               }
