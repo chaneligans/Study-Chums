@@ -36,7 +36,7 @@
             this.userId = user.uid;
             
             // execute only if something is there
-            if (photo_in !== null)    {updatePhotoURL(this.userId, photo_in);}
+            if (photo_in.value !== "")    {updatePhotoURL(this.userId, photo_in);}
             
             if (name_in !== "") {updateName(this.userId, name_in);}
             
@@ -46,8 +46,12 @@
             
             if (bio_in !== "")   {updateBio(this.userId, bio_in);}
       
+            if (photo_in.value === "") {
+              setTimeout(function() {
+                  location.href = "profile.html";
+              }, 1000);
+            }
             console.log("Updates sent to database.");
-            location.href='home.html';
           } else {
             console.log("Who are you? And why do you have access to this?");
           }                              
@@ -58,21 +62,21 @@
         firebase.auth().onAuthStateChanged(function(user) {
           console.log("Updating photo for user id ", user.uid);
           // update photo for this 'user' with file_in
-      
+
           this.userId = user.uid;
-      
+
           let ref = firebase.database().ref("Users/" + this.userId);
           let fs = firebase.firestore();
-          
+
           var photoUrl = 'Something went wrong!!!';
-          
+
           var file = photo.files[0];
           var fileName = photo.files[0].name;
-          
+
           console.log('Attempting to upload file ' + fileName);
           var storageRef = firebase.storage().ref('img/'+this.userId);
           var uploadTask = storageRef.put(file);    
-          
+
           uploadTask.on('state_changed', function(snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
@@ -101,6 +105,7 @@
                   console.log("Update failed - p1Url to " + photo);
                 } else {
                   console.log("Update succeeded - p1Url to " + photo);
+                  location.href="profile.html";
                 }
               });
             });
@@ -201,32 +206,34 @@
   </head>
   <body>
     <div class="create-profile-box">
-      <h1>Create Profile</h1>
-      <button onclick="location.href='profile.html';">Back to Profile</button>
-      <label class="upload-photo">
-      Upload Profile Photo
-      <input id="file" type="file" class="upload-photo" value="image/png" id="file">
-      </label>
-      <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
-      <div class="textbox">
-        <i class="fas fa-user"></i>
-        <input id="name" type="text" placeholder="Name" name="" value="">
-      </div>
-      <div class="textbox">
-        <i class="fas fa-at"></i>
-        <input id="email" type="text" placeholder="Email" name="" value="">
-      </div>
-      <div class="textbox">
-        <!-- <i class="fas fa-user"></i> -->
-        <i class="fas fa-glasses"></i>
-        <input id="major" type="text" placeholder="Major" name="" value="">
-      </div>
-      <div class="textbox">
-        <i class="fas fa-align-justify"></i>
-        <input id="bio" type="text" placeholder="Tell Us About Yourself" name="" value="">
-      </div>
-      <input class="create-profile-btn" type="button" name=""
-        value="Add To Profile" onclick="updateProfile();">
+      <h1>Edit Profile</h1>
+      <button class="create-profile-btn" onclick="location.href='profile.html';">Back to Profile</button>
+      <form>
+        <label class="upload-photo">
+        Upload Profile Photo
+        <input id="file" type="file" class="upload-photo" value="image/png" id="file">
+        </label>
+        <!-- <button type="btn btn-primary" id="uploadButton" onclick="uploadFile()"> -->
+        <div class="textbox">
+          <i class="fas fa-user"></i>
+          <input id="name" type="text" placeholder="Name" name="" value="">
+        </div>
+        <div class="textbox">
+          <i class="fas fa-at"></i>
+          <input id="email" type="text" placeholder="Email" name="" value="">
+        </div>
+        <div class="textbox">
+          <!-- <i class="fas fa-user"></i> -->
+          <i class="fas fa-glasses"></i>
+          <input id="major" type="text" placeholder="Major" name="" value="">
+        </div>
+        <div class="textbox">
+          <i class="fas fa-align-justify"></i>
+          <textarea id="bio" type="text" placeholder="Tell us about yourself!" name="" value=""></textarea>
+        </div>
+        <input class="create-profile-btn" type="button" name=""
+          value="Add To Profile" onclick="updateProfile();">
+      </form>
       <!--//onclick should call function that saves new user data,
         which then redirects page to home.html -->
     </div>
