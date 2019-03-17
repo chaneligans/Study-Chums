@@ -61,16 +61,15 @@
             
             if (bio_in !== "")   {updateBio(this.userId, bio_in);}
       
-            if (photo_in.value === "") {
-              if (name_in === "" || email_in === "" || major_in === "" || bio_in === "") {
+            if (photo_in.value === "" || name_in === "" || email_in === "" || major_in === "" || bio_in === "") {
                 alert("Please fill in all fields.");
-              }
-              else {
-                setTimeout(function() {
-                    location.href = "home.html";
-                }, 1000);
-              }
             }
+            else {
+              setTimeout(function() {
+                location.href = "home.html";
+              }, 1000);
+            }
+            
             console.log("Updates sent to database.");
           } else {
             console.log("Who are you? And why do you have access to this?");
