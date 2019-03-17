@@ -24,7 +24,9 @@ function facebookSignIn() {
           var userRef = firebase.database().ref("Users/" + user.uid);
           userRef.update({
             index: index_in,
-            "index": index_in
+            "index": index_in,
+            "currentIndex": 0,
+            currentIndex: 0
           }, function(error) {
             if (error) {
               console.log("Update failed - index to " + index_in);

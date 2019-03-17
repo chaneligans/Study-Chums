@@ -79,8 +79,8 @@
         <div id="description">
           <h1>Find your Study Chums!</h1>
         </div>
-        <i id="leftbutton" class="far fa-hand-point-left"></i>
-        <i id="rightbutton" class="far fa-hand-point-right" onclick="loadProfile();"></i>
+        <i id="leftbutton" class="far fa-hand-point-left" onclick="previousProfile();"></i>
+        <i id="rightbutton" class="far fa-hand-point-right" onclick="nextProfile();"></i>
         <div id= "profileview">
           <!-- Value -->
           <pre id="Users"></pre>
@@ -110,7 +110,7 @@
                 });
               }
               
-              function loadProfile() {
+              function loadProfile(startIndex) {
                 firebase.auth().onAuthStateChanged(function(user) {
                   if(user) {
                     var userIndex;
@@ -118,13 +118,13 @@
                       userIndex = snapshot.val().index;
               
                       var total;
-                      var startIndex = userIndex;
+                      //var startIndex = userIndex;
                       getTotalUsers().then((result)=> {
                         total = result.val().total;
-                        //Make sure profile shown is not user
-                        while(startIndex == userIndex) {
-                          startIndex = getRandomInt(total);
-                        }
+//                        //Make sure profile shown is not user
+//                        while(startIndex == userIndex) {
+//                          startIndex = getRandomInt(total);
+//                        }
                         console.log("Loading Profile of index: " + startIndex);
               
                         loadImage(startIndex);
@@ -141,7 +141,103 @@
                 });
               }
               
-              loadProfile();
+              function nextProfile() {
+                firebase.auth().onAuthStateChanged(function(user) {
+                  if (user) {
+                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
+                      let ref = firebase.database().ref("Users/" + user.uid);
+                      
+                      console.log(user.uid);
+                      
+                      var userIndex;
+                      var prevIndex;
+                      userIndex = snapshot.val().index;
+                      nextIndex = snapshot.val().currentIndex + 1;
+  
+                      var total;
+                      getTotalUsers().then((result)=> {
+                        total = result.val().total;                        
+                        while (nextIndex === userIndex || nextIndex > total - 1) {
+                          console.log('While loop on nextProfile()');
+                          if (nextIndex > total - 1) {
+                            nextIndex = 0;
+                          }
+                          if (nextIndex === userIndex){
+                            nextIndex = nextIndex + 1;
+                          }
+                        }
+                        
+                        ref.update({
+                          currentIndex: nextIndex,
+                          "currentIndex": nextIndex
+                        }, function(error) {
+                          if (error) {
+                            console.log("Update failed - currentIndex to " + nextIndex);
+                          } else {
+                            console.log("Update suceeded - currentIndex to " + nextIndex);
+                          }
+                        });
+                        
+                        console.log('Loading next profile at index ' + nextIndex);
+                        loadProfile(nextIndex);
+                      });
+
+                    });
+                  }
+                  else {
+                    console.log('No user found');
+                  }
+                });
+              }
+              
+              function previousProfile() {
+                firebase.auth().onAuthStateChanged(function(user) {
+                  if (user) {
+                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
+                      let ref = firebase.database().ref("Users/" + user.uid);
+                      
+                      var userIndex;
+                      var prevIndex;
+                      userIndex = snapshot.val().index;
+                      nextIndex = snapshot.val().currentIndex - 1;
+  
+                      var total;
+                      getTotalUsers().then((result)=> {
+                        total = result.val().total;                        
+                        while (nextIndex === userIndex || nextIndex < 0) {
+                          console.log('While loop on previousProfile()');
+                          if (nextIndex < 0) {
+                            nextIndex = total - 1;
+                          }
+                          if (nextIndex === userIndex){
+                            nextIndex = nextIndex - 1;
+                          }
+                        }
+                        
+                        ref.update({
+                          currentIndex: nextIndex,
+                          "currentIndex": nextIndex
+                        }, function(error) {
+                          if (error) {
+                            console.log("Update failed - currentIndex to " + nextIndex);
+                          } else {
+                            console.log("Update suceeded - currentIndex to " + nextIndex);
+                          }
+                        });
+                        
+                        console.log('Loading next profile at index ' + nextIndex);
+                        loadProfile(nextIndex);
+                      });
+
+                    });
+                  }
+                  else {
+                    console.log('No user found');
+                  }
+                });
+              }
+              
+              nextProfile();
               
               function loadImage(startIndex) {
                 var image_val;
