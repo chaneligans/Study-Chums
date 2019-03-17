@@ -172,7 +172,11 @@
               imageRef.once("value").then(function(snapshot){
                 var key = snapshot.key;
                 var childData = snapshot.val();              
-                image_val = snapshot.val().p1Url;                
+                image_val = snapshot.val().p1Url;
+                if (image_val === undefined) {
+                  image_val = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
+                  alert('Please upload a profile image.');
+                }
                 $("#image").append(image_val);
                 document.getElementById('img').src = image_val;
               });

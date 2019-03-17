@@ -89,7 +89,7 @@
           var fileName = photo.files[0].name;
 
           console.log('Attempting to upload file ' + fileName);
-          var storageRef = firebase.storage().ref('img/'+this.userId);
+          var storageRef = firebase.storage().ref('img/'+this.userId+'/'+this.userId);
           var uploadTask = storageRef.put(file);    
 
           uploadTask.on('state_changed', function(snapshot) {
