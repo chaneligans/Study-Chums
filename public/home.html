@@ -141,7 +141,7 @@
                 });
               }
               
-              function nextProfile() {
+              function nextProfile(update) {
                 firebase.auth().onAuthStateChanged(function(user) {
                   if (user) {
                     firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
@@ -152,7 +152,11 @@
                       var userIndex;
                       var prevIndex;
                       userIndex = snapshot.val().index;
-                      nextIndex = snapshot.val().currentIndex + 1;
+                      nextIndex = snapshot.val().currentIndex;
+                      
+                      if (update === undefined) {
+                        nextIndex++;
+                      }
   
                       var total;
                       getTotalUsers().then((result)=> {
@@ -237,7 +241,7 @@
                 });
               }
               
-              nextProfile();
+              nextProfile(false);
               
               function loadImage(startIndex) {
                 var image_val;
