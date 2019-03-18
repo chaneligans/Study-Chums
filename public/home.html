@@ -3,44 +3,46 @@
   <head>
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Home | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- IMPORT ICONS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        
+    <!-- FACEBOOK SIGN OUT-->
+    <script type="text/javascript" src="scripts/facebook_logout.js"></script>
+    
+    <!-- HOMEPAGE JAVASCRIPT (LOAD PROFILES) -->
+    <script type="text/javascript" src="scripts/home.js"></script>
+    
+    <!-- CHECK IF USED IS LOGGED IN -->
+    <script type="text/javascript" src="scripts/check_login.js"></script>
+
+    <!-- ??? -->
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- Please not comment out this line!!! -->
-    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    
+    <!-- jQuery IMPORT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
     <script>
       $(document).ready(function(){
+        // nav for mobile
         $('.navbar-toggle').click(function() {
           $('#nav').toggle('.unhide');
         });
       });
       
-      function checkLogin() {
-        firebase.auth().onAuthStateChanged(function(user) {
-          if(user) {
-            console.log('Signed in');
-          }
-          else {
-            console.log('Not signed in: ' + user);
-            alert('You are not signed in. Please log in to continue.');
-            location.href = 'index.html';
-          }
-        });
-      }
-      
+      // calls checkLogin when the page is loaded
       window.onload = checkLogin;
     </script>
-    
-    <!-- FACEBOOK SIGN OUT-->
-    <script type="text/javascript" src="scripts/facebook_logout.js"></script>
-    <!-- END FACEBOOK SIGN OUT -->
+
   </head>
   <body>
-    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js">
-      //set the configuration
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script>
+      // INITIALIZE FIREBASE      
       var config = {
         apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
         authDomain: "study-chums.firebaseapp.com",
@@ -49,13 +51,15 @@
         storageBucket: "study-chums.appspot.com"
       };
       firebase.initializeApp(config);
+      
       // Get a reference to the storage service, which is used to create references in your storage bucket
       var storage = firebase.storage();
       // Create a storage reference from our storage service
       var storageRef = storage.ref();
+      
+      // load the currently viewing profile to the homepage 
+      nextProfile(false);
     </script>
-    
-
     
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
@@ -74,244 +78,24 @@
         </ul>
       </nav>
       <!-- END OF NAVIGATION MENU -->
+      
       <!-- CONTENT (description, profiles) -->
       <div id="content">
         <div id="description">
           <h1>Find your Study Chums!</h1>
         </div>
-        <i id="leftbutton" class="far fa-hand-point-left" onclick="previousProfile();"></i>
-        <i id="rightbutton" class="far fa-hand-point-right" onclick="nextProfile();"></i>
         <div id= "profileview">
-          <!-- Value -->
-          <pre id="Users"></pre>
-          <!-- child -->
+          <i id="leftbutton" class="far fa-hand-point-left" onclick="previousProfile();"></i>
+          <i id="rightbutton" class="far fa-hand-point-right" onclick="nextProfile();"></i>
           <div class="card">
-            <img src="" id="imageBox" style="width:100%">
-            <script language="javascript">
-              function getRandomInt(max) {
-                return Math.floor(Math.random() * Math.floor(max));
-              }
-              
-                //set the configuration
-              (function(){
-                var config = {
-                    apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
-                    authDomain: "study-chums.firebaseapp.com",
-                    databaseURL: "https://study-chums.firebaseio.com/",
-                    projectId: 'study-chums',
-                    storageBucket: "study-chums.appspot.com"
-                };
-                firebase.initializeApp(config);
-              }());
-              
-              function getTotalUsers() {
-                var databaseRef = firebase.database().ref("TotalUsers");  
-                return databaseRef.once("value", function(data) {
-                });
-              }
-              
-              function loadProfile(startIndex) {
-                firebase.auth().onAuthStateChanged(function(user) {
-                  if(user) {
-                    var userIndex;
-                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
-                      userIndex = snapshot.val().index;
-              
-                      var total;
-                      //var startIndex = userIndex;
-                      getTotalUsers().then((result)=> {
-                        total = result.val().total;
-//                        //Make sure profile shown is not user
-//                        while(startIndex == userIndex) {
-//                          startIndex = getRandomInt(total);
-//                        }
-                        console.log("Loading Profile of index: " + startIndex);
-              
-                        loadImage(startIndex);
-                        loadName(startIndex);
-                        loadMajor(startIndex);
-                        loadBio(startIndex);
-                      });
-                    });
-              
-                  } else {
-                    console.log("No user found.");
-                  }
-              
-                });
-              }
-              
-              function nextProfile(update) {
-                firebase.auth().onAuthStateChanged(function(user) {
-                  if (user) {
-                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
-                      let ref = firebase.database().ref("Users/" + user.uid);
-                      
-                      console.log(user.uid);
-                      
-                      var userIndex;
-                      var prevIndex;
-                      userIndex = snapshot.val().index;
-                      nextIndex = snapshot.val().currentIndex;
-                      
-                      if (update === undefined) {
-                        nextIndex++;
-                      }
-  
-                      var total;
-                      getTotalUsers().then((result)=> {
-                        total = result.val().total;                        
-                        while (nextIndex === userIndex || nextIndex > total - 1) {
-                          console.log('While loop on nextProfile()');
-                          if (nextIndex > total - 1) {
-                            nextIndex = 0;
-                          }
-                          if (nextIndex === userIndex){
-                            nextIndex = nextIndex + 1;
-                          }
-                        }
-                        
-                        ref.update({
-                          currentIndex: nextIndex,
-                          "currentIndex": nextIndex
-                        }, function(error) {
-                          if (error) {
-                            console.log("Update failed - currentIndex to " + nextIndex);
-                          } else {
-                            console.log("Update suceeded - currentIndex to " + nextIndex);
-                          }
-                        });
-                        
-                        console.log('Loading next profile at index ' + nextIndex);
-                        loadProfile(nextIndex);
-                      });
-
-                    });
-                  }
-                  else {
-                    console.log('No user found');
-                  }
-                });
-              }
-              
-              function previousProfile() {
-                firebase.auth().onAuthStateChanged(function(user) {
-                  if (user) {
-                    firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
-                      let ref = firebase.database().ref("Users/" + user.uid);
-                      
-                      var userIndex;
-                      var prevIndex;
-                      userIndex = snapshot.val().index;
-                      nextIndex = snapshot.val().currentIndex - 1;
-  
-                      var total;
-                      getTotalUsers().then((result)=> {
-                        total = result.val().total;                        
-                        while (nextIndex === userIndex || nextIndex < 0) {
-                          console.log('While loop on previousProfile()');
-                          if (nextIndex < 0) {
-                            nextIndex = total - 1;
-                          }
-                          if (nextIndex === userIndex){
-                            nextIndex = nextIndex - 1;
-                          }
-                        }
-                        
-                        ref.update({
-                          currentIndex: nextIndex,
-                          "currentIndex": nextIndex
-                        }, function(error) {
-                          if (error) {
-                            console.log("Update failed - currentIndex to " + nextIndex);
-                          } else {
-                            console.log("Update suceeded - currentIndex to " + nextIndex);
-                          }
-                        });
-                        
-                        console.log('Loading next profile at index ' + nextIndex);
-                        loadProfile(nextIndex);
-                      });
-
-                    });
-                  }
-                  else {
-                    console.log('No user found');
-                  }
-                });
-              }
-              
-              nextProfile(false);
-              
-              function loadImage(startIndex) {
-                var image_val;
-                console.log(startIndex);
-                var userDataRef = firebase.database().ref("Users");
-                userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
-                    var key;
-              
-                    snapshot.forEach(function (childSnapshot){
-                        key = childSnapshot.key;
-                        var childData = childSnapshot.val();              
-                        image_val = childSnapshot.val().p1Url;
-                        if (image_val === undefined) {
-                          console.log('Undefined image');
-                          image_val = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
-                        }
-                        console.log(image_val);
-                        $("#image").append(image_val);
-                        document.getElementById('imageBox').src = image_val;
-                    });
-                });
-              }
-            </script>
+            <img id="imageBox">
             <h2 id="Name"></h2>
-            <script language="javascript">
-              //set the configuration
-              function loadName(startIndex) {
-              var name_val;
-              userDataRef = firebase.database().ref("Users");
-              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                  var key;
-              
-                  snapshot.forEach(function (childSnapshot){
-                      key = childSnapshot.key;
-                      var childData = childSnapshot.val();              
-                      name_val = childSnapshot.val().name;
-                      //var id_val = snapshot.val().email;
-                      console.log(name_val);
-                      $("#name").append(name_val);
-                     // $("#id").append(id_val);
-                      document.getElementById("Name").innerHTML=name_val; 
-              
-                  })
-              });
-              }
-                
-            </script>
             <h3 id="Major"class="title"></h3>
-            <script language="javascript">
-              //set the configuration
-              function loadMajor(startIndex) {
-              var Major_val;
-              userDataRef = firebase.database().ref("Users");
-              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
-                  var key;
-                  snapshot.forEach(function(childSnapshot){
-                      key = childSnapshot.key;
-                      var childData = childSnapshot.val();              
-                      Major_val = childSnapshot.val().Major;
-                      console.log(Major_val);
-                      $("#Major").append(Major_val);
-                     // $("#id").append(id_val);
-                      document.getElementById("Major").innerHTML= Major_val; 
-                  });
-              });
-              }
-            </script>
             <button class="accordion">Show Bio</button>
             <p id = "bio" class="panel"></p>
             <script>
+              // show and hide biography
+              // i'm not sure why but this only works when it's below the button
               var acc = document.getElementsByClassName("accordion");
               var i;
 
@@ -327,29 +111,11 @@
                 });
               }
             </script>
-            <script language="javascript">
-              //set the configuration
-              function loadBio(startIndex){
-              var bio_val;
-              userDataRef = firebase.database().ref("Users");
-              userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-                  var key;
-                  snapshot.forEach(function(childSnapshot){
-                      key = childSnapshot.key;
-                      var childData = childSnapshot.val();              
-                      bio_val = childSnapshot.val().bio;
-                      console.log(bio_val);
-                      $("#bio").append(bio_val);
-                     // $("#id").append(id_val);
-                      document.getElementById("bio").innerHTML=bio_val; 
-                  });
-              });
-              }
-            </script>
-          </div>
-        </div>
-      </div>
+          </div> <!-- card div -->
+        </div> <!-- profileview div -->
+      </div> <!-- content div -->
       <!-- END CONTENT-->
+      
       <!-- FOOTER -->
       <footer>
         Designed and Developed by Team Motivation 2019

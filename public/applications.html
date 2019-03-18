@@ -11,27 +11,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="scripts/db_login.js"></script>
     <script type="text/javascript" src="scripts/db_register.js"></script>
+    
+    <!-- CHECK IF USED IS LOGGED IN -->
+    <script type="text/javascript" src="scripts/check_login.js"></script>
+    
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
-    <!-- END FACEBOOK SIGN OUT -->
+    
     <script>
       $(document).ready(function(){
         $('.navbar-toggle').click(function() {
           $('#nav').toggle('.unhide');
         });
       });
-      function checkLogin() {
-        firebase.auth().onAuthStateChanged(function(user) {
-          if(user) {
-            console.log('Signed in');
-          }
-          else {
-            console.log('Not signed in: ' + user);
-            alert('You are not signed in. Please log in to continue.');
-            location.href = 'index.html';
-          }
-        });
-      }
       
       window.onload = checkLogin;
     </script>

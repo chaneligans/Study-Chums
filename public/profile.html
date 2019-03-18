@@ -12,25 +12,16 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script src="scripts/db_login.js"></script>
     <script src="scripts/db_register.js"></script>
+        
+    <!-- CHECK IF USED IS LOGGED IN -->
+    <script type="text/javascript" src="scripts/check_login.js"></script>
+
     <script>
       $(document).ready(function(){
         $('.navbar-toggle').click(function() {
           $('#nav').toggle('.unhide');
         });
       });
-      
-      function checkLogin() {
-        firebase.auth().onAuthStateChanged(function(user) {
-          if(user) {
-            console.log('Signed in');
-          }
-          else {
-            console.log('Not signed in: ' + user);
-            alert('You are not signed in. Please log in to continue.');
-            location.href = 'index.html';
-          }
-        });
-      }
       
       window.onload = checkLogin;
     </script>
@@ -151,7 +142,6 @@
                 var childData = snapshot.val();              
                 name_val = snapshot.val().name;
                 console.log(name_val);
-                $("#name").append(name_val);
                 document.getElementById("name").innerHTML = name_val;
               });
             }
@@ -178,7 +168,6 @@
                   alert('Please upload a profile image.');
                   location.href = 'edit_profile.html';
                 }
-                $("#image").append(image_val);
                 document.getElementById('img').src = image_val;
               });
             }
