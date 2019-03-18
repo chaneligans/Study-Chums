@@ -86,7 +86,7 @@
                 Major_val = snapshot.val().Major;
                 console.log(Major_val);
                 $("#Major").append(Major_val);
-                document.getElementById("major").innerHTML = "Major: " + Major_val;
+                document.getElementById("major").innerHTML = Major_val;
               });
             }
             else {
@@ -176,6 +176,7 @@
                 if (image_val === undefined) {
                   image_val = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
                   alert('Please upload a profile image.');
+                  location.href = 'edit_profile.html';
                 }
                 $("#image").append(image_val);
                 document.getElementById('img').src = image_val;
@@ -198,18 +199,12 @@
             <img id="img"><script>getUserP1Url();</script>
             <h2 id="name"></h2>
             <script>getUserName();</script>
-            <p id="major" class="title"></p>
+            <h3 id="major" class="title"></h3>
             <script>getUserMajor();</script>
             <p id="email" class="title"></p>
             <script>getUserEmail();</script>
             <p id="bio"></p>
             <script>getUserBio();</script>
-            <div style="margin: 24px 0;">
-              <a href="#"><i class="fa fa-dribbble"></i></a>
-              <a href="#"><i class="fa fa-twitter"></i></a>
-              <a href="#"><i class="fa fa-linkedin"></i></a>
-              <a href="#"><i class="fa fa-facebook"></i></a>
-            </div>
           </div>
         </div>
       </div>
