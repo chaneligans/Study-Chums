@@ -93,10 +93,38 @@
         });
       }
         function SearchName(name_in){
-            
+            firebase().database().ref('/Users').orderByChild("index").equalTo(name_in).on('value',function(snapshot){
+                console.log(snapshot.val())
+                console.log('-----------');
+ 
+       //go through each item found and print out the emails
+                snapshot.forEach(function(childSnapshot) {
+
+                var key = childSnapshot.key;
+                var childData = childSnapshot.val();
+    
+        //this will be the actual email value found
+                console.log(childData.index);
+                console.log("Index searched.");
+                });
+            });
         }
         function SearchMajor(major_in){
-            
+            firebase().database().ref('/Users').orderByChild("index").equalTo(major_in).on('value',function(snapshot){
+                console.log(snapshot.val())
+                console.log('-----------');
+ 
+       //go through each item found and print out the emails
+                snapshot.forEach(function(childSnapshot) {
+
+                var key = childSnapshot.key;
+                var childData = childSnapshot.val();
+    
+        //this will be the actual email value found
+                console.log(childData.index);
+                console.log("Index searched.");
+                });
+            });
         }
     </script>
   </head>
@@ -137,11 +165,11 @@
                   By Name
                 </li>
               </ul>
-              <input id="main-submit" class="" type="submit" value="Search" onclick="Search();"/>
+              <input id="main-submit" class="" type="submit" value="Search" onclick="Search()"/>
             </form>
           </div>
           <!-- mobile submit -->
-          <button type="button" id="main-submit-mobile">Search</button>
+          <button type="button" id="main-submit-mobile" onclick="Search()">Search</button>
         </div>
         <div id= "profileview">
         </div>
