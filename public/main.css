@@ -1,4 +1,3 @@
-@import "@material/card/mdc-card";
 @import url('https://fonts.googleapis.com/css?family=Sniglet|Nunito');
 
 ::selection {
@@ -40,6 +39,7 @@ body{
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 15px;
+  font-family: 'Nunito', sans-serif;
 }
 
 /* Create Profile */
@@ -73,6 +73,7 @@ body{
   width: 26px;
   float: left;
   text-align: center;
+  font-family: 'Nunito', sans-serif;
 }
 .textbox input{
   border: none;
@@ -94,6 +95,7 @@ body{
   font-size: 18px;
   cursor: pointer;
   margin: 12px 0;
+  font-family: 'Sniglet', sans-serif;
 }
 label.upload-photo{
   width: 100%;
@@ -117,11 +119,15 @@ html.waiting * {
 } */
 
 h1 {
- font-size: 45px; 
+   font-size: calc(25px + 1vw); 
 }
 
 h2 {
-  font-size: 35px;
+  font-size: calc(20px + 1vw);
+}
+
+h3 {
+  font-size: calc(15px + 1vw);  
 }
 
 h1, h2, h3, h4, h5 {
@@ -141,28 +147,6 @@ h1, h2, h3, h4, h5 {
 
 #menubutton {
   display: none;
-}
-
-nav {
-  width: auto;
-  font-family: 'Sniglet', sans-serif;
-  font-weight: bold;
-}
-
-nav ul {
-  list-style-type: none;
-  height: 35px;
-}
-
-nav li {
-  display: inline;
-  font-size: 20px;
-  padding: 1px;
-  cursor: pointer;
-}
-
-nav li a {
-  text-decoration: none;
 }
 
 a {
@@ -190,14 +174,14 @@ footer {
   float: right;
   margin-top: 10%;
   margin-right: 5%;
-  font-size: 50px;
+  font-size: 60px;
 }
 
 #leftbutton {
   float: left;
   margin-top: 10%;
   margin-left: 5%;
-  font-size: 50px;
+  font-size: 60px;
 }
 
 #leftbutton:hover, #rightbutton:hover{
@@ -210,53 +194,6 @@ textarea {
   width: 87%;
 }
 
-@media screen and (max-width: 830px) {
-  #menubutton {
-    display: block;
-    border: none;
-    border-radius: 10px;
-    outline: 0;
-    padding: 8px;
-    color: white;
-    background-color: #000;
-    text-align: center;
-    cursor: pointer;
-    width: 100%;
-    font-size: 18px;
-    font-weight: bold;
-    font-family: 'Nunito', sans-serif;
-  }
-  
-  nav ul {
-    height: auto;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border-radius: 1px;
-  }
-  
-  nav li {
-    background-color: rgba(255, 255, 255, 0.5);
-    display: block;
-    padding: 5px;
-    border-width: 1px;
-    border-style: dotted;
-    border-color: rgba(0,0,0,0.2);
-    border-radius: 10px;
-  }
-  
-  nav li:hover {
-    background-color: rgba(0,0,0,0.1);
-  }
-}
-
-@media screen and (min-width: 831px) {
-  nav .panel {
-    overflow: visible;
-    display: inline;
-  }
-}
-
 /* 
   #profileview - the card on BOTH the home page AND profile page
   .profilecard - the card on the profile page ONLY
@@ -265,39 +202,50 @@ textarea {
   #imageBox - the image on the home page ONLY
 */
 
-.card {
+.card, .profilecard {
   display: inline-block;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   background-color: rgba(255, 255, 255, 0.8);
-  max-width: 550px;
+  width: 40vmin;
   margin: auto;
   text-align: center;
   font-family: 'Nunito', sans-serif;
 }
 
 .card #imageBox, .profilecard #img {
-  max-height: 500px;
-  max-width: 550px;
-  width: auto;
+  width: 40vmin;
 }
 
-.card h2 {
+.card h2, .profilecard h2 {
+  word-wrap: break-word;
   font-family: 'Sniglet', sans-serif;
   margin: 10px 10px 0px 10px;
 }
 
-.card h3 {
+.card h3, .profilecard h3 {
+  word-wrap: break-word;
   margin-bottom: 20px;
   margin: 0px 0px 10px 0px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.card p {
+.card p, .profilecard p {
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 15px 0px 15px 0px;
+  word-wrap: break-word;
 }
 
-.card .title {
+.title {
   color: grey;
-  font-size: 25px;
+  font-size: calc(10px + 1vw);
+  font-weight: bold;
+}
+
+.subtitle {
+  color: lightgray;
+  font-size: calc(7px + 1vw);
   font-weight: bold;
 }
 
@@ -350,9 +298,86 @@ textarea {
   transition: max-height 0.2s ease-out;
 }
 
+nav {
+  width: auto;
+  font-family: 'Sniglet', sans-serif;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style-type: none;
+  height: 35px;
+}
+
+nav li {
+  display: inline;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+nav li a {
+  text-decoration: none;
+}
+
+
+@media screen and (max-width: 830px) {
+  #menubutton {
+    display: block;
+    border: none;
+    border-radius: 10px;
+    outline: 0;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Nunito', sans-serif;
+  }
+  
+  nav ul {
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 1px;
+  }
+  
+  nav li {
+    background-color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding: 5px;
+    border-width: 1px;
+    border-style: dotted;
+    border-color: rgba(0,0,0,0.2);
+    border-radius: 10px;
+  }
+  
+  nav li:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+}
+
+@media screen and (min-width: 831px) {
+  nav .panel {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav li {
+    padding: 10px;
+    border-radius: 5px;
+  }
+}
+
 /* discover css below */
+/*
 
 p {font-family: "Webly Sleek SemiLight",Helvetica-,droid sans,sans-serif;font-weight: normal;margin: 0 0 1rem;}
+*/
 
 .centerbox {position: absolute;top:50%;left:50%;
 transform: translate(-50%, -50%);

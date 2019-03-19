@@ -3,21 +3,42 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Page Not Found | Study Chums</title>
+    <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
       
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
-    <!-- END FACEBOOK SIGN OUT -->
+    
+    <!-- PROFILE JAVASCRIPT (GET USER INFO FUNCTIONS) -->
+    <script type="text/javascript" src="scripts/profile.js"></script>
+
   </head>
   <body>
+    <!-- FIREBASE INITIALIZATION -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
+        authDomain: "study-chums.firebaseapp.com",
+        databaseURL: "https://study-chums.firebaseio.com",
+        projectId: "study-chums",
+        storageBucket: "study-chums.appspot.com",
+        messagingSenderId: "644812797355"
+      };
+      firebase.initializeApp(config);
+    </script>
+    
+    <!-- WRAPPER (WHITE BOX) -->
     <div id="wrapper">
-      <nav class="navbar">
-        <span class="navbar-toggle" id="js-navbar-toggle">
-        &#x2630;
-        </span>
-        <ul id="nav" class="main-nav">
+      <!-- NAVIGATION MENU -->
+      <nav>
+        <button id="menubutton" class="accordion">Menu</button>
+        <ul class="panel">
           <li><a href="home.html" class="nav-item">Home</a></li>
+          <li><a href="discover.html" class="nav-item">Discover</a></li>
           <li><a href="profile.html" class="nav-item">Profile</a></li>
           <li><a href="messages.html" class="nav-item">Messages</a></li>
           <li><a href="chums.html" class="nav-item">Chums</a></li>
@@ -25,16 +46,47 @@
           <li><a class="nav-item" onclick="facebookSignOut();">Sign Out</a></li>
         </ul>
       </nav>
+      <!-- END OF NAVIGATION MENU -->
+      
+      <!-- CONTENT (description, profiles) -->      
       <div id="content">
-        <h1>404</h1>
-        <h1>Page Not Found</h1>
-        <p>The specified file was not found on this website. Please check the URL for mistakes and try again.</p>
+        <div id="description">
+          <h1>404 Not Found</h1>
+        </div>
+        <div id="profileview">
+          <div class="profilecard">
+            <img id="img"><script>getUserP1Url(true);</script>
+            <h2 id="name">Page Not Found</h2>
+            <h3 id="major" class="title">The specified file was not found on this website.</h3>
+            <p id="email" class="subtitle">Please check the URL for any mistakes and try again.</p>
+            <p id="bio"></p>
+          </div>
+        </div>
       </div>
+      
       <!-- FOOTER -->
       <footer>
         Designed and Developed by Team Motivation 2019
       </footer>
       <!-- END FOOTER -->
     </div>
+    <script>
+      // show and hide biography
+      // i'm not sure why but this only works when it's below the button
+      var acc = document.getElementsByClassName("accordion");
+      var i;
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          if (panel.style.maxHeight){
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          } 
+        });
+      }
+    </script>
   </body>
 </html>
