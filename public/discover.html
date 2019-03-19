@@ -8,6 +8,9 @@
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
 
+    <!-- IMPORT ICONS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
     <!-- ??? -->
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
@@ -16,7 +19,7 @@
 
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
+    <script>//window.onload = checkLogin;</script>
 
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
@@ -86,13 +89,19 @@
         $('html').addClass('waiting');
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-            let name_in = document.getElementsByClassName("main-input main-name").value;
-            let major_in = document.getElementsByClassName("main-input main-location").value;
+            let value = document.getElementById("query").value;   // value
+            let option = document.getElementById("option").value; // dropdown
 
             // execute only if something is there
-            if (name_in !== "") {SearchName(name_in);}
-
-            if (major_in !== "") {SearchMajor(major_in);}
+            if (option === 'name') {
+              if (value !== "") {SearchName(value);}
+            }
+            else if (option === 'major') {
+              if (value !== "") {SearchMajor(value);}
+            }
+            else {
+              alert('Invalid!');
+            }
 
             console.log("Search sent to database.");
           } else {
@@ -101,7 +110,9 @@
         });
       }
         function SearchName(name_in){
-            firebase().database().ref('/Users').orderByChild("index").equalTo(name_in).on('value',function(snapshot){
+          console.log(name_in);
+            firebase.database().ref('Users/').orderByChild("name")
+            .equalTo(name_in).once('value',function(snapshot){
                 console.log(snapshot.val())
                 console.log('-----------');
 
@@ -118,7 +129,9 @@
             });
         }
         function SearchMajor(major_in){
-            firebase().database().ref('/Users').orderByChild("index").equalTo(major_in).on('value',function(snapshot){
+          console.log(major_in);
+            firebase.database().ref('Users/').orderByChild("Major")
+            .equalTo(major_in).once('value',function(snapshot){
                 console.log(snapshot.val())
                 console.log('-----------');
 
@@ -137,13 +150,6 @@
     </script>
   </head>
   <body>
-    <script>
-      // Get a reference to the storage service, which is used to create references in your storage bucket
-      var storage = firebase.storage();
-      // Create a storage reference from our storage service
-      var storageRef = storage.ref();
-    </script>
-
     <!-- WRAPPER (WHITE BOX) -->
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
@@ -166,31 +172,19 @@
         <div id="description">
           <h1>Search for Chums</h1>
         </div>
-        <div id="search">
-          <div class="main-form-container">
-            <form id="" class="" method="post">
-              <input type="text" class="main-input main-name" name="NAME"
-                onfocus="clearText(this)" onblur="replaceText(this)"/>
-              <input type="text" class="main-input main-location"
-                name="LOCATION" onfocus="clearText(this)"
-                onblur="replaceText(this)" />
-              <button type="button" class="main-btn">
-                <p class="search-small">SEARCH BY</p>
-                <p class="search-large">Name</p>
+        <div class="searchBar">
+          <div class="container">
+            <div class="search">
+              <input id="query" type="text" class="searchTerm" placeholder="What are you looking for?">
+              <select id="option" class="searchOptions">
+                <option value="name">Search by Name</option>
+                <option value="major">Search by Major</option>
+              </select>
+                  <button type="submit" class="searchButton" onclick="Search();">
+                <i class="fas fa-search"></i>
               </button>
-              <ul class="search-description">
-                <li>
-                  By Major
-                </li>
-                <li>
-                  By Name
-                </li>
-              </ul>
-              <input id="main-submit" class="" type="submit" value="Search" onclick="Search()"/>
-            </form>
+            </div>
           </div>
-          <!-- mobile submit -->
-          <button type="button" id="main-submit-mobile" onclick="Search()">Search</button>
         </div>
       </div>
       <!-- END CONTENT-->
