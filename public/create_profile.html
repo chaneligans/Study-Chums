@@ -3,41 +3,31 @@
   <head>
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <title>Create Profile | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-    
+
     <!-- IMPORT ICONS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    
+
     <!-- IMPORT jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        
+
     <!-- CREATE PROFILE JAVASCRIPT (COLLECT USER INFO FUNCTIONS) -->
     <script type="text/javascript" src="scripts/create-profile.js"></script>
-    
+
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
     <script>window.onload = checkLogin;</script>
-    
+
+    <!-- firebase IMPORT -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
+
   </head>
-  <body>
-    <!-- FIREBASE INITIALIZATION -->
-    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDFPHvR2SV7dodysPpvLUfIGp6huuBDf0A",
-        authDomain: "study-chums.firebaseapp.com",
-        databaseURL: "https://study-chums.firebaseio.com",
-        projectId: "study-chums",
-        storageBucket: "study-chums.appspot.com",
-        messagingSenderId: "644812797355"
-      };
-      firebase.initializeApp(config);
-    </script>
-    
+  <body>    
     <div class="create-profile-box">
       <h1>Create Profile</h1>
       <form id="profileForm">
@@ -46,7 +36,7 @@
           <input id="file" type="file" class="upload-photo" value="image/png" id="file" required>
         </label>
         <div class="textbox">
-          <i class="fas fa-user"></i>          
+          <i class="fas fa-user"></i>
           <input id="name" type="text" placeholder="Name" name="" value="" required>
         </div>
         <div class="textbox">
