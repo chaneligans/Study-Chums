@@ -27,13 +27,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
     <script>
-      $(document).ready(function(){
-        // nav for mobile
-        $('.navbar-toggle').click(function() {
-          $('#nav').toggle('.unhide');
-        });
-      });
-      
       // calls checkLogin when the page is loaded
       window.onload = checkLogin;
     </script>
@@ -63,11 +56,9 @@
     
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
-      <nav class="navbar">
-        <span class="navbar-toggle" id="js-navbar-toggle">
-        &#x2630;
-        </span>
-        <ul id="nav" class="main-nav">
+      <nav>
+        <button id="menubutton" class="accordion">Menu</button>
+        <ul class="panel">
           <li><a href="home.html" class="nav-item">Home</a></li>
           <li><a href="discover.html" class="nav-item">Discover</a></li>
           <li><a href="profile.html" class="nav-item">Profile</a></li>

@@ -116,6 +116,13 @@ html.waiting * {
   z-index: -1;
 } */
 
+h1 {
+ font-size: 45px; 
+}
+
+h2 {
+  font-size: 35px;
+}
 
 h1, h2, h3, h4, h5 {
   font-family: 'Sniglet', sans-serif;
@@ -129,21 +136,33 @@ h1, h2, h3, h4, h5 {
   border-radius: 25px;
   text-align: center;
   max-width: 800px;
+  padding-top: 10px;
 }
+
+#menubutton {
+  display: none;
+}
+
 nav {
-  line-height: 30px;
+  width: auto;
   font-family: 'Sniglet', sans-serif;
   font-weight: bold;
-  top: 0;
-  width: 95%;
-  display: flex;
-  padding: 10px;
 }
 
 nav ul {
-  list-style: none;
-  width: 95%;
-  text-align:right;
+  list-style-type: none;
+  height: 35px;
+}
+
+nav li {
+  display: inline;
+  font-size: 20px;
+  padding: 1px;
+  cursor: pointer;
+}
+
+nav li a {
+  text-decoration: none;
 }
 
 a {
@@ -155,75 +174,6 @@ a {
 a:hover {
   text-decoration: none;
   color: red;
-}
-
-@media screen and (min-width: 600px) {
-  .navbar-toggle {
-    display: none;
-  }
-
-  .main-nav {
-    display: block;
-  }
-
-  nav ul li {
-    display: inline;
-    margin-right: 0;
-    font-size: 2.25vmin;
-    color: cornflowerblue;
-    background: #FFFFFF;
-    border-radius: 25px;
-    padding: 5px;
-  }
-  
-  nav ul li:hover{
-    text-decoration: none;
-    color: red;
-    cursor: pointer;
-  }
-}
-@media screen and (max-width: 600px){
-  section {
-    margin: 7%;
-    padding: 5%;
-  }
-  .unhide {
-    display: block;
-  }
-  .navbar-toggle {
-    position: absolute;
-    top: 25px;
-    right: 40px;
-    cursor: pointer;
-    color: rgba(0,0,0,0.8);
-    font-size: 24px;
-  }
-
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 0;
-    height: 70px;
-  }
-
-  .main-nav {
-    display: none;
-    margin-top: 50px;
-    margin-right: 20px;
-    right: 20px;
-    color: cornflowerblue;
-    background-color: white;
-  }
-
-  .nav-item {
-    margin-left: 40px;
-    background-color: #FFFFFF;
-    margin: 50%
-  }
-
-  nav ul li {
-    width: 100%;
-  }
 }
 
 #content {
@@ -260,6 +210,53 @@ textarea {
   width: 87%;
 }
 
+@media screen and (max-width: 830px) {
+  #menubutton {
+    display: block;
+    border: none;
+    border-radius: 10px;
+    outline: 0;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Nunito', sans-serif;
+  }
+  
+  nav ul {
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 1px;
+  }
+  
+  nav li {
+    background-color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding: 5px;
+    border-width: 1px;
+    border-style: dotted;
+    border-color: rgba(0,0,0,0.2);
+    border-radius: 10px;
+  }
+  
+  nav li:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+}
+
+@media screen and (min-width: 831px) {
+  nav .panel {
+    overflow: visible;
+    display: inline;
+  }
+}
+
 /* 
   #profileview - the card on BOTH the home page AND profile page
   .profilecard - the card on the profile page ONLY
@@ -286,20 +283,21 @@ textarea {
 
 .card h2 {
   font-family: 'Sniglet', sans-serif;
-  margin: 20px 20px 0px 20px;
+  margin: 10px 10px 0px 10px;
 }
 
 .card h3 {
   margin-bottom: 20px;
+  margin: 0px 0px 10px 0px;
 }
 
 .card p {
-  margin: 10px;
+  margin: 15px 0px 15px 0px;
 }
 
 .card .title {
   color: grey;
-  font-size: 18px;
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -346,13 +344,11 @@ textarea {
 }
 
 .panel {
-  padding: 0 18px;
   background-color: white;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
-
 
 /* discover css below */
 
