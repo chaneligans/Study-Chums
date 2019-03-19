@@ -72,6 +72,33 @@
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
     <!-- END FACEBOOK SIGN OUT -->
+      
+    <script>
+        function Search() {
+        $('html').addClass('waiting');
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            let name_in = document.getElementsByClassName("main-input main-name").value;
+            let major_in = document.getElementsByClassName("main-input main-location").value;
+
+            // execute only if something is there     
+            if (name_in !== "") {SearchName(name_in);}
+            
+            if (major_in !== "") {SearchMajor(major_in);}
+
+            console.log("Search sent to database.");
+          } else {
+            console.log("Who are you? And why do you have access to this?");
+          }                              
+        });
+      }
+        function SearchName(name_in){
+            
+        }
+        function SearchMajor(major_in){
+            
+        }
+    </script>
   </head>
   <body>
     <div id="wrapper">
@@ -110,7 +137,7 @@
                   By Name
                 </li>
               </ul>
-              <input id="main-submit" class="" type="submit" value="Search" />
+              <input id="main-submit" class="" type="submit" value="Search" onclick="Search();"/>
             </form>
           </div>
           <!-- mobile submit -->
