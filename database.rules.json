@@ -2,14 +2,17 @@
   /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
     "Users": {
-      "$uid":{
-         ".read": true,
-         ".write": true /*"$uid == auth.uid"*/
-       }
-    }
+      ".read": true,
+      ".indexOn": "index",
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
+    },
     "TotalUsers": {
       ".read": true,
-      ".write": true /*"$uid == auth.uid"*/
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
     }
   }
 }
