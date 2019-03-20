@@ -31,7 +31,6 @@
 
     <!-- DISCOVER JAVASCRIPT -->
     <script type="text/javascript" src="scripts/discover.js"></script>
-    
   </head>
   <body>
     <!-- WRAPPER (WHITE BOX) -->
@@ -53,24 +52,27 @@
 
       <!-- CONTENT (search bar, profiles) -->
       <div id="content">
-        <div id="description">
-          <h1>Search for Chums</h1>
-        </div>
-        <div class="searchBar">
-          <div class="container">
-            <div class="search">
-              <input id="query" type="text" class="searchTerm" placeholder="What are you looking for?">
-              <select id="option" class="searchOptions">
-                <option value="name">Search by Name</option>
-                <option value="major">Search by Major</option>
-              </select>
-                  <button type="submit" class="searchButton" onclick="Search();">
-                <i class="fas fa-search"></i>
-              </button>
+          <div id="description">
+            <h1>Search for Chums</h1>
+          </div>
+          <div class="searchBar">
+            <div class="container">
+              <div class="search">
+                <input id="query" type="text" class="searchTerm" placeholder="What are you looking for?">
+                <select id="option" class="searchOptions">
+                  <option value="name">Search by Name</option>
+                  <option value="major">Search by Major</option>
+                </select>
+                    <button type="submit" class="searchButton" onclick="Search();">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
             </div>
           </div>
+          <div id="searchResults">
+          
+          </div>
         </div>
-      </div>
       <!-- END CONTENT-->
 
       <!-- FOOTER -->
