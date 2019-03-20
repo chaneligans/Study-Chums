@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Home | Study Chums</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="main.css">
+
+    <!-- IMPORT ICONS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- FACEBOOK SIGN OUT-->
+    <script type="text/javascript" src="scripts/facebook_logout.js"></script>
+
+    <!-- HOMEPAGE JAVASCRIPT (LOAD PROFILES) -->
+    <script type="text/javascript" src="scripts/home.js"></script>
+
+    <!-- CHECK IF USED IS LOGGED IN -->
+    <script type="text/javascript" src="scripts/check_login.js"></script>
+    <script>window.onload = checkLogin;</script>
+
+    <!-- ??? -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- PROFILE JAVASCRIPT (GET USER INFO FUNCTIONS) -->
+    <script type="text/javascript" src="scripts/view_profile.js"></script>
+
+    <!-- jQuery IMPORT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- firebase IMPORT -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
+
+  </head>
+  <body>
+    <!-- WRAPPER (WHITE BOX) -->
+    <div id="wrapper">
+        <!-- NAVIGATION MENU -->
+        <nav>
+            <button id="menubutton" class="accordion">Menu</button>
+            <ul class="panel">
+            <li><a href="home.html" class="nav-item">Home</a></li>
+            <li><a href="discover.html" class="nav-item">Discover</a></li>
+            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <li><a href="messages.html" class="nav-item">Messages</a></li>
+            <li><a href="chums.html" class="nav-item">Chums</a></li>
+            <li><a href="applications.html" class="nav-item">Applications</a></li>
+            <li><a class="nav-item" onclick="facebookSignOut();">Sign Out</a></li>
+            </ul>
+        </nav>
+        <!-- END OF NAVIGATION MENU -->
+
+        <!-- VIEW PROFILE -->
+        <div id="content">
+            <div id="profileview">
+                <div class="profilecard">
+                    <img id="img"><script>getUserP1Url();</script>
+                    <h2 id="name"></h2>
+                    <script>getUserName();</script>
+                    <h3 id="major" class="title"></h3>
+                    <script>getUserMajor();</script>
+                    <p id="email" class="subtitle"></p>
+                    <script>getUserEmail();</script>
+                    <p id="bio"></p>
+                    <script>getUserBio();</script>
+                </div>
+            </div>
+        </div>
+
+
+  </body>
+  </html>
