@@ -3,7 +3,7 @@
   "rules": {
     "Users": {
       ".read": true,
-      ".indexOn": "index",
+      ".indexOn": ["index", "name", "Major"],
       "$uid": {
         ".write": "$uid === auth.uid"
       }
