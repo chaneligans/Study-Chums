@@ -7,16 +7,16 @@ function showSearchResults(results) {
 
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
-    index = result[0];
-    img = result[1];
-    name = result[2];
-    major = result[3];
+        index = result[0];
+        img = result[1];
+        name = result[2];
+        major = result[3];
 
-    html += '<tr class="resultRow">';
-    html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><h2 id="resultUserName0">' + name + '</h2></td>';
-    html += '<td class="resultUserMajor"><h3 id="resultUserMajor0">' + major + '</h3></td>';
-    html += '</tr>'
+        html += '<tr class="resultRow">';
+        html += '<td class="resultUserImage"><img src="' + img + '"></td>';
+        html += '<td class="resultUserName"><h2 id="resultUserName0">' + name + '</h2></td>';
+        html += '<td class="resultUserMajor"><h3 id="resultUserMajor0">' + major + '</h3></td>';
+        html += '</tr>'
     });
 
     html += '</table>'; 
