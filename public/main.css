@@ -458,3 +458,28 @@ nav li a {
 .searchBar:after {
     clear: both;
 }
+
+#results {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #9DD2EE;
+}
+
+.resultRow:not(:first-child) {
+  border-top: 1px solid #F1F1EF;
+}
+
+.resultRow td {
+  padding: 10px; 
+  font-size: calc(12px + .5vw);
+}
+
+.resultUserImage:first-child {
+  width: 20%;
+}
+
+.resultUserImage img {
+  object-fit: cover;
+  width: 40vmin;
+  height: 40vmin;
+}
