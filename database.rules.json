@@ -6,7 +6,7 @@
          ".read": true,
          ".write": true /*"$uid == auth.uid"*/
        }
-    }
+    },
     "TotalUsers": {
       ".read": true,
       ".write": true /*"$uid == auth.uid"*/
