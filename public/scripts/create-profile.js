@@ -24,7 +24,7 @@ function updateProfile() {
       if (photo_in.value === "" || name_in === "" || email_in === "" || major_in === "" || bio_in === "") {
           alert("Please fill in all fields.");
       }
-      else {
+      else if (photo_in.value === "") {
         setTimeout(function() {
           location.href = "home.html";
         }, 1000);
@@ -33,7 +33,7 @@ function updateProfile() {
       console.log("Updates sent to database.");
     } else {
       console.log("Who are you? And why do you have access to this?");
-    }                              
+    }
   });
 }
 
@@ -54,7 +54,7 @@ function updatePhotoURL(uid, photo) {
 
     console.log('Attempting to upload file ' + fileName);
     var storageRef = firebase.storage().ref('img/'+this.userId+'/'+this.userId);
-    var uploadTask = storageRef.put(file);    
+    var uploadTask = storageRef.put(file);
 
     uploadTask.on('state_changed', function(snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -113,7 +113,7 @@ function updateName(user, name_in) {
       }
     });
   });
-} 
+}
 
 function updateEmail(user, email_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -136,7 +136,7 @@ function updateEmail(user, email_in) {
       }
     });
   });
-} 
+}
 
 function updateMajor(user, major_in) {
   firebase.auth().onAuthStateChanged(function(user) {
