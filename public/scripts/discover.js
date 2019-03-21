@@ -90,6 +90,7 @@ function showSearchResults(results) {
     var img;
     var name;
     var major;
+    var id = 0;
 
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
@@ -97,12 +98,15 @@ function showSearchResults(results) {
         img = result[1];
         name = result[2];
         major = result[3];
+        console.log(id);
 
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><h2 id="resultUserName0">' + name + '</h2></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor0">' + major + '</h3></td>';
+        html += '<td class="resultUserName"><h2 id="resultUserName' + id + '">' + name + '</h2></td>';
+        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + id + '">' + major + '</h3></td>';
         html += '</tr>'
+
+        id++;
     });
 
     html += '</table>'; 
