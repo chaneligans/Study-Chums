@@ -292,6 +292,22 @@ textarea {
   opacity: 0.7;
 }
 
+.match-btn{
+  background-color: #eee;
+  border: none;
+  color: #6495ed;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  display: inline-block;
+  font-size: 15px;
+}
+.active, .match-btn:hover {
+  background-color: #ccc;
+}
+
 .accordion {
   background-color: #eee;
   color: #444;
