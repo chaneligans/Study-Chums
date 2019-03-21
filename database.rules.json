@@ -10,9 +10,7 @@
     },
     "TotalUsers": {
       ".read": true,
-      "$uid": {
-        ".write": "$uid === auth.uid"
-      }
+        ".write": true
     }
   }
 }
