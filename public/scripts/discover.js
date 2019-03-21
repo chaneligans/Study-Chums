@@ -30,9 +30,9 @@ function Search() {
 }
       
             
-function getUserData(childSnapshotValue) {
+function getUserData(childSnapshotValue, childKey) {
     var photo = childSnapshotValue.p1Url + " ";
-    var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major];
+    var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
     return data;
 }
 function SearchName(name_in){
@@ -45,7 +45,7 @@ function SearchName(name_in){
             var key = childSnapshot.key;
             var childData = childSnapshot.val();
                       
-            data = getUserData(childData);
+            data = getUserData(childData, key);
             results.push(data);
 
         });
@@ -90,6 +90,7 @@ function showSearchResults(results) {
     var img;
     var name;
     var major;
+    var count;
     var id = 0;
 
     // iterate through and add a table row for each user (result)
@@ -98,15 +99,15 @@ function showSearchResults(results) {
         img = result[1];
         name = result[2];
         major = result[3];
-        console.log(id);
+        id = result[4];
 
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><h2 id="resultUserName' + id + '">' + name + '</h2></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + id + '">' + major + '</h3></td>';
+        html += '<td class="resultUserName"><a onclick="viewProfile(' + id + ');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
+        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
         html += '</tr>'
 
-        id++;
+        count++;
     });
 
     html += '</table>'; 
@@ -115,4 +116,9 @@ function showSearchResults(results) {
     $( "#searchResults" ).load( html, function() {
         console.log( "Load was performed." );
     });
+}
+
+function viewProfile(userData) {
+
+
 }
