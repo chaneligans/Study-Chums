@@ -69,7 +69,7 @@ function SearchMajor(major_in){
               var key = childSnapshot.key;
               var childData = childSnapshot.val();
                       
-              data = getUserData(childData);
+              data = getUserData(childData, key);
               results.push(data);
 
             });
@@ -101,9 +101,11 @@ function showSearchResults(results) {
         major = result[3];
         id = result[4];
 
+        console.log(id);
+
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><a onclick="viewProfile(' + id + ');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
+        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
         html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
         html += '</tr>'
 
@@ -118,7 +120,10 @@ function showSearchResults(results) {
     });
 }
 
-function viewProfile(userData) {
-
-
+function saveUserID(userID) {
+    console.log(userID);
+    sessionStorage.setItem('userID', userID);
+    var storageData = sessionStorage.getItem('userID');
+    console.log("saved user id ..." + storageData);
+    return true;
 }

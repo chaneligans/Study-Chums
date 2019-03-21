@@ -54,19 +54,23 @@
         </nav>
         <!-- END OF NAVIGATION MENU -->
 
+        <script> 
+            var userID = sessionStorage.getItem('userID');
+        </script>
+
         <!-- VIEW PROFILE -->
         <div id="content">
             <div id="profileview">
                 <div class="profilecard">
-                    <img id="img"><script>getUserP1Url();</script>
+                    <img id="img"><script>getUserP1Url(false, userID);</script>
                     <h2 id="name"></h2>
-                    <script>getUserName();</script>
+                    <script>getUserName(userID);</script>
                     <h3 id="major" class="title"></h3>
-                    <script>getUserMajor();</script>
+                    <script>getUserMajor(userID);</script>
                     <p id="email" class="subtitle"></p>
-                    <script>getUserEmail();</script>
+                    <script>getUserEmail(userID);</script>
                     <p id="bio"></p>
-                    <script>getUserBio();</script>
+                    <script>getUserBio(userID);</script>
                 </div>
             </div>
         </div>
