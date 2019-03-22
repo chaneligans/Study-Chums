@@ -217,3 +217,27 @@ function loadBio(startIndex){
       });
   });
 }
+
+function saveUserID() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if(user){
+      userDataRef = firebase.database().ref("Users/" + user.uid);
+      var currentIndex;
+      userDataRef.once("value", function(snapshot) {
+        currentIndex = snapshot.val().currentIndex;
+        var userId;
+
+        firebase.database().ref("Users").orderByChild("index").equalTo(currentIndex).once("value", function(data){
+          data.forEach(function(childData){
+            userId = childData.key;
+            sessionStorage.clear();
+            sessionStorage.setItem('userID', userId);
+            var storageData = sessionStorage.getItem('userID');
+            console.log("saved user id ..." + storageData);             
+          });
+        });
+      });
+    }
+  });
+  return false;
+}

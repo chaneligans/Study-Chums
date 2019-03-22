@@ -121,7 +121,7 @@ function showSearchResults(results) {
 }
 
 function saveUserID(userID) {
-    console.log(userID);
+    sessionStorage.clear();
     sessionStorage.setItem('userID', userID);
     var storageData = sessionStorage.getItem('userID');
     console.log("saved user id ..." + storageData);
