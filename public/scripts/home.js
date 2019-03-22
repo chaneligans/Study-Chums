@@ -233,11 +233,12 @@ function saveUserID() {
             sessionStorage.clear();
             sessionStorage.setItem('userID', userId);
             var storageData = sessionStorage.getItem('userID');
-            console.log("saved user id ..." + storageData);             
+            console.log("saved user id ..." + storageData);     
+            
+            window.location.pathname = 'view_profile.html';
           });
         });
       });
     }
   });
-  return false;
 }
