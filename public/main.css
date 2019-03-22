@@ -288,6 +288,10 @@ textarea {
   color: black;
 }
 
+#profileview a:hover{
+    color:red;
+}
+
 #profileview button:hover, a:hover {
   opacity: 0.7;
 }
