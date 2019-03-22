@@ -4,7 +4,7 @@ function getUserMajor(id) {
         var db = firebase.database().ref("Users/" + id);
         var Major_val;
         var userDataRef = firebase.database().ref();
-        var MajorRef = userDataRef.child("Users/" + user.id);
+        var MajorRef = userDataRef.child("Users/" + id);
         MajorRef.once("value").then(function(snapshot){
           var key = snapshot.key;
           var childData = snapshot.val();              
