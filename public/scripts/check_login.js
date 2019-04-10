@@ -7,9 +7,12 @@ function checkLogin() {
     }
     else {
       console.log('Not signed in: ' + user);
-      alert('You are not signed in. Please log in to continue.');
-      output('Alert is gone.');
-      location.href = 'index.html';
+
+      setTimeout(function() {
+        alert('You are not signed in. Please log in to continue.');
+        window.location.href = 'index.html';
+      }, 1000);
+
     }
   });
 }
