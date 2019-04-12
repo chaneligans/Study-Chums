@@ -121,11 +121,15 @@ function request(id){
             var myid = user.uid;
             console.log(myid);
             console.log(id);
-            firebase.database().ref('Applications/'+myid+'/Sending/').set({
-                idnumber : id
+            var status = "pending";
+            var Accept = false;
+            var Decline = false;
+            firebase.database().ref('Applications/'+myid+'/Sending/'+id).set({
+                IDstatus: status
             });
-            firebase.database().ref('Applications/'+id+'/Receiving/').set({
-                idnumber : myid
+            firebase.database().ref('Applications/'+id+'/Receiving/'+myid).set({
+                Accept : Accept,
+                Decline: Decline
             });
         } else {
             console.log('Something went wrong!');
