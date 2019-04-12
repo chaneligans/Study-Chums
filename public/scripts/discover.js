@@ -85,38 +85,41 @@ function SearchMajor(major_in){
 }
 
 function showSearchResults(results) {
-    var html = '<table id="results">';
-    var index;
-    var img;
-    var name;
-    var major;
-    var count;
-    var id = 0;
+    firebase.auth().onAuthStateChanged(function(user) {
+        var html = '<table id="results">';
+        var index;
+        var img;
+        var name;
+        var major;
+        var count;
+        var id = 0;
 
-    // iterate through and add a table row for each user (result)
-    results.forEach(function(result) {
-        index = result[0];
-        img = result[1];
-        name = result[2];
-        major = result[3];
-        id = result[4];
+        // iterate through and add a table row for each user (result)
+        results.forEach(function(result) {
+            index = result[0];
+            img = result[1];
+            name = result[2];
+            major = result[3];
+            id = result[4];
 
-        console.log(id);
+            if(id != user.uid) {
+                
+                html += '<tr class="resultRow">';
+                html += '<td class="resultUserImage"><img src="' + img + '"></td>';
+                html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
+                html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
+                html += '</tr>'
 
-        html += '<tr class="resultRow">';
-        html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
-        html += '</tr>'
+                count++;
+            }
+        });
 
-        count++;
-    });
+        html += '</table>'; 
 
-    html += '</table>'; 
-
-    document.getElementById("searchResults").innerHTML = html;
-    $( "#searchResults" ).load( html, function() {
-        console.log( "Load was performed." );
+        document.getElementById("searchResults").innerHTML = html;
+        $( "#searchResults" ).load( html, function() {
+            console.log( "Load was performed." );
+        });
     });
 }
 
