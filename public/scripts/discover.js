@@ -54,6 +54,9 @@ function SearchName(name_in){
             if (results.length > 0) {     
                 showSearchResults(results);
             }
+            else {
+                noResultsFound();
+            }
         });
     }).catch(function(error) {
         console.log("Error getting results: ", error);
@@ -78,6 +81,9 @@ function SearchMajor(major_in){
               if (results.length > 0) {     
                 showSearchResults(results);
               }
+              else {
+                  noResultsFound();
+              }
             });
         }).catch(function(error) {
             console.log("Error getting results: ", error);
@@ -93,6 +99,7 @@ function showSearchResults(results) {
         var major;
         var count;
         var id = 0;
+        var length = results.length;
 
         // iterate through and add a table row for each user (result)
         results.forEach(function(result) {
@@ -112,6 +119,13 @@ function showSearchResults(results) {
 
                 count++;
             }
+            else {
+                if(length == 1) {
+                    html += '<tr class="resultRow">';
+                    html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
+                    html += '</tr>'
+                }
+            }
         });
 
         html += '</table>'; 
@@ -129,4 +143,20 @@ function saveUserID(userID) {
     var storageData = sessionStorage.getItem('userID');
     console.log("saved user id ..." + storageData);
     return true;
+}
+
+function noResultsFound() {
+    var html = '<table id="results">';
+
+    html += '<tr class="resultRow">';
+    html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
+    html += '</tr>'
+
+    html += '</table>'; 
+
+    document.getElementById("searchResults").innerHTML = html;
+        $( "#searchResults" ).load( html, function() {
+            console.log( "Load was performed." );
+        });
+
 }
