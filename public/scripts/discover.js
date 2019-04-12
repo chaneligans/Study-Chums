@@ -124,7 +124,6 @@ function showSearchResults(results) {
                     html += '<tr class="resultRow">';
                     html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
                     html += '</tr>'
-                
                 }
             }
         });
