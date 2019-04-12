@@ -113,3 +113,22 @@ function getUserMajor(id) {
       }
     });
   }
+
+
+function request(id){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user){
+            var myid = user.uid;
+            console.log(myid);
+            console.log(id);
+            firebase.database().ref('Applications/'+myid+'/Sending/').set({
+                idnumber : id
+            });
+            firebase.database().ref('Applications/'+id+'/Receiving/').set({
+                idnumber : myid
+            });
+        } else {
+            console.log('Something went wrong!');
+        }
+    });
+}
