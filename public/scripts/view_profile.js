@@ -113,7 +113,29 @@ function getUserMajor(id) {
       }
     });
   }
-
+function getStatus(id){
+        firebase.auth().onAuthStateChanged(function(user) {
+        if(user){
+            var myid = user.uid;
+            console.log(myid);
+            console.log(id);
+            var status_val;
+            var userDataRef = firebase.database().ref();
+            var statusRef = userDataRef.child("Application/" + myid + "/Sending/" + id);
+            statusRef.once("value").then(function(snapshot){
+                var key = snapshot.key;
+                var childData = snapshot.val();              
+                status_val = snapshot.val().IDstatus;
+                console.log(status_val);
+                document.getElementsByClassName("match-btn").value = status_val;
+            });
+            
+        } else {
+            document.getElementsByClassName("match-btn").value = "Request to Match";
+            console.log('Something went wrong!');
+        }
+    });
+}
 
 function request(id){
     firebase.auth().onAuthStateChanged(function(user) {
@@ -121,7 +143,7 @@ function request(id){
             var myid = user.uid;
             console.log(myid);
             console.log(id);
-            var status = "pending";
+            var status = "Requested";
             var Accept = false;
             var Decline = false;
             firebase.database().ref('Applications/'+myid+'/Sending/'+id).set({
@@ -131,6 +153,7 @@ function request(id){
                 Accept : Accept,
                 Decline: Decline
             });
+            document.getElementsByClassName("match-btn").value = "Requested";
         } else {
             console.log('Something went wrong!');
         }

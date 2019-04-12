@@ -75,7 +75,9 @@
                     <script>getUserEmail(userID);</script>
                     <p id="bio"></p>
                     <script>getUserBio(userID);</script>
-                    <button class="match-btn" onclick="request( userID)">Request to Match</button>
+                    <button class="match-btn" onclick="request( userID)">
+                        <script>getStatus(userID);</script>
+                    </button>
                 </div>
             </div>
         </div>
