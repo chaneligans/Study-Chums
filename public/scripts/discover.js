@@ -99,6 +99,7 @@ function showSearchResults(results) {
         var major;
         var count;
         var id = 0;
+        var length = results.length;
 
         // iterate through and add a table row for each user (result)
         results.forEach(function(result) {
@@ -117,6 +118,13 @@ function showSearchResults(results) {
                 html += '</tr>'
 
                 count++;
+            }
+            else {
+                if(length == 1) {
+                    html += '<tr class="resultRow">';
+                    html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
+                    html += '</tr>'
+                }
             }
         });
 
