@@ -117,21 +117,22 @@ function getStatus(id){
         firebase.auth().onAuthStateChanged(function(user) {
           if(user){
               var myid = user.uid;
-              var status_val;
+              var status;
               var userDataRef = firebase.database().ref();
               var statusRef = userDataRef.child("Applications/" + myid + "/Sent/" + id);
-              statusRef.on("value").then(function(snapshot){
-                  var key = snapshot.key;
-                  var childData = snapshot.val();              
-                  status = snapshot.val().status;
-                  console.log(status);
-                  document.getElementsByClassName("match-btn").value = status;
-              });
-              
-          } else {
-              document.getElementsByClassName("match-btn").value = "Request to Match";
-              console.log('Something went wrong!');
-          }
+              statusRef.on("value", function(snapshot){
+                  var key = snapshot.key; 
+                  if(snapshot.val()) {
+                    status = snapshot.val().status;
+                    console.log(status);
+                    document.getElementById("status").innerHTML = status;
+                  } 
+                  else {
+                    status = "Request to Match";
+                    document.getElementById("status").innerHTML = status;
+                  }         
+              });   
+          } 
     });
 }
 
@@ -143,7 +144,7 @@ function request(id){
             firebase.database().ref('Applications/'+myid+'/Sent/'+id).set({
                 status: status
             });
-            firebase.database().ref('Applications/'+id+'/Received'+myid).set({
+            firebase.database().ref('Applications/'+id+'/Received/'+myid).set({
                 status: status
             });
             document.getElementsByClassName("match-btn").value = "Requested";
