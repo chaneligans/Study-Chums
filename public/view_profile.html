@@ -75,11 +75,13 @@
                     <script>getUserEmail(userID);</script>
                     <p id="bio"></p>
                     <script>getUserBio(userID);</script>
-                    <button class="match-btn" >Request to Match</button>
+                    <button class="match-btn" onclick="request(userID)">
+                        <p id="status"></p>
+                        <script>getStatus(userID);</script>
+                    </button>
                 </div>
             </div>
         </div>
-
-
-  </body>
-  </html>
+      </div>
+    </body>
+</html>

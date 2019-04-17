@@ -113,3 +113,43 @@ function getUserMajor(id) {
       }
     });
   }
+function getStatus(id){
+        firebase.auth().onAuthStateChanged(function(user) {
+          if(user){
+              var myid = user.uid;
+              var status;
+              var userDataRef = firebase.database().ref();
+              var statusRef = userDataRef.child("Applications/" + myid + "/Sent/" + id);
+              statusRef.on("value", function(snapshot){
+                  var key = snapshot.key; 
+                  if(snapshot.val()) {
+                    status = snapshot.val().status;
+                    console.log(status);
+                    document.getElementById("status").innerHTML = status;
+                  } 
+                  else {
+                    status = "Request to Match";
+                    document.getElementById("status").innerHTML = status;
+                  }         
+              });   
+          } 
+    });
+}
+
+function request(id){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user){
+            var myid = user.uid;
+            var status = "Requested";
+            firebase.database().ref('Applications/'+myid+'/Sent/'+id).set({
+                status: status
+            });
+            firebase.database().ref('Applications/'+id+'/Received/'+myid).set({
+                status: status
+            });
+            document.getElementsByClassName("match-btn").value = "Requested";
+        } else {
+            console.log('Something went wrong!');
+        }
+    });
+}

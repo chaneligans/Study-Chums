@@ -11,6 +11,10 @@
     "TotalUsers": {
       ".read": true,
         ".write": true
+    },
+    "Applications": {
+      ".read": true,
+        ".write": true
     }
   }
 }

@@ -4,13 +4,22 @@
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Applications | Study Chums</title>
+    <title>Discover | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
 
+    <!-- IMPORT ICONS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- ??? -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- jQuery IMPORT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
+    <script>//window.onload = checkLogin;</script>
 
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
@@ -20,15 +29,10 @@
     <script type="text/javascript" src="scripts/firebase-config.js"></script>
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
+    <!-- DISCOVER JAVASCRIPT -->
+    <script type="text/javascript" src="scripts/applications.js"></script>
   </head>
   <body>
-    <script>
-      // Get a reference to the storage service, which is used to create references in your storage bucket
-      var storage = firebase.storage();
-      // Create a storage reference from our storage service
-      var storageRef = storage.ref();
-    </script>
-
     <!-- WRAPPER (WHITE BOX) -->
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
@@ -46,19 +50,15 @@
       </nav>
       <!-- END OF NAVIGATION MENU -->
 
-      <!-- CONTENT (description, profiles) -->
+      <!-- CONTENT (search bar, profiles) -->
       <div id="content">
-        <div id="description">
-          <h1>Applications</h1>
-        </div>
-        <p>No content here... yet.</p>
-        <div id="applicationView">
-          <div class="UserList">
-            <h2 id="ApplicationList"></h2>
-            <script>List();</script>
+          <div id="description">
+            <h1>Chum Requests</h1>
+          </div>
+          <div id="searchResults">
+            <script>retrieveRequests();</script>
           </div>
         </div>
-      </div> <!-- content div -->
       <!-- END CONTENT-->
 
       <!-- FOOTER -->
@@ -67,6 +67,8 @@
       </footer>
       <!-- END FOOTER -->
     </div>
+    <!-- END WRAPPER (WHITE BOX) -->
+
     <script type="text/javascript" src="scripts/toggle_bio.js"></script>
   </body>
 </html>
