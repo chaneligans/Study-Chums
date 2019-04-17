@@ -78,8 +78,9 @@ function SearchMajor(major_in){
             });
             Promise.all(results).then(result => {
               console.log('Results found: ' + result.length);
-              if (results.length > 0) {     
-                showSearchResults(results);
+              console.log(result);
+              if (result.length > 0) {     
+                showSearchResults(result);
               }
               else {
                   noResultsFound();
