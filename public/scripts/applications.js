@@ -9,7 +9,7 @@ function retrieveRequests(){
         if(user) {
             var results = [];
             var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
-            applicationsRef.once("value", function(snapshot){                
+            applicationsRef.on("value", function(snapshot){                
                     var data;
                     snapshot.forEach(function(childSnapshot) {
                         var key = childSnapshot.key;
