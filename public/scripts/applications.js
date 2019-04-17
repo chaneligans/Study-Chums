@@ -101,4 +101,30 @@ function noRequestsFound() {
 
 }
 
+function acceptRequest(acceptID) {
+    var status = "Accepted"
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user) {
+            var userID = user.uid;
+            
+            firebase.database().ref('Applications/' + userID + '/Recieved/'+ acceptID).update({
+                status: status,
+                "status": status
+
+            }, function(error) {
+                if (error) {
+                  console.log("Update failed - name to " + name_in);
+                } else {
+                  console.log("Update suceeded - name to " + name_in);
+                }
+            });
+
+
+        }
+        else {
+            console.log('Something went wrong!');
+        }
+    });
+}
+
 
