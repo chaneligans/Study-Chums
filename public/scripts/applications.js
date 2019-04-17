@@ -8,7 +8,7 @@ function retrieveRequests(){
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
             var results = [];
-            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
+            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
             applicationsRef.once("value", function(snapshot){                
                     var data;
                     snapshot.forEach(function(childSnapshot) {
