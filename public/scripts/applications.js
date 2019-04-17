@@ -113,13 +113,23 @@ function acceptRequest(acceptID) {
 
             }, function(error) {
                 if (error) {
-                  console.log("Update failed - name to " + name_in);
+                  console.log("Update failed - status to " + status);
                 } else {
-                  console.log("Update suceeded - name to " + name_in);
+                  console.log("Update suceeded - status to " + status);
                 }
             });
 
+            firebase.database().ref('Applications/' + acceptID + '/Sent/'+ userID).update({
+                status: status,
+                "status": status
 
+            }, function(error) {
+                if (error) {
+                  console.log("Update failed - status to " + status);
+                } else {
+                  console.log("Update suceeded - status to " + status);
+                }
+            });
         }
         else {
             console.log('Something went wrong!');
