@@ -1,3 +1,19 @@
+
+
+function retrieveRequests(){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user) {
+            var results = [];
+            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
+            applicationsRef.once("value", function(snapshot){                
+                    var data;
+
+                });
+            }
+        
+    });
+}
+
 function displayRequests(results) {
     var html = '<table id="results">';
     var index;
