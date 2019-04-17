@@ -137,4 +137,40 @@ function acceptRequest(acceptID) {
     });
 }
 
+function rejectRequest() {
+    var status = "Rejected"
+    firebase.auth().onAuthStateChanged(function(user) {
+        if(user) {
+            var userID = user.uid;
+            
+            firebase.database().ref('Applications/' + userID + '/Recieved/'+ acceptID).update({
+                status: status,
+                "status": status
+
+            }, function(error) {
+                if (error) {
+                  console.log("Update failed - status to " + status);
+                } else {
+                  console.log("Update suceeded - status to " + status);
+                }
+            });
+
+            firebase.database().ref('Applications/' + acceptID + '/Sent/'+ userID).update({
+                status: status,
+                "status": status
+
+            }, function(error) {
+                if (error) {
+                  console.log("Update failed - status to " + status);
+                } else {
+                  console.log("Update suceeded - status to " + status);
+                }
+            });
+        }
+        else {
+            console.log('Something went wrong!');
+        }
+    });
+}
+
 
