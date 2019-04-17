@@ -35,7 +35,7 @@ function retrieveRequests(){
                         displayRequests(result);
                         }
                         else {
-                            noResultsFound();
+                            noRequestsFound();
                         }
                     })
                 });
