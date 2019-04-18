@@ -143,8 +143,11 @@ function request(id){
                 status: status
             });
             document.getElementsByClassName("match-btn").value = "Requested";
+          
         } else {
             console.log('Something went wrong!');
         }
     });
 }
+
+

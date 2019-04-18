@@ -1,65 +1,59 @@
 const functions = require('firebase-functions');
-const admin = require("firebase-admin");
-admin.initializeApp();
+const nodemailer = require('nodemailer');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
 
-var nodemailer = require('nodemailer');
-
-exports.sendMail = functions.https.onRequest((req, res) => {
-  var transporter = nodemailer.createTransport(
-  /*smtps://username@gmail.com:password@smtp.gmail.com*/
-  );
-
-  var mailOptions ={
-    //to: /*receive@gmail.com*/,
-    subject: 'Test mail',
-    html: 'testing email'
-  }
-  transporter.sendMail(mailOptions, function(err, res) {
-    if (err) {
-      res.end('Mail not sent.');
-    } else {
-      res.end('Mail sent.');
-    }
-  });
+const gmailEmail = functions.config().gmail.email;
+const gmailPassword = functions.config().gmail.password;
+const mailTransport = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: gmailEmail,
+    pass: gmailPassword,
+  },
 });
-// to send message, use the url:
-// https://us-central1-study-chums.cloudfunctions.net/sendMail
+const APP_NAME = 'Study Chums';
 
-// TODO: how to get the emails of sender and receiver from html to here?
+exports.sendRequestEmail = functions.database.ref('Applications/{uid}/Sent').onWrite((change, context) => {
+  
+  var email = "chanelmdza@gmail.com"; // sending to chanel to not spam anyone
+  var actualEmail;
+  var recipientID;
+  var recipient = change.after.forEach((snapshot) => {
+    recipientID = snapshot.key;
+  });
+  console.log("Recipient:",recipientID);
+  
+  var userDataRef = admin.database().ref();
+  
+  var recipientEmailRef = userDataRef.child("Users/"+recipientID+"/email");
 
-
-
-
-
-// exports.redirectToLogin = functions.http.onRequest((request, response) => {
-//   // check if user is logged in***
-//   // if so, redirect to homepage and login into their account to pull up their data
-//   // if not, redirect to index
-//
-//   admin.database.ref('Users').get()
-//   .then(snapshot => {
-//     const data = snapshot.val();
-//     let currentUser = admin.auth().currentUser; // may need to change this later
-//     if (currentUser !== null) {
-//       data.forEach(child => {
-//         // check uid against current user id
-//         if (child.uid === currentUser) {
-//           // redirect to homepage with login credentials
-//
-//           response.redirect('../public/home.html');
-//         } else {
-//
-//         }
-//       });
-//     }
-//   }).catch(error => {
-//     console.log(error);
-//     console.log("Redirecting to login page...");
-//     // redirect to login page
-//     response.redirect('../public/index.html');
-//   });
-//
-//   reponse.send(null);
-// });
-
-// *** is the user logged into Facebook?
+  recipientEmailRef.on("value", (snapshot) => {
+    var key = snapshot.key; 
+    if(snapshot.val()) {
+      actualEmail = snapshot.val();
+    }   
+    else {
+      console.log("Couldn't get email");
+    }         
+  });
+  
+  var mailOptions = {
+    from: `${APP_NAME} <noreply@firebase.com>`,
+    to: email,
+  };
+  
+  mailOptions.subject = `Welcome to ${APP_NAME}!`;
+  
+  // can change .text to .html to make it prettier
+  mailOptions.text = `Hello! This is a message from ${APP_NAME}. You have a new match request! recipient id: ${recipientID} emaiil: ${actualEmail}`;
+//  mailTransport.sendMail(mailOptions, (err, response) =>{
+//    if (err) {
+//      console.log('Could not send request email to', email);
+//    }
+//    else{
+//      console.log('Request email sent to:', email);
+//    }
+//  });
+  return null;
+});
