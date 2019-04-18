@@ -1,4 +1,13 @@
 
+function Enter(){
+    var Enterkey = document.getElementById("query");
+    Enterkey.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            Search();
+        }
+    });
+}
+
 function Search() {
     $('html').addClass('waiting');
     firebase.auth().onAuthStateChanged(function(user) {
