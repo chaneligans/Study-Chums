@@ -37,6 +37,34 @@ function getUserData(childSnapshotValue, childKey) {
 }
 function SearchName(name_in){
     var results = [];
+    name_in = name_in.toLowerCase();
+    //check lowercase first
+    firebase.database().ref('Users/').orderByChild("name")
+    .equalTo(name_in).once('value',function(snapshot){                
+        var data;
+
+        snapshot.forEach(function(childSnapshot) {
+            var key = childSnapshot.key;
+            var childData = childSnapshot.val();
+                      
+            data = getUserData(childData, key);
+            results.push(data);
+
+        });
+        Promise.all(results).then(result => {
+            console.log('Results found: ' + result.length);
+            if (results.length > 0) {     
+                showSearchResults(results);
+            }
+            else {
+                noResultsFound();
+            }
+        });
+    }).catch(function(error) {
+        console.log("Error getting results: ", error);
+        });
+    //check uppercase first
+    name_in = name_in.charAt(0).toUpperCase()+name_in.slice(1);
     firebase.database().ref('Users/').orderByChild("name")
     .equalTo(name_in).once('value',function(snapshot){                
         var data;
@@ -63,6 +91,8 @@ function SearchName(name_in){
         });
 }
 function SearchMajor(major_in){
+    major_in = major_in.toLowerCase();
+    //check lowercase first
     var results = [];
     firebase.database().ref('Users/').orderByChild("Major")
         .equalTo(major_in).once('value',function(snapshot){                
@@ -89,6 +119,33 @@ function SearchMajor(major_in){
         }).catch(function(error) {
             console.log("Error getting results: ", error);
           });
+    //check uppercase first
+    major_in = major_in.charAt(0).toUpperCase()+major_in.slice(1);
+    firebase.database().ref('Users/').orderByChild("Major")
+        .equalTo(major_in).once('value',function(snapshot){                
+            var data;
+
+            snapshot.forEach(function(childSnapshot) {
+              var key = childSnapshot.key;
+              var childData = childSnapshot.val();
+                      
+              data = getUserData(childData, key);
+              results.push(data);
+
+            });
+            Promise.all(results).then(result => {
+              console.log('Results found: ' + result.length);
+              console.log(result);
+              if (result.length > 0) {     
+                showSearchResults(result);
+              }
+              else {
+                  noResultsFound();
+              }
+            });
+        }).catch(function(error) {
+            console.log("Error getting results: ", error);
+        });
 }
 
 function showSearchResults(results) {
