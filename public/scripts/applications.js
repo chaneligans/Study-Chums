@@ -130,6 +130,10 @@ function acceptRequest(acceptID) {
                   console.log("Update suceeded - status to " + status);
                 }
             });
+            var chums = "Friends";
+            firebase.database().ref('Chums/' + userID + '/chums/' + acceptID).set({
+                status: chums
+            });
         }
         else {
             console.log('Something went wrong!');
