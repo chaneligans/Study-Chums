@@ -10,7 +10,7 @@ exports.sendMail = functions.https.onRequest((req, res) => {
   );
 
   var mailOptions ={
-    to: /*receive@gmail.com*/,
+    //to: /*receive@gmail.com*/,
     subject: 'Test mail',
     html: 'testing email'
   }
