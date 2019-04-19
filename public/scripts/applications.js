@@ -9,7 +9,7 @@ function retrieveRequests(){
         if(user) {
             var results = [];
             var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
-            applicationsRef.on("value", function(snapshot){                
+            applicationsRef.once("value", function(snapshot){                
                     var data;
                     snapshot.forEach(function(childSnapshot) {
                         var key = childSnapshot.key;
@@ -62,8 +62,10 @@ function displayRequests(results) {
 
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
+        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+        // html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
+        html += '<td class= "resultIcons" id="acceptIcon"><a onclick="acceptRequest(\'' + id + '\');"><i class="fas fa-user-check fa-2x"></i></a></td>';
+        html += '<td class= "resultIcons" id="rejectIcon"><a onclick="rejectRequest(\'' + id + '\');"><i class="fas fa-trash-alt fa-2x"></i></a></td>';
         html += '</tr>'
     
         count++;
@@ -107,29 +109,21 @@ function acceptRequest(acceptID) {
         if(user) {
             var userID = user.uid;
             
-            firebase.database().ref('Applications/' + userID + '/Recieved/'+ acceptID).update({
-                status: status,
-                "status": status
+            var userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            userRef.child(acceptID).remove().then(function() {
+                console.log("Remove succeeded.")
+              })
+              .catch(function(error) {
+                console.log("Remove failed: " + error.message)
+              });
 
-            }, function(error) {
-                if (error) {
-                  console.log("Update failed - status to " + status);
-                } else {
-                  console.log("Update suceeded - status to " + status);
-                }
-            });
-
-            firebase.database().ref('Applications/' + acceptID + '/Sent/'+ userID).update({
-                status: status,
-                "status": status
-
-            }, function(error) {
-                if (error) {
-                  console.log("Update failed - status to " + status);
-                } else {
-                  console.log("Update suceeded - status to " + status);
-                }
-            });
+            var senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
+            senderRef.child(userID).remove().then(function() {
+                console.log("Remove succeeded.")
+              })
+              .catch(function(error) {
+                console.log("Remove failed: " + error.message)
+              });
 
             var chums = "Friends";
             firebase.database().ref('Chums/' + userID + '/' + acceptID + '/').set({
@@ -152,6 +146,8 @@ function acceptRequest(acceptID) {
                 }
             });
 
+            // document.getElementById("acceptIcon").value = "Accepted!";
+
         }
         else {
             console.log('Something went wrong!');
@@ -165,29 +161,21 @@ function rejectRequest() {
         if(user) {
             var userID = user.uid;
             
-            firebase.database().ref('Applications/' + userID + '/Recieved/'+ acceptID).update({
-                status: status,
-                "status": status
+            var userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            userRef.child(acceptID).remove().then(function() {
+                console.log("Remove succeeded.")
+              })
+              .catch(function(error) {
+                console.log("Remove failed: " + error.message)
+              });
 
-            }, function(error) {
-                if (error) {
-                  console.log("Update failed - status to " + status);
-                } else {
-                  console.log("Update suceeded - status to " + status);
-                }
-            });
-
-            firebase.database().ref('Applications/' + acceptID + '/Sent/'+ userID).update({
-                status: status,
-                "status": status
-
-            }, function(error) {
-                if (error) {
-                  console.log("Update failed - status to " + status);
-                } else {
-                  console.log("Update suceeded - status to " + status);
-                }
-            });
+            var senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
+            senderRef.child(userID).remove().then(function() {
+                console.log("Remove succeeded.")
+              })
+              .catch(function(error) {
+                console.log("Remove failed: " + error.message)
+              });
         }
         else {
             console.log('Something went wrong!');
