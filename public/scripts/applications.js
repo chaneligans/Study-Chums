@@ -130,10 +130,28 @@ function acceptRequest(acceptID) {
                   console.log("Update suceeded - status to " + status);
                 }
             });
+
             var chums = "Friends";
-            firebase.database().ref('Chums/' + userID + '/chums/' + acceptID).set({
+            firebase.database().ref('Chums/' + userID + '/' + acceptID + '/').set({
                 status: chums
+            }, function(error) {
+                if (error) {
+                  console.log("Update to Chum List failed");
+                } else {
+                  console.log("Update to Chum List failed");
+                }
             });
+
+            firebase.database().ref('Chums/' + acceptID + '/' + userID + '/').set({
+                status: chums
+            }, function(error) {
+                if (error) {
+                  console.log("Update to Chum List failed");
+                } else {
+                  console.log("Update to Chum List failed");
+                }
+            });
+
         }
         else {
             console.log('Something went wrong!');

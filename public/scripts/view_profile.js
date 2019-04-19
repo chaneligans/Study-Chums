@@ -140,6 +140,7 @@ function request(id){
             firebase.database().ref('Applications/'+id+'/Received/'+myid).set({
                 status: status
             });
+            
             document.getElementsByClassName("match-btn").value = "Requested";
           
         } else {
