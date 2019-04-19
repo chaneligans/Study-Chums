@@ -109,7 +109,7 @@ function updateProfile() {
                     console.log('Finished updating image');
                   }
                   else{
-                    reject("Sorry");
+                    reject("Failed to resize image.");
                   }
                 }
               );

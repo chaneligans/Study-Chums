@@ -97,8 +97,6 @@ function getUserMajor(id) {
           }
           else if (image_val === undefined) {
             image_val = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
-            alert('Please upload a profile image.');
-            location.href = 'edit_profile.html';
           }
           document.getElementById('img').src = image_val;
         });
