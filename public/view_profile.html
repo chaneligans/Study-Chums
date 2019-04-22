@@ -19,7 +19,7 @@
 
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
+    <script>//window.onload = checkLogin;</script>
 
     <!-- ??? -->
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -75,8 +75,11 @@
                     <h3 id="major" class="title"></h3>
                     <script>getUserMajor(userID);</script>
                     <p id="email" class="subtitle"></p>
+<!--
+commenting out to keep people's emails from being shown to the public
                     <script>getUserEmail(userID);</script>
                     <p id="bio"></p>
+-->
                     <script>getUserBio(userID);</script>
                     <button class="match-btn" onclick="request(userID)">
                         <p id="status"></p>

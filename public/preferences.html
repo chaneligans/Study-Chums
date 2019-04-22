@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Edit Contact Preferences | Study Chums</title>
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="main.css">
+
+    <!-- IMPORT ICONS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- IMPORT jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- firebase IMPORT -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
+
+    <!-- CHECK IF USED IS LOGGED IN -->
+    <script type="text/javascript" src="scripts/check_login.js"></script>
+    <script>//window.onload = checkLogin;</script>
+
+    <!-- PROFILE JAVASCRIPT (GET USER INFO FUNCTIONS) -->
+    <script type="text/javascript" src="scripts/view_profile.js"></script>
+  </head>
+  <body>
+    <div class="create-profile-box">
+      <h1>Edit Contact Preferences</h1>
+      <button class="create-profile-btn" onclick="location.href='home.html';">Home</button>
+      <div id="profileview">
+          <div class="profilecard">
+              <img id="img"><script>getUserP1Url(false, userID);</script>
+              <h2 id="name"></h2>
+              <script>getUserName(userID);</script>
+              <h3 id="major" class="title"></h3>
+              <script>getUserMajor(userID);</script>
+              <p id="email" class="subtitle"></p>
+<!--
+commenting out to keep people's emails from being shown to the public
+              <script>getUserEmail(userID);</script>
+              <p id="bio"></p>
+-->
+              <script>getUserBio(userID);</script>
+              <button class="match-btn" onclick="request(userID)">
+                  <p id="status"></p>
+                  <script>getStatus(userID);</script>
+              </button>
+          </div>
+      </div>
+      </div>
+      <form>
+        <div class="textbox">
+          <i class="fas fa-user"></i>
+          <input id="name" type="text" placeholder="Name" name="" value="">
+        </div>
+        <div class="textbox">
+          <i class="fas fa-at"></i>
+          <input id="email" type="text" placeholder="Email" name="" value="">
+        </div>
+        <div class="textbox">
+          <i class="fas fa-glasses"></i>
+          <input id="major" type="text" placeholder="Major" name="" value="">
+        </div>
+        <div class="textbox">
+          <i class="fas fa-align-justify"></i>
+          <textarea id="bio" type="text" placeholder="Tell us about yourself!" name="" value=""></textarea>
+        </div>
+        <input class="create-profile-btn" type="button" name=""
+          value="Add To Profile" onclick="updateProfile();">
+      </form>
+    </div>
+  </body>
+</html>
