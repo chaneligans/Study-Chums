@@ -117,27 +117,30 @@ function getStatus(id){
                   var key = snapshot.key; 
                   if(snapshot.val()) {
                     status = snapshot.val().status;
-                    console.log(status);
+                    console.log(status + "app");
+                    document.getElementById("status").innerHTML = status;
+                    
+                  } 
+                  else {
+                    console.log(status + "app cannot");
+                    status = "Request to Match";
+                    document.getElementById("status").innerHTML = status;
+                  }         
+              });
+              var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
+              ChumsStatusRef.on("value", function(snapshot){
+                  var key = snapshot.key; 
+                  if(snapshot.val()) {
+                    status = snapshot.val().status;
+                    console.log(status + "chum");
                     document.getElementById("status").innerHTML = status;
                   } 
                   else {
-                    var myid = user.uid;
-                    var status;
-                    var userDataRef = firebase.database().ref();
-                    var statusRef = userDataRef.child("Chums/" + myid);
-                    statusRef.on("value", function(snapshot){
-                        var key = snapshot.key; 
-                        if(snapshot.val()) {
-                            status = snapshot.val().status;
-                            console.log(status);
-                            document.getElementById("status").innerHTML = status;
-                        } 
-                        else {
-                            status = "Request to Match";
-                            document.getElementById("status").innerHTML = status;
-                        }         
+                    console.log(status + "chum cannot");
+                    status = "Request to Match";
+                    document.getElementById("status").innerHTML = status;
                   }         
-              });   
+              });
           } 
     });
 }
