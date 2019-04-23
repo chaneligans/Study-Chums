@@ -122,42 +122,72 @@ function getStatus(id){
                     
                   } 
                   else {
-                    console.log(status + "app cannot");
-                    status = "Request to Match";
-                    document.getElementById("status").innerHTML = status;
-                  }         
-              });
-              var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
-              ChumsStatusRef.on("value", function(snapshot){
-                  var key = snapshot.key; 
-                  if(snapshot.val()) {
-                    status = snapshot.val().status;
-                    console.log(status + "chum");
-                    document.getElementById("status").innerHTML = status;
-                  } 
-                  else {
-                    console.log(status + "chum cannot");
-                    status = "Request to Match";
-                    document.getElementById("status").innerHTML = status;
-                  }         
-              });
-          } 
+                    var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
+                    ChumsStatusRef.on("value", function(snapshot){
+                        var key = snapshot.key; 
+                        if(snapshot.val()) {
+                            status = snapshot.val().status;
+                            console.log(status + "chum");
+                            document.getElementById("status").innerHTML = status;
+                        } 
+                        else {
+                            console.log(status + "chum cannot");
+                            status = "Request to Match";
+                            document.getElementById("status").innerHTML = status;
+                        }
+                    });         
+//              var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
+//              ChumsStatusRef.on("value", function(snapshot){
+//                  var key = snapshot.key; 
+//                  if(snapshot.val()) {
+//                    status = snapshot.val().status;
+//                    console.log(status + "chum");
+//                    document.getElementById("status").innerHTML = status;
+//                  } 
+//                  else {
+//                    console.log(status + "chum cannot");
+//                    status = "Request to Match";
+//                    document.getElementById("status").innerHTML = status;
+//                  }         
+              }
+          }); 
+        }
     });
 }
+
+                                           
 
 function request(id){
     firebase.auth().onAuthStateChanged(function(user) {
         if(user){
             var myid = user.uid;
-            var status = "Requested";
-            firebase.database().ref('Applications/'+myid+'/Sent/'+id).set({
-                status: status
-            });
-            firebase.database().ref('Applications/'+id+'/Received/'+myid).set({
-                status: status
+
+            
+            var chumStatus;
+            var userDataRef = firebase.database().ref();
+            var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
+            ChumsStatusRef.on("value", function(snapshot){
+                  var key = snapshot.key; 
+                  if(snapshot.val()) {
+                    chumStatus = snapshot.val().status;
+                    console.log(chumStatus + "chum");
+                  } 
+                  else {
+                    console.log(chumStatus + "chum cannot");
+                  }         
             });
             
-            document.getElementsByClassName("match-btn").value = "Requested";
+            
+            if(chumStatus != "Chums"){
+                var status = "Requested";
+                firebase.database().ref('Applications/'+myid+'/Sent/'+id).set({
+                    status: status
+                });
+                firebase.database().ref('Applications/'+id+'/Received/'+myid).set({
+                    status: status
+                });
+                document.getElementsByClassName("match-btn").value = "Requested";
+            }
           
         } else {
             console.log('Something went wrong!');
