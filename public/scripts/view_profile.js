@@ -121,8 +121,21 @@ function getStatus(id){
                     document.getElementById("status").innerHTML = status;
                   } 
                   else {
-                    status = "Request to Match";
-                    document.getElementById("status").innerHTML = status;
+                    var myid = user.uid;
+                    var status;
+                    var userDataRef = firebase.database().ref();
+                    var statusRef = userDataRef.child("Chums/" + myid);
+                    statusRef.on("value", function(snapshot){
+                        var key = snapshot.key; 
+                        if(snapshot.val()) {
+                            status = snapshot.val().status;
+                            console.log(status);
+                            document.getElementById("status").innerHTML = status;
+                        } 
+                        else {
+                            status = "Request to Match";
+                            document.getElementById("status").innerHTML = status;
+                        }         
                   }         
               });   
           } 
