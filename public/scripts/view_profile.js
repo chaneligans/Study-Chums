@@ -130,13 +130,20 @@ function getStatus(id){
                     ChumsStatusRef.on("value", function(snapshot){
                         var key = snapshot.key; 
                         if(snapshot.val()) {
-                            status = '<a onclick="viewFacebookProfile(\'' + id + '\');" style="color:white"><i class="fab fa-facebook-square fa-sm"></i></a>';
-                            console.log(status);
-
-                            document.getElementById("status").innerHTML = status;
-                            $( "#status" ).load( status, function() {
-                                console.log( "Load was performed." );
+                            let fbProfileLink = firebase.database().ref('Users/' + id).once("value").then(function(snapshot) {
+                              let fbProfile= snapshot.val().fbProfile;
+                              return fbProfile
                             });
+                            Promise.resolve(fbProfileLink).then(function(value) {
+                              console.log(value);
+                              status = '<a href="' + value + '" target="_blank" style="color:white"><i class="fab fa-facebook-square fa-sm"></i></a>';
+                              console.log(status);
+
+                              document.getElementById("status").innerHTML = status;
+                              $( "#status" ).load( status, function() {
+                                  console.log( "Load was performed." );
+                              });
+                            })
                         } 
                         else {
                             console.log(status + "not chums");
@@ -207,7 +214,11 @@ function request(id){
     });
 }
 
-function viewFacebookProfile(id) {
-
+function getFacebookProfile(id) {
+  let userRef = firebase.database().ref('Users/' + id);
+  userRef.once("value", function(snapshot) {
+    let fbProfileLink = snapshot.val().fbProfile;
+    return fbProfileLink;
+  });
 }
 
