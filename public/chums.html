@@ -20,6 +20,8 @@
     <script type="text/javascript" src="scripts/firebase-config.js"></script>
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
+    <script type="text/javascript" src="scripts/chums.js"></script>
+
   </head>
   <body>
     <script>
@@ -50,9 +52,10 @@
       <div id="content">
         <div id="description">
           <h1>Chums</h1>
-        </div>
-        <p>No content here... yet.</p>
-      </div> <!-- content div -->
+          <div id="searchResults">
+            <script>retrieveChums();</script>
+          </div>
+      </div>  
       <!-- END CONTENT-->
 
       <!-- FOOTER -->

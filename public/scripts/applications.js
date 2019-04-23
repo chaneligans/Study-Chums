@@ -30,7 +30,7 @@ function retrieveReceivedRequests(){
                             displayReceivedRequests(result);
                         }
                         else {
-                            noRequestsFound();
+                            noReceievedRequestsFound()
                         }
                     })
                 });
@@ -65,7 +65,7 @@ function retrieveSentRequests() {
                             displaySentRequests(result);
                         }
                         else {
-                            noRequestsFound();
+                            noSentRequestsFound()
                         }
                     })
                 });
@@ -149,8 +149,8 @@ function saveUserID(userID) {
     return true;
 }
 
-function noRequestsFound() {
-    let html = '<table id="results">';
+function noReceievedRequestsFound() {
+    let html = '<table class="requests">';
 
     html += '<tr class="resultRow">';
     html += '<td class="resultUserName"><h2>No Chum Requests Yet!</h2></td>';
@@ -158,10 +158,26 @@ function noRequestsFound() {
 
     html += '</table>'; 
 
-    document.getElementById("searchResults").innerHTML = html;
-        $( "#searchResults" ).load( html, function() {
-            console.log( "Load was performed." );
-        });
+    document.getElementById("recievedRequests").innerHTML = html;
+    $( "#recievedRequests" ).load( html, function() {
+        console.log( "Load was performed." );
+    });
+
+}
+
+function noSentRequestsFound() {
+    let html = '<table class="requests">';
+
+    html += '<tr class="resultRow">';
+    html += '<td class="resultUserName"><h2>No Sent Requests Yet!</h2></td>';
+    html += '</tr>'
+
+    html += '</table>'; 
+
+    document.getElementById("sentRequests").innerHTML = html;
+    $( "#sentRequests" ).load( html, function() {
+        console.log( "Load was performed." );
+    });
 
 }
 
@@ -211,6 +227,8 @@ function acceptRequest(acceptID) {
             document.getElementById('acceptIcon' + acceptID).innerHTML = "Accepted!";
             console.log(acceptID);
 
+            document.getElementById('rejectIcon' + acceptID).innerHTML = "";
+
         }
         else {
             console.log('Something went wrong!');
@@ -241,6 +259,7 @@ function rejectRequest(rejectID) {
               });
 
               document.getElementById('rejectIcon' + rejectID).innerHTML = "Rejected!";
+              document.getElementById('acceptIcon' + recjectID).innerHTML = "";
         }
         else {
             console.log('Something went wrong!');

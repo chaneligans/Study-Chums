@@ -1,4 +1,4 @@
-function getUserData(childSnapshotValue, childKey) {
+function setUserData(childSnapshotValue, childKey) {
     var photo = childSnapshotValue.p1Url + " ";
     var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
     return data;
@@ -7,35 +7,29 @@ function getUserData(childSnapshotValue, childKey) {
 function retrieveChums(){
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            var results = [];
-            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
-            applicationsRef.on("value", function(snapshot){                
-                    var data;
+            let results = [];
+            let applicationsRef = firebase.database().ref('Chums/' + user.uid);
+            applicationsRef.once("value", function(snapshot){                
                     snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        console.log(key);
-                        var userDataRef = firebase.database().ref('Users/' + key);
+                        let key = childSnapshot.key;
+                        let userDataRef = firebase.database().ref('Users/' + key);
 
-                        var data = userDataRef.once("value").then(function(childSnapshotData){
-                            console.log("hi");
-                            var name = childSnapshotData.val().name;
-                            childData = childSnapshotData.val();
+                        let data = userDataRef.once("value").then(function(childSnapshotData){
+                            let childData = childSnapshotData.val();
                             return setUserData(childData, key);
 
                         });
                         results.push(Promise.resolve(data).then( function() {
-                            console.log(data);
                             return data;
                         }))
                     });
                     Promise.all(results).then(result => {
                         console.log('Results found: ' + result.length);
-                        console.log(result);
                         if (result.length > 0) {     
-                        displayRequests(result);
+                            displayChums(result);
                         }
                         else {
-                            noRequestsFound();
+                            noChumsFound();
                         }
                     })
                 });
@@ -44,8 +38,8 @@ function retrieveChums(){
     });
 }
 
-function displayRequests(results) {
-    var html = '<table id="results">';
+function displayChums(results) {
+    var html = '<table class="requests">';
     var index;
     var img;
     var name;
@@ -85,11 +79,11 @@ function saveUserID(userID) {
     return true;
 }
 
-function noRequestsFound() {
-    var html = '<table id="results">';
+function noChumsFound() {
+    var html = '<table class="requests">';
 
     html += '<tr class="resultRow">';
-    html += '<td class="resultUserName"><h2>No Chum Requests Yet!</h2></td>';
+    html += '<td class="resultUserName"><h2>No Chums Yet!</h2></td>';
     html += '</tr>'
 
     html += '</table>'; 
