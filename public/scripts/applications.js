@@ -171,7 +171,7 @@ function acceptRequest(acceptID) {
         if(user) {
             let userID = user.uid;
             
-            let userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
             userRef.child(acceptID).remove().then(function() {
                 console.log("Remove succeeded.")
               })
@@ -187,24 +187,24 @@ function acceptRequest(acceptID) {
                 console.log("Remove failed: " + error.message)
               });
 
-            let chums = "Friends";
-            firebase.database().ref('Chums/' + userID + '/' + acceptID + '/').set({
+            let chums = "Chums";
+            firebase.database().ref('Chums/' + userID + '/' + acceptID).set({
                 status: chums
             }, function(error) {
                 if (error) {
                   console.log("Update to Chum List failed");
                 } else {
-                  console.log("Update to Chum List failed");
+                  console.log("Update to Chum List succeeded");
                 }
             });
 
-            firebase.database().ref('Chums/' + acceptID + '/' + userID + '/').set({
+            firebase.database().ref('Chums/' + acceptID + '/' + userID).set({
                 status: chums
             }, function(error) {
                 if (error) {
                   console.log("Update to Chum List failed");
                 } else {
-                  console.log("Update to Chum List failed");
+                  console.log("Update to Chum List succeeded");
                 }
             });
 
@@ -224,7 +224,7 @@ function rejectRequest(rejectID) {
         if(user) {
             let userID = user.uid;
             
-            let userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
             userRef.child(rejectID).remove().then(function() {
                 console.log("Remove succeeded.")
               })

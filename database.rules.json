@@ -15,6 +15,10 @@
     "Applications": {
       ".read": true,
         ".write": true
+    },
+    "Chums": {
+      ".read": true,
+        ".write": true
     }
   }
 }
