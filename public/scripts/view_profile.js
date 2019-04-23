@@ -116,9 +116,13 @@ function getStatus(id){
               statusRef.on("value", function(snapshot){
                   var key = snapshot.key; 
                   if(snapshot.val()) {
-                    status = snapshot.val().status;
-                    console.log(status + "app");
+                    status = 'Requested';
+                    console.log(status);
+
                     document.getElementById("status").innerHTML = status;
+                    $( "#status" ).load( status, function() {
+                        console.log( "Load was performed." );
+                    });
                     
                   } 
                   else {
@@ -126,14 +130,22 @@ function getStatus(id){
                     ChumsStatusRef.on("value", function(snapshot){
                         var key = snapshot.key; 
                         if(snapshot.val()) {
-                            status = snapshot.val().status;
-                            console.log(status + "chum");
+                            status = '<a onclick="viewFacebookProfile(\'' + id + '\');" style="color:white"><i class="fab fa-facebook-square fa-sm"></i></a>';
+                            console.log(status);
+
                             document.getElementById("status").innerHTML = status;
+                            $( "#status" ).load( status, function() {
+                                console.log( "Load was performed." );
+                            });
                         } 
                         else {
-                            console.log(status + "chum cannot");
-                            status = "Request to Match";
+                            console.log(status + "not chums");
+                            status = '<a onclick="request(\'' + id + '\');" style="color:white">Request To Match</a>';
+                            
                             document.getElementById("status").innerHTML = status;
+                            $( "#status" ).load( status, function() {
+                              console.log( "Load was performed." );
+                          });
                         }
                     });         
 //              var ChumsStatusRef = userDataRef.child("Chums/" + myid +"/"+ id);
@@ -195,4 +207,7 @@ function request(id){
     });
 }
 
+function viewFacebookProfile(id) {
+
+}
 
