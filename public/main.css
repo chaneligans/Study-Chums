@@ -488,6 +488,18 @@ nav li a {
   border: 1px solid #9DD2EE;
 }
 
+.requests {
+  width: 100%;
+  /* border-collapse: collapse;
+  border: 1px solid #9DD2EE; */
+  padding-bottom: 60px;
+}
+
+.request_description {
+  text-align: left;
+  padding-left: 10px;
+}
+
 .resultRow:not(:first-child) {
   border-top: 1px solid #F1F1EF;
 }

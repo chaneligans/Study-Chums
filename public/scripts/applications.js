@@ -1,22 +1,21 @@
 function setUserData(childSnapshotValue, childKey) {
-    var photo = childSnapshotValue.p1Url + " ";
-    var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+    let photo = childSnapshotValue.p1Url + " ";
+    let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
     return data;
 }
 
 function retrieveReceivedRequests(){
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            var results = [];
-            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
+            let results = [];
+            let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
             applicationsRef.once("value", function(snapshot){                
-                    var data;
                     snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var userDataRef = firebase.database().ref('Users/' + key);
+                        let key = childSnapshot.key;
+                        let userDataRef = firebase.database().ref('Users/' + key);
 
-                        var data = userDataRef.once("value").then(function(childSnapshotData){
-                            var name = childSnapshotData.val().name;
+                        let data = userDataRef.once("value").then(function(childSnapshotData){
+                            let name = childSnapshotData.val().name;
                             childData = childSnapshotData.val();
                             return setUserData(childData, key);
 
@@ -43,16 +42,15 @@ function retrieveReceivedRequests(){
 function retrieveSentRequests() {
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            var results = [];
-            var applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
+            let results = [];
+            let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
             applicationsRef.once("value", function(snapshot){                
-                    var data;
                     snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var userDataRef = firebase.database().ref('Users/' + key);
+                        let key = childSnapshot.key;
+                        let userDataRef = firebase.database().ref('Users/' + key);
 
-                        var data = userDataRef.once("value").then(function(childSnapshotData){
-                            var name = childSnapshotData.val().name;
+                        let data = userDataRef.once("value").then(function(childSnapshotData){
+                            let name = childSnapshotData.val().name;
                             childData = childSnapshotData.val();
                             return setUserData(childData, key);
 
@@ -77,13 +75,12 @@ function retrieveSentRequests() {
 }
 
 function displayReceivedRequests(results) {
-    var html = '<table id="results">';
-    var index;
-    var img;
-    var name;
-    var major;
-    var count;
-    var id = 0;
+    let html = '<table class="requests">';
+    let img;
+    let name;
+    let major;
+    let count;
+    let id = 0;
 
     results.forEach(function(result) {
         index = result[0];
@@ -96,8 +93,8 @@ function displayReceivedRequests(results) {
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
         html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
         
-        html += '<td class= "resultIcons"><p id="acceptIcon' + id + '"><a onclick="acceptRequest(\'' + id + '\');"><i class="fas fa-user-check fa-2x"></i></a></p></td>';
-        html += '<td class= "resultIcons"><p id="rejectIcon' + id + '"><a onclick="rejectRequest(\'' + id + '\');"><i class="fas fa-trash-alt fa-2x"></i></a></p></td>';
+        html += '<td class= "resultIcons"><p id="acceptIcon' + id + '"><a onclick="acceptRequest(\'' + id + '\');" style="color:black"><i class="fas fa-user-check fa-lg"></i></a></p></td>';
+        html += '<td class= "resultIcons"><p id="rejectIcon' + id + '"><a onclick="rejectRequest(\'' + id + '\');" style="color:black"><i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
         html += '</tr>'
     
         count++;
@@ -105,26 +102,55 @@ function displayReceivedRequests(results) {
 
     html += '</table>'; 
 
-    document.getElementById("searchResults").innerHTML = html;
-    $( "#searchResults" ).load( html, function() {
+    document.getElementById("recievedRequests").innerHTML = html;
+    $( "#recievedRequests" ).load( html, function() {
         console.log( "Load was performed." );
     });
 }
 
-function displaySentRequests(result) {
+function displaySentRequests(results) {
+    let html = '<table class="requests">';
+    let img;
+    let name;
+    let major;
+    let count;
+    let id = 0;
+
+    results.forEach(function(result) {
+        index = result[0];
+        img = result[1];
+        name = result[2];
+        major = result[3];
+        id = result[4];
+
+        html += '<tr class="resultRow">';
+        html += '<td class="resultUserImage"><img src="' + img + '"></td>';
+        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+        
+        html += '<td class= "resultIcons"><i class="fas fa-spinner fa-sm"></i><p>Request Pending</p></td>';
+        html += '</tr>'
     
+        count++;
+    });
+
+    html += '</table>'; 
+
+    document.getElementById("sentRequests").innerHTML = html;
+    $( "#sentRequests" ).load( html, function() {
+        console.log( "Load was performed." );
+    });
 }
 
 function saveUserID(userID) {
     sessionStorage.clear();
     sessionStorage.setItem('userID', userID);
-    var storageData = sessionStorage.getItem('userID');
+    let storageData = sessionStorage.getItem('userID');
     console.log("saved user id ..." + storageData);
     return true;
 }
 
 function noRequestsFound() {
-    var html = '<table id="results">';
+    let html = '<table id="results">';
 
     html += '<tr class="resultRow">';
     html += '<td class="resultUserName"><h2>No Chum Requests Yet!</h2></td>';
@@ -140,12 +166,12 @@ function noRequestsFound() {
 }
 
 function acceptRequest(acceptID) {
-    var status = "Accepted"
+    let status = "Accepted"
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            var userID = user.uid;
+            let userID = user.uid;
             
-            var userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            let userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
             userRef.child(acceptID).remove().then(function() {
                 console.log("Remove succeeded.")
               })
@@ -153,7 +179,7 @@ function acceptRequest(acceptID) {
                 console.log("Remove failed: " + error.message)
               });
 
-            var senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
+            let senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
             senderRef.child(userID).remove().then(function() {
                 console.log("Remove succeeded.")
               })
@@ -161,7 +187,7 @@ function acceptRequest(acceptID) {
                 console.log("Remove failed: " + error.message)
               });
 
-            var chums = "Friends";
+            let chums = "Friends";
             firebase.database().ref('Chums/' + userID + '/' + acceptID + '/').set({
                 status: chums
             }, function(error) {
@@ -193,12 +219,12 @@ function acceptRequest(acceptID) {
 }
 
 function rejectRequest(rejectID) {
-    var status = "Rejected"
+    let status = "Rejected"
     firebase.auth().onAuthStateChanged(function(user) {
         if(user) {
-            var userID = user.uid;
+            let userID = user.uid;
             
-            var userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
+            let userRef = firebase.database().ref('Applications/' + userID + '/Recieved/');
             userRef.child(rejectID).remove().then(function() {
                 console.log("Remove succeeded.")
               })
@@ -206,7 +232,7 @@ function rejectRequest(rejectID) {
                 console.log("Remove failed: " + error.message)
               });
 
-            var senderRef = firebase.database().ref('Applications/' + rejectID + '/Sent/');
+            let senderRef = firebase.database().ref('Applications/' + rejectID + '/Sent/');
             senderRef.child(userID).remove().then(function() {
                 console.log("Remove succeeded.")
               })
