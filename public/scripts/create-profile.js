@@ -4,7 +4,7 @@ function updateProfile() {
     if (user) {
       let photo_in = document.getElementById("file");
       let name_in = document.getElementById("name").value;
-      let email_in = document.getElementById("email").value;
+      //let email_in = document.getElementById("email").value;
       let major_in = document.getElementById("major").value;
       let bio_in = document.getElementById("bio").value;
 
@@ -15,13 +15,14 @@ function updateProfile() {
 
       if (name_in !== "") {updateName(this.userId, name_in);}
 
-      if (email_in !== "") {updateEmail(this.userId, email_in);}
+      updateEmail(this.userId);
+      updateSubscription(this.userId);
 
       if (major_in !== "")   {updateMajor(this.userId, major_in);}
 
       if (bio_in !== "")   {updateBio(this.userId, bio_in);}
 
-      if (photo_in.value === "" || name_in === "" || email_in === "" || major_in === "" || bio_in === "") {
+      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "") {
           alert("Please fill in all fields.");
       }
       else if (photo_in.value === "") {
@@ -188,10 +189,11 @@ function updateName(user, name_in) {
   });
 }
 
-function updateEmail(user, email_in) {
+function updateEmail(user) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
+    var email_in = user.email;
 
     let ref = firebase.database().ref("Users/" + this.userId);
     let fs = firebase.firestore();
@@ -250,6 +252,26 @@ function updateBio(user, bio_in) {
         console.log("Update failed - bio to " + bio_in);
       } else {
         console.log("Update succeeded - bio to " + bio_in)
+      }
+    });
+  });
+}
+
+function updateSubscription(user) {
+  firebase.auth().onAuthStateChanged(function(user) {
+    console.log("Updating subscription preferences for user id ", user.uid);
+
+    let ref = firebase.database().ref("Users/" + this.userId);
+    this.userId = user.uid;
+    //realtime database
+    ref.update({
+      subscribed: true,
+      "subscribed": true
+    }, function(error){
+      if (error) {
+        console.log("Update failed - email pref to true");
+      } else {
+        console.log("Update succeeded - email pref to true");
       }
     });
   });
