@@ -1,7 +1,6 @@
 function getUserMajor() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var db = firebase.database().ref("Users/" + user.uid);
       var Major_val;
       var userDataRef = firebase.database().ref();
       var MajorRef = userDataRef.child("Users/" + user.uid);
@@ -23,7 +22,6 @@ function getUserMajor() {
 function getUserBio() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var db = firebase.database().ref("Users/" + user.uid);
       var bio_val;
       var userDataRef = firebase.database().ref();
       var bioRef = userDataRef.child("Users/" + user.uid);
@@ -45,7 +43,6 @@ function getUserBio() {
 function getUserEmail() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var db = firebase.database().ref("Users/" + user.uid);
       var email_val;
       var userDataRef = firebase.database().ref();
       var emailRef = userDataRef.child("Users/" + user.uid);
@@ -67,7 +64,6 @@ function getUserEmail() {
 function getUserName() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var db = firebase.database().ref("Users/" + user.uid);
       var name_val;
       var userDataRef = firebase.database().ref();
       var nameRef = userDataRef.child("Users/" + user.uid);
@@ -89,7 +85,6 @@ function getUserP1Url(showGeneric) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log(user.uid);
     if (user) {
-      var db = firebase.database().ref("Users/" + user.uid);
       var image_val;
       var userDataRef = firebase.database().ref();
       var imageRef = userDataRef.child("Users/"+ user.uid)
