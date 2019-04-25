@@ -10,12 +10,12 @@ function updateEmailPreferences() {
 
       // execute only if something is there
       if (email_in !== undefined) {
-        updateEmail(this.userId, email_in);}
+        updateEmail(this.userId, email_in);
+      }
       if (subscribe) {
         console.log(email_in + ' has subscribed to emails');
         updateSubscription(this.userId, true);
-      }
-      else {
+      } else {
         console.log(email_in + ' has unsubscribed to emails');
         updateSubscription(this.userId, false);
       }
@@ -26,7 +26,7 @@ function updateEmailPreferences() {
       }, 1000);
     } else {
       console.log("Who are you? And why do you have access to this?");
-    }                              
+    }
   });
 }
 
@@ -50,7 +50,7 @@ function updateEmail(user, email_in) {
       }
     });
   });
-}  
+}
 
 
 function updateSubscription(user, preference) {
@@ -64,18 +64,18 @@ function updateSubscription(user, preference) {
       ref.update({
         subscribed: false,
         "subscribed": false
-      }, function(error){
+      }, function(error) {
         if (error) {
           console.log("Update failed - email pref to false");
         } else {
           console.log("Update succeeded - email pref to false");
         }
-      }); 
+      });
     } else {
       ref.update({
         subscribed: true,
         "subscribed": true
-      }, function(error){
+      }, function(error) {
         if (error) {
           console.log("Update failed - email pref to true");
         } else {

@@ -12,21 +12,16 @@ function updateProfile() {
       this.userId = user.uid;
 
       // execute only if something is there
-      if (photo_in.value !== "")    {updatePhotoURL(this.userId, photo_in);}
-
+      if (photo_in.value !== "") {updatePhotoURL(this.userId, photo_in);}
       if (name_in !== "") {updateName(this.userId, name_in);}
-
       // if (email_in !== "") {updateEmail(this.userId, email_in);}
-
-      if (major_in !== "")   {updateMajor(this.userId, major_in);}
-
-      if (bio_in !== "")   {updateBio(this.userId, bio_in);}
-
-      if (FBprofileLink_in !== "")   {updateFBProfileLink(this.userId, FBprofileLink_in);}
+      if (major_in !== "") {updateMajor(this.userId, major_in);}
+      if (bio_in !== "") {updateBio(this.userId, bio_in);}
+      if (FBprofileLink_in !== "") {updateFBProfileLink(this.userId, FBprofileLink_in);}
 
       if (photo_in.value === "") {
         setTimeout(function() {
-            location.href = "profile.html";
+          location.href = "profile.html";
         }, 1000);
       }
       console.log("Updates sent to database.");
@@ -79,8 +74,7 @@ function updatePhotoURL(uid, photo) {
                   height = Math.round(height *= max_width / width);
                   width = max_width;
                 }
-              }
-              else {
+              } else {
                 if (height > max_height) {
                   width = Math.round(width *= max_height / height);
                   height = max_height;
@@ -97,26 +91,27 @@ function updatePhotoURL(uid, photo) {
 
               var canvasDataURL = canvas.toDataURL("imge/jpeg", 0.7);
 
-              var arr = canvasDataURL.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-              while(n--){
-                u8arr[n] = bstr.charCodeAt(n);
-              }
-              file = new Blob([u8arr], {type:mime});
+              var arr = canvasDataURL.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+              while (n--) {u8arr[n] = bstr.charCodeAt(n);}
+              file = new Blob([u8arr], {type: mime});
 
               console.log(file);
               resolve("It worked!");
               console.log('Finished updating image');
-            }
-            else{
+            } else {
               reject("Sorry");
             }
           }
         );
 
-        var tryUpdateImage = function () {
-          updateImage.then(function (fulfilled) {
+        var tryUpdateImage = function() {
+          updateImage.then(function(fulfilled) {
             console.log('Attempting to upload file ' + fileName);
-            var storageRef = firebase.storage().ref('img/'+this.userId+'/'+this.userId);
+            var storageRef = firebase.storage().ref('img/' + this.userId + '/' + this.userId);
             var uploadTask = storageRef.put(file);
 
             uploadTask.on('state_changed', function(snapshot) {
@@ -147,22 +142,20 @@ function updatePhotoURL(uid, photo) {
                     console.log("Update failed - p1Url to " + photo);
                   } else {
                     console.log("Update succeeded - p1Url to " + photo);
-                    location.href="home.html";
+                    location.href = "home.html";
                   }
                 });
               });
             });
             console.log(fulfilled);
-          }).catch(function (error) {
-            console.log(error);
-          })
+          }).catch(function(error) {console.log(error);})
         }
-
         tryUpdateImage();
       }
     }
   });
 }
+
 
 function updateName(user, name_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -178,11 +171,8 @@ function updateName(user, name_in) {
       name: name_in,
       "name": name_in
     }, function(error) {
-      if (error) {
-        console.log("Update failed - name to " + name_in);
-      } else {
-        console.log("Update suceeded - name to " + name_in);
-      }
+      if (error) {console.log("Update failed - name to " + name_in);} 
+      else {console.log("Update suceeded - name to " + name_in);}
     });
   });
 }
@@ -202,14 +192,12 @@ function updateEmail(user, email_in) {
       email: email_in,
       "email": email_in
     }, function(error) {
-      if (error) {
-        console.log("Update failed - email to " + email_in);
-      } else {
-        console.log("Update suceeded - email to " + email_in);
-      }
+      if (error) {console.log("Update failed - email to " + email_in);} 
+      else {console.log("Update suceeded - email to " + email_in);}
     });
   });
 }
+
 
 function updateMajor(user, major_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -223,15 +211,13 @@ function updateMajor(user, major_in) {
     ref.update({
       Major: major_in,
       "Major": major_in
-    }, function(error){
-      if (error) {
-        console.log("Update failed - major to " + major_in);
-      } else {
-        console.log("Update succeeded - major to " + major_in)
-      }
+    }, function(error) {
+      if (error) {console.log("Update failed - major to " + major_in);} 
+      else {console.log("Update succeeded - major to " + major_in);}
     });
   });
 }
+
 
 function updateBio(user, bio_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -245,15 +231,13 @@ function updateBio(user, bio_in) {
     ref.update({
       bio: bio_in,
       "bio": bio_in
-    }, function(error){
-      if (error) {
-        console.log("Update failed - bio to " + bio_in);
-      } else {
-        console.log("Update succeeded - bio to " + bio_in)
-      }
+    }, function(error) {
+      if (error) {console.log("Update failed - bio to " + bio_in);} 
+      else {console.log("Update succeeded - bio to " + bio_in);}
     });
   });
 }
+
 
 function updateFBProfileLink(user, FBprofileLink_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -266,12 +250,9 @@ function updateFBProfileLink(user, FBprofileLink_in) {
     ref.update({
       fbProfile: FBprofileLink_in,
       "fbProfile": FBprofileLink_in
-    }, function(error){
-      if (error) {
-        console.log("Update failed - fbProfile to " + FBprofileLink_in);
-      } else {
-        console.log("Update succeeded - fbProfile to " + FBprofileLink_in)
-      }
+    }, function(error) {
+      if (error) {console.log("Update failed - fbProfile to " + FBprofileLink_in);} 
+      else {console.log("Update succeeded - fbProfile to " + FBprofileLink_in);}
     });
   });
 }
