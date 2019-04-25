@@ -7,7 +7,6 @@ function Enter() {
   });
 }
 
-
 function Search() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(function(user) {
@@ -36,114 +35,85 @@ function Search() {
   });
 }
 
-
 function getUserData(childSnapshotValue, childKey) {
   var photo = childSnapshotValue.p1Url + " ";
   var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
   return data;
 }
 
-
 function SearchName(name_in) {
   var results = [];
-  name_in = name_in.toLowerCase();
-  //check lowercase first
-  firebase.database().ref('Users/').orderByChild("name")
-    .equalTo(name_in).once('value', function(snapshot) {
-      var data;
-      snapshot.forEach(function(childSnapshot) {
-        var key = childSnapshot.key;
-        var childData = childSnapshot.val();
-        data = getUserData(childData, key);
-        results.push(data);
+  var nameTypes = [name_in, name_in.toLowerCase(), upperCaseWords(name_in)];
+  // check each name type (as-is, lowercase, uppercase)
+  nameTypes.forEach((name_) => {
+    firebase.database().ref('Users/').orderByChild("name")
+      .equalTo(name_).once('value', function(snapshot) {
+        var data;
+        snapshot.forEach(function(childSnapshot) {
+          var key = childSnapshot.key;
+          var childData = childSnapshot.val();
+          data = getUserData(childData, key);
+          results.push(data);
+        });
+        Promise.all(results).then(result => {
+          console.log('Results found: ' + result.length);
+          if (results.length > 0) {
+            showSearchResults(results);
+          } else {
+            noResultsFound();
+          }
+        });
+      }).catch(function(error) {
+        console.log("Error getting results: ", error);
       });
-      Promise.all(results).then(result => {
-        console.log('Results found: ' + result.length);
-        if (results.length > 0) {
-          showSearchResults(results);
-        } else {
-          noResultsFound();
-        }
-      });
-    }).catch(function(error) {
-      console.log("Error getting results: ", error);
-    });
-  //check uppercase first
-  name_in = name_in.charAt(0).toUpperCase() + name_in.slice(1);
-  firebase.database().ref('Users/').orderByChild("name")
-    .equalTo(name_in).once('value', function(snapshot) {
-      var data;
-
-      snapshot.forEach(function(childSnapshot) {
-        var key = childSnapshot.key;
-        var childData = childSnapshot.val();
-
-        data = getUserData(childData, key);
-        results.push(data);
-
-      });
-      Promise.all(results).then(result => {
-        console.log('Results found: ' + result.length);
-        if (results.length > 0) {
-          showSearchResults(results);
-        } else {
-          noResultsFound();
-        }
-      });
-    }).catch(function(error) {
-      console.log("Error getting results: ", error);
-    });
+  });
 }
-
 
 function SearchMajor(major_in) {
-  major_in = major_in.toLowerCase();
-  //check lowercase first
   var results = [];
-  firebase.database().ref('Users/').orderByChild("Major")
-    .equalTo(major_in).once('value', function(snapshot) {
-      var data;
+  var majorTypes = [major_in, major_in.toLowerCase(), upperCaseWords(major_in)];
 
-      snapshot.forEach(function(childSnapshot) {
-        var key = childSnapshot.key;
-        var childData = childSnapshot.val();
-        data = getUserData(childData, key);
-        results.push(data);
-
+  // check each major type (as-is, lowercase, uppercase)
+  majorTypes.forEach((major_) => {
+    firebase.database().ref('Users/').orderByChild("Major")
+      .equalTo(major_).once('value', function(snapshot) {
+        var data;
+        snapshot.forEach(function(childSnapshot) {
+          var key = childSnapshot.key;
+          var childData = childSnapshot.val();
+          data = getUserData(childData, key);
+          results.push(data);
+        });
+        Promise.all(results).then(result => {
+          console.log('Results found: ' + result.length);
+          console.log(result);
+          if (result.length > 0) {
+            showSearchResults(result);
+          } else {
+            noResultsFound();
+          }
+        });
+      }).catch(function(error) {
+        console.log("Error getting results: ", error);
       });
-      Promise.all(results).then(result => {
-        console.log('Results found: ' + result.length);
-        console.log(result);
-        if (result.length > 0) {
-          showSearchResults(result);
-        } else {
-          noResultsFound();
-        }
-      });
-    }).catch(function(error) {
-      console.log("Error getting results: ", error);
-    });
-  //check uppercase first
-  major_in = major_in.charAt(0).toUpperCase() + major_in.slice(1);
-  firebase.database().ref('Users/').orderByChild("Major")
-    .equalTo(major_in).once('value', function(snapshot) {
-      var data;
-
-      snapshot.forEach(function(childSnapshot) {
-        var key = childSnapshot.key;
-        var childData = childSnapshot.val();
-        data = getUserData(childData, key);
-        results.push(data);
-      });
-      Promise.all(results).then(result => {
-        console.log('Results found: ' + result.length);
-        console.log(result);
-        if (result.length > 0) {showSearchResults(result);} 
-        else {noResultsFound();}
-      });
-    }).catch(function(error) {console.log("Error getting results: ", error);});
+  });
 }
 
+function upperCaseWords(msg) {
+  var bool = true;
+  var mstr = "";
+  var i = 0;
+  var arr = msg.split(" ");
+  arr.forEach((str) => {
+    if (str !== "" && str !== " ") {
+     mstr += str.charAt(0).toUpperCase() + str.slice(1);
+     bool = false;
+    }
+    if (i < arr.length-1) { mstr += " "; }
+    i++;
+  });
+  return bool ? msg : mstr;
+}
 
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -186,7 +156,6 @@ function showSearchResults(results) {
   });
 }
 
-
 function saveUserID(userID) {
   sessionStorage.clear();
   sessionStorage.setItem('userID', userID);
@@ -194,7 +163,6 @@ function saveUserID(userID) {
   console.log("saved user id ..." + storageData);
   return true;
 }
-
 
 function noResultsFound() {
   var html = '<table id="results">';

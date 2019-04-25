@@ -52,7 +52,6 @@ function updateEmail(user, email_in) {
   });
 }
 
-
 function updateSubscription(user, preference) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating subscription preferences for user id ", user.uid);
