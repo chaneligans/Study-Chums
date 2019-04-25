@@ -9,7 +9,7 @@ function retrieveChums(){
         if(user) {
             let results = [];
             let applicationsRef = firebase.database().ref('Chums/' + user.uid);
-            applicationsRef.on("value", function(snapshot){                
+            applicationsRef.once("value", function(snapshot){                
                     snapshot.forEach(function(childSnapshot) {
                         let key = childSnapshot.key;
                         let userDataRef = firebase.database().ref('Users/' + key);

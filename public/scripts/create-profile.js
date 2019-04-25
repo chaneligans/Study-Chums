@@ -6,6 +6,7 @@ function updateProfile() {
       let name_in = document.getElementById("name").value;
       //let email_in = document.getElementById("email").value;
       let major_in = document.getElementById("major").value;
+      let FBprofileLink_in = document.getElementById("FBprofileLink").value;
       let bio_in = document.getElementById("bio").value;
 
       this.userId = user.uid;
@@ -22,7 +23,10 @@ function updateProfile() {
 
       if (bio_in !== "")   {updateBio(this.userId, bio_in);}
 
-      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "") {
+      if (FBprofileLink_in !== "")   {updateFBProfileLink(this.userId, FBprofileLink_in);}
+
+
+      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "" || FBprofileLink_in === "") {
           alert("Please fill in all fields.");
       }
       else if (photo_in.value === "") {
@@ -252,6 +256,27 @@ function updateBio(user, bio_in) {
         console.log("Update failed - bio to " + bio_in);
       } else {
         console.log("Update succeeded - bio to " + bio_in)
+      }
+    });
+  });
+}
+
+function updateFBProfileLink(user, FBprofileLink_in) {
+  firebase.auth().onAuthStateChanged(function(user) {
+    console.log("Updating FB profile for user id ", user.uid);
+
+    let ref = firebase.database().ref("Users/" + this.userId);
+    let fs = firebase.firestore();
+    this.userId = user.uid;
+    //realtime database
+    ref.update({
+      fbProfile: FBprofileLink_in,
+      "fbProfile": FBprofileLink_in
+    }, function(error){
+      if (error) {
+        console.log("Update failed - fbProfile to " + FBprofileLink_in);
+      } else {
+        console.log("Update succeeded - fbProfile to " + FBprofileLink_in)
       }
     });
   });

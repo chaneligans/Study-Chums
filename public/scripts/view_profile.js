@@ -137,9 +137,9 @@ function getStatus(id){
                             Promise.resolve(fbProfileLink).then(function(value) {
                               console.log(value);
                               status = '<a href="' + value + '" target="_blank" style="color:white"><i class="fab fa-facebook-square fa-sm"></i></a>';
-                              console.log(status);
 
-                              document.getElementById("status").innerHTML = status;
+                              console.log(document.getElementsByClassName("match-btn"));
+                              document.getElementById("status").innerHTML = status; 
                               $( "#status" ).load( status, function() {
                                   console.log( "Load was performed." );
                               });
@@ -212,13 +212,5 @@ function request(id){
             console.log('Something went wrong!');
         }
     });
-}
-
-function getFacebookProfile(id) {
-  let userRef = firebase.database().ref('Users/' + id);
-  userRef.once("value", function(snapshot) {
-    let fbProfileLink = snapshot.val().fbProfile;
-    return fbProfileLink;
-  });
 }
 
