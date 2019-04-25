@@ -20,6 +20,11 @@ var expected = 'Study Chums';
 // a delay promise
 const delay = t => new Promise(resolve => setTimeout(resolve,t));
 
+// get user credentials
+var fs = require('fs');
+var file = "secret/keys.json"; //adjust the file here with your own credentials
+var internet = JSON.parse(fs.readFileSync(file, "utf8")).internet;
+
 suite(function(env) {
 
   describe('Redirection - multiple', function() {
@@ -31,7 +36,7 @@ suite(function(env) {
 
     extras.forEach((extra) => {
       var browser = new Builder().
-        withCapabilities(Capabilities.chrome()).build();
+        withCapabilities(Capabilities[internet]()).build();
 
       it('Redirects from ' + extra, function() {
         browser.get(url + extra).then(() => {

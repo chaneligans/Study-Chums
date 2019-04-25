@@ -2,7 +2,7 @@ function updateEmailPreferences() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      let email_in = document.getElementById("email").value;
+      let email_in = document.getElementById("new_email").value;
       let subscribe = document.getElementById("subscribe").checked;
       let unsubscribe = document.getElementById("unsubscribe").checked;
 

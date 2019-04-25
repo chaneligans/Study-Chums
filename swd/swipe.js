@@ -13,6 +13,7 @@ var file = "secret/keys.json"; //adjust the file here with your own credentials
 var json = JSON.parse(fs.readFileSync(file, "utf8"));
 var user = json.user;
 var pass = json.pass;
+var internet = json.internet;
 
 suite(function(env) {
   describe('Swiping through users', function() {
@@ -20,7 +21,7 @@ suite(function(env) {
     var browser;
     before(function(done) {
       browser = new Builder().
-        withCapabilities(Capabilities.chrome()).build();
+        withCapabilities(Capabilities[internet]()).build();
       browser.get(url);
       done();
     });
