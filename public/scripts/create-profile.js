@@ -286,7 +286,7 @@ function updateSubscription(user) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating subscription preferences for user id ", user.uid);
 
-    let ref = firebase.database().ref("Users/" + this.userId);
+    let ref = firebase.database().ref("Subscriptions/" + this.userId);
     this.userId = user.uid;
     //realtime database
     ref.update({

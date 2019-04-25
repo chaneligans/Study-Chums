@@ -10,15 +10,19 @@
     },
     "TotalUsers": {
       ".read": true,
-        ".write": true
+      ".write": true
     },
     "Applications": {
       ".read": true,
-        ".write": true
+      ".write": true
     },
     "Chums": {
       ".read": true,
-        ".write": true
+      ".write": true
+    },
+    "Subscriptions": {
+      ".read": true,
+      ".write": true
     }
   }
 }
