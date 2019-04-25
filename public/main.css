@@ -125,9 +125,12 @@ input[type="file"]{
 }
 */
 
+/*
 html.waiting * {
     cursor: progress;
 }
+*/
+
 /* Hides Choose File and image selection */
 /* input#file{
   width: 0.1px;
