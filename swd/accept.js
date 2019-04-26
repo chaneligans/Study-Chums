@@ -93,46 +93,23 @@ suite(function(env) {
       });
 
       delay(30000).then(() => {
-        var items = [];
+        var str = 'acceptIcon9CeW8yh74VgiIextJLyjxFFEJv42';
+        // 'acceptIconMPcQcxOZPveoVy8RjMvVce5Z5sh2';
+        browser.findElement(By.id(str)).click();
 
-        // document.getElementById('recievedRequests').
-        //   getElementsByTagName('tr')[0].
-        //   getElementsByClassName('resultIcons')[0].childNodes[0];
-        //                                         ^- 0=accept, 1=reject
-
-        // browser.findElement(By.id('recievedRequests')).then((block) => {
-        //   console.log(block);
-        //   block.findElements(By.css('tr')).then((miniblock) => {
-        //     console.log(miniblock);
-        //     var icons = miniblock.findElements(By.className('resultIcons'));
-        //
-        //     icons.then((posts) => {
-        //       for (var i = 0; i < posts.length; i++) {
-        //         if (posts[i].id.lastIndexOf('acceptIcon', 0) === 0) {
-        //           items.push(posts[i]);
-        //           console.log('icon: ' + posts[i].id);
-        //         }
-        //       }
-        //     });
-        //   });
-        // });
-        var posts = browser.findElements(By.className('resultIcons'));
-        posts.then((p)=> {
-          console.log(p);
-          p.forEach((post)=> {
-            console.log(post.findElement(By.css('p')).getId());
-          });
-        });
-
-
-        // console.log('accept a request');
-        // console.log('decline a request');
       });
 
+      var who = 'Sam';
       delay(36000).then(() => {
-        console.log('end of test');
-        browser.findElement(By.linkText('Home')).click();
+        // console.log('end of test');
+        browser.findElement(By.linkText('Chums')).click();
+        browser.wait(until.titleIs('Chums | ' +expected)).then(() => {
+          browser.findElement(By.linkText(who)).click();
 
+          browser.wait(until.titleIs('View Profile | '+expected)).then(() => {
+            browser.findElement(By.id('status')).click();
+          });
+        });
       });
 
       done();
