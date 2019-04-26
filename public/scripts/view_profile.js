@@ -134,7 +134,7 @@ function getStatus(id) {
               });
               Promise.resolve(fbProfileLink).then(function(value) {
                 console.log(value);
-                status = '<a href="' + value + '" target="_blank" style="color:#3b5998"><i class="fab fa-facebook-square fa-sm"></i></a>';
+                status = '<a href="' + value + '" target="_blank" style="color:#3b5998"><i class="fab fa-facebook-square fa-lg"></i></a>';
 
                 console.log(document.getElementsByClassName("match-btn"));
                 document.getElementsByClassName("match-btn")[0].style.backgroundColor = "white";
