@@ -137,7 +137,7 @@ function getStatus(id) {
                 status = '<a href="' + value + '" target="_blank" style="color:white"><i class="fab fa-facebook-square fa-sm"></i></a>';
 
                 console.log(document.getElementsByClassName("match-btn"));
-                document.getElementsByClassName("match-btn")[0].style.backgroundColor = "#00BFFF";
+                document.getElementsByClassName("match-btn")[0].style.backgroundColor = "#3b5998";
                 document.getElementsByClassName("match-btn")[0].style.padding = "8px";
                   
                 document.getElementById("status").innerHTML = status;
