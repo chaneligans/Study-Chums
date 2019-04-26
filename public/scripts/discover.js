@@ -53,7 +53,15 @@ function SearchName(name_in) {
           var key = childSnapshot.key;
           var childData = childSnapshot.val();
           data = getUserData(childData, key);
-          results.push(data);
+            
+          var bool = false;
+            results.forEach((result)=> {
+          if (result[4] === data[4]) {
+              bool = true;
+          }
+          });
+          if (bool === false) {
+            results.push(data);}
         });
         Promise.all(results).then(result => {
           console.log('Results found: ' + result.length);
@@ -82,7 +90,14 @@ function SearchMajor(major_in) {
           var key = childSnapshot.key;
           var childData = childSnapshot.val();
           data = getUserData(childData, key);
-          results.push(data);
+          var bool = false;
+          results.forEach((result)=> {
+            if (result[4] === data[4]) {
+                bool = true;
+            }
+          });
+          if (bool === false) {
+            results.push(data);}
         });
         Promise.all(results).then(result => {
           console.log('Results found: ' + result.length);
