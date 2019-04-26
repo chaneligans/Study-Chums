@@ -35,6 +35,7 @@ suite(function(env) {
     });
 
     it('Should expect the title for homepage after logging in', function(done) {
+      console.log('login button clicked');
       browser.findElement(By.id('loginbtn')).click();
       let main = browser.getWindowHandle();
       main.then((m) => {
@@ -51,6 +52,7 @@ suite(function(env) {
         delay(5500).then(() => {
           browser.wait(until.elementLocated(By.id('homelink')), 2500).
             then(() => {
+              console.log('log into FB');
               browser.findElement(By.id('email')).sendKeys(user);
               browser.findElement(By.id('pass')).sendKeys(pass);
               browser.findElement(By.id('loginbutton')).click();
@@ -65,6 +67,7 @@ suite(function(env) {
           browser.wait(until.titleIs('Home | '+expected)).then(() => {
             browser.getTitle().then((title) => {
               assert.equal(title, 'Home | '+expected);
+              console.log('In Home');
             }, (err) => {
               console.log('title fail(assert) <- homepage: '+ err.message);
             });
@@ -83,6 +86,7 @@ suite(function(env) {
             then(() => {
               browser.getTitle().then((title) => {
                 assert.equal(title, 'Applications | '+expected);
+                console.log('In Applications')
               }, (err) => {
                 console.log('title fail(assert) <- applications: '+ err.message);
               });
@@ -93,21 +97,51 @@ suite(function(env) {
       });
 
       delay(30000).then(() => {
-        var str = 'acceptIcon9CeW8yh74VgiIextJLyjxFFEJv42';
+        // var str = //'acceptIcon9CeW8yh74VgiIextJLyjxFFEJv42';
         // 'acceptIconMPcQcxOZPveoVy8RjMvVce5Z5sh2';
-        browser.findElement(By.id(str)).click();
-
+        // browser.findElement(By.id(str)).click();
+        console.log('accept a request');
       });
 
-      var who = 'Sam';
       delay(36000).then(() => {
+
+        var who =
+        // 'Sam';
+        // 'Lili';
+        'Chanel';
+
         // console.log('end of test');
         browser.findElement(By.linkText('Chums')).click();
         browser.wait(until.titleIs('Chums | ' +expected)).then(() => {
-          browser.findElement(By.linkText(who)).click();
-
-          browser.wait(until.titleIs('View Profile | '+expected)).then(() => {
-            browser.findElement(By.id('status')).click();
+          browser.getTitle().then((title) => {
+            assert.equal(title, 'Chums | '+expected);
+            console.log('In Chums');
+          }, (err) => {
+            console.log('assertion (Chums) failed: '+err.message);
+          });
+          delay(5000).then(() => {
+            browser.findElement(By.linkText(who)).click();
+            browser.wait(until.titleIs('View Profile | '+expected),2500).
+              then(() => {
+                browser.getTitle().then((title) => {
+                  assert.equal(title,'View Profile | '+expected);
+                  console.log('viewing profile: ' + who);
+                }, (err) => {
+                  console.log('assertion(view profile) failed: '+ err.message);
+                });
+                delay(5000).then(() => {
+                  var mainTab = browser.getWindowHandle();
+                  browser.findElement(By.id('status')).click();
+                  console.log('FB link clicked: '+ who);
+                  delay(5000).then(() => {
+                    browser.switchTo().window(mainTab);
+                    browser.findElement(By.linkText('Home')).click();
+                    console.log('end of test');
+                  });
+                });
+            }, (err) => {
+              console.log('titleIs(view profile) failed: ' + err.message);
+            });
           });
         });
       });

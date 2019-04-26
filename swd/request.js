@@ -88,17 +88,17 @@ suite(function(env) {
               }, (err) => {
                 console.log('title fail(assert) <- view profile: '+ err.message);
               });
+
+              delay(6000).then(() => {
+                // browser.findElement(By.id('status')).
+                //   findElement(By.linkText('Request to Match')).click();
+
+                console.log('clicked on "request to match"');
+              });
             }, (err) => {
               console.log('title fail(titleIs) <- view profile: '+ err.message);
             });
         });
-      });
-
-      delay(30000).then(() => {
-        // browser.findElement(By.id('status')).
-        //   findElement(By.linkText('Request to Match')).click();
-
-        console.log('clicked on "request to match"');
       });
 
       delay(35000).then(() => {
