@@ -162,12 +162,14 @@ function getStatus(id) {
 
 
 function request(id) {
+  let test = successful;
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       var myid = user.uid;
       var chumStatus;
       var userDataRef = firebase.database().ref();
       var ChumsStatusRef = userDataRef.child("Chums/" + myid + "/" + id);
+      
       ChumsStatusRef.on("value", function(snapshot) {
         var key = snapshot.key;
         if (snapshot.val()) {
@@ -182,9 +184,16 @@ function request(id) {
         var status = "Requested";
         firebase.database().ref('Applications/' + myid + '/Sent/' + id).set({
           status: status
+        }).catch(function(error) {
+          test = unsuccessful;
+          console.log("Request failed: " + error.message)
         });
+
         firebase.database().ref('Applications/' + id + '/Received/' + myid).set({
           status: status
+        }).catch(function(error) {
+          test = unsuccessful;
+          console.log("Request failed: " + error.message)
         });
         document.getElementsByClassName("match-btn").value = "Requested";
       }
