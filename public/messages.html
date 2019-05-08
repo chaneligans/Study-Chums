@@ -7,13 +7,13 @@
     <title>Messages | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="main.css">
-    
+
     <!-- IMPORT ICONS -->
     <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
+    <!-- <script>window.onload = checkLogin;</script> -->
 
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/facebook_logout.js"></script>
@@ -22,7 +22,6 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script type="text/javascript" src="scripts/firebase-config.js"></script>
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
-
   </head>
   <body>
     <script>
@@ -55,7 +54,19 @@
         <div id="description">
           <h1>Messages</h1>
         </div>
-        <p>No content here... yet.</p>
+        <!-- <p>No content here... yet.</p> -->
+        <textarea id="thread" rows="20" cols="50"></textarea>
+        <div id="message_block_1">
+          <input type="text" id="message_in_1"
+            placeholder="Message 1 goes here..." onkeyup="enter();">
+          <button id="message_send_1" onclick="up();">Send</button>
+        </div>
+        <div id="message_block_2">
+          <input type="text" id="message_in_2"
+            placeholder="Message 2 goes here..." onkeyup="enter_();">
+          <button id="message_send_2" onclick="up_();">Send</button>
+        </div>
+        <button id="see_thread_list" onclick="show();">Show thread</button>
       </div> <!-- content div -->
       <!-- END CONTENT-->
 
@@ -67,5 +78,6 @@
     </div>
 
     <script type="text/javascript" src="scripts/toggle_bio.js"></script>
+    <script type="text/javascript" src="scripts/messages.js"></script>
   </body>
 </html>
