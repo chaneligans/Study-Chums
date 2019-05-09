@@ -97,8 +97,11 @@
                 <button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button>
               </div>
             </header>
+            
+            <script>
+              loadChatHistory();
+            </script>
             <ul id="chat"> <!-- CHAT -->
-              <script>loadChatHistory();</script>
               <!-- <li class="you">
                 <div class="entete">
                   <h2 class="sender">Vincent</h2>
@@ -107,16 +110,13 @@
                 <div class="message">
                   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                 </div>
-              </li>
+              </li> -->
               <li class="me">
-                <div class="entete">
-                  <h3 class="timestamp">10:12AM, Today</h3>
-                  <h2 class="sender">You</h2>
-                </div>
+                <div class="entete"><h3 class="timestamp">10:12AM, Today</h3><h2 class="sender">You</h2></div>
                 <div class="message">
                   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                 </div>
-              </li> -->
+              </li>
             </ul>
             <footer>
               <textarea id="message" placeholder="Type your message"></textarea>

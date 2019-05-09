@@ -42,6 +42,37 @@ function loadChatHistory() {
   });
 }
 
+function displayMessages(messages) {
+  firebase.auth().onAuthStateChanged(user => {
+    if(user) {
+      messages.forEach(result => {
+        console.log(result.senderID);
+
+        const senderID = result.senderID;
+        const senderName = result.senderName;
+        const t = result.time;
+        const time = t.getHours() + ':' + t.getMinutes() + ', ' + t.getMonth() + "/" + t.getDay() + "/" + t.getFullYear();
+        const message = result.message;
+  
+        if(user.uid == senderID) {
+
+          $(document).ready(function () {
+            $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">'+ time +'</h3><h2 class="sender">'+ senderName +'</h2></div><div class="message">'+ message +'</div></li>');
+          });
+          
+        } else {
+          $(document).ready(function () {
+            $("#chat").append('<li class="you"><div class="entete"><h3 class="timestamp">'+ time +'</h3><h2 class="sender">'+ senderName +'</h2></div><div class="message">'+ message +'</div></li>');
+          });
+        }
+
+      })
+    } else {
+      console.log('User is not signed in!');
+    }
+  });
+}
+
 function sendMessage() {
   const message = document.getElementById("message").value;
   const timestamp = firebase.firestore.FieldValue.serverTimestamp();

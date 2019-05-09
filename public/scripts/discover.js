@@ -139,6 +139,8 @@ function showSearchResults(results) {
 
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
+      console.log(result);
+      
       index = result[0];
       img = result[1];
       name = result[2];
