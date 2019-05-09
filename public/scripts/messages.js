@@ -10,29 +10,38 @@ function openChatRoom() {
 
 //if user creates new chatroom
 function createChatRoom(topic) {
-  //create new roomID
-  //set roomID
-  //set topic
-  //update users
     firebase.auth().onAuthStateChanged(user => {
         if(user){
             const db = firebase.firestore();
-            const roomID;
-            //add user self first, and later call the updateUser to add more Users
-            let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
-            usersRef.doc(user.id)
+            let room;
+            //add user self first, and later call the updateUser to add more User
     
             db.collection("ChatRooms").add({
                 topic: topic
             })
             .then(function(docRef) {
-                console.log("Document Roomid successfully written!", docRef.id);
+                console.log("ChatRoom created with key --- ", docRef.id);
+                room = docRef.id;
+                roomID = room;
+
+                db.collection("Users").doc(user.uid).get(result => {
+                  let name = result.data().name;
+
+                  db.collection("ChatRooms").doc(room).collection("Users").doc(user.uid)
+                  .set({
+                    name: name,
+                  });
+                });
+
+                db.collection("Users").doc(user.uid).collection("ChatRooms").doc(room).set({
+                  topic: topic,
+                });
             })
             .catch(function(error) {
                 console.error("Error writing document: ", error);
             });
         }
-    }
+    });
     
 }
 function updateUsers(userId){
