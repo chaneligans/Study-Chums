@@ -675,8 +675,20 @@ nav li a {
   color:#bbb;
 }
 #chat .entete{
-  text-align: center;
+  text-align: right;
   margin-bottom:5px;
+}
+#chat .me .entete{
+  text-align: right;
+}
+#chat .you .entete{
+  text-align: left;
+}
+#chat .you .entete .sender{
+  padding-right: 3px;
+}
+#chat .me .entete .sender{
+  padding-left: 5px;
 }
 #chat .message{
   padding:20px;
@@ -692,7 +704,8 @@ nav li a {
 }
 #chat .you .message{
   color: dimgrey;
-  background-color:#f2f2f2;
+  /* background-color:#f2f2f2; */
+  background-color: #E1E3E8;
 }
 #chat .me .message{
 	background-color:#9DD2EE;
