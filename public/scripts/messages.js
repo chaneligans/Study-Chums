@@ -2,19 +2,53 @@ var roomID = "123Test";
 
 
 
-//if user opens existing chatroom
+//if user opens existing chatroom 
 function openChatRoom() {
   //set roomID
 
 }
 
 //if user creates new chatroom
-function createChatRoom() {
+function createChatRoom(topic) {
   //create new roomID
   //set roomID
   //set topic
   //update users
+    firebase.auth().onAuthStateChanged(user => {
+        if(user){
+            const db = firebase.firestore();
+            const roomID;
+            //add user self first, and later call the updateUser to add more Users
+            let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
+            usersRef.doc(user.id)
+    
+            db.collection("ChatRooms").add({
+                topic: topic
+            })
+            .then(function(docRef) {
+                console.log("Document Roomid successfully written!", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
+        }
+    }
+    
+}
+function updateUsers(userId){
+      const db = firebase.firestore();
+      const userName = getUserName(userId);
 
+      let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
+      usersRef.doc(userId).set({
+          name: userName
+      })
+      .then(function(docRef) {
+          console.log("Document userid successfully written!", docRef.id);
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
 }
 
 function loadChatHistory() {
