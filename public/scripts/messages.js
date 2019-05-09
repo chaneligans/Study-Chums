@@ -1,4 +1,4 @@
-var roomID = "123Test";
+// var roomID = "123Test";
 
 
 
@@ -12,7 +12,8 @@ function openChatRoom(roomID) {
 }
 
 //if user creates new chatroom
-function createChatRoom(topic) {
+function createChatRoom() {
+    const topic = "Comp Sci";
     firebase.auth().onAuthStateChanged(user => {
         if(user){
             const db = firebase.firestore();
@@ -24,7 +25,7 @@ function createChatRoom(topic) {
                 console.log("ChatRoom created with key --- ", docRef.id);
                 const roomID = docRef.id;
 
-                db.collection("Users").doc(user.uid).get(result => {
+                db.collection("Users").doc(user.uid).get().then(result => {
                   let name = result.data().name;
 
                   db.collection("ChatRooms").doc(roomID).collection("Users").doc(user.uid)
@@ -68,27 +69,32 @@ function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
-    let messages = [];
+    db.collection("Users").doc(user.uid).get().then(result => {
+      let roomID = result.data().currentChatRoom;
+      let messages = [];
 
-    db.collection("ChatRooms").doc(roomID).collection("Messages")
-    .get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
-            messages.push({
-              senderID: doc.data().senderID,
-              senderName: doc.data().senderName,
-              time: doc.data().time.toDate(),
-              message: doc.data().message,
-            });
-        });
+      db.collection("ChatRooms").doc(roomID).collection("Messages")
+      .get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+              console.log(doc.id, " => ", doc.data());
+              messages.push({
+                senderID: doc.data().senderID,
+                senderName: doc.data().senderName,
+                time: doc.data().time.toDate(),
+                message: doc.data().message,
+              });
+          });
 
-        Promise.all(messages).then(results => {
-          displayMessages(results);
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
+          Promise.all(messages).then(results => {
+            displayMessages(results);
+          });
+      })
+      .catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
     });
+
+  
   });
 }
 
@@ -107,7 +113,7 @@ function displayMessages(messages) {
         if(user.uid == senderID) {
 
           $(document).ready(function () {
-            $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">'+ time +'</h3><h2 class="sender">'+ senderName +'</h2></div><div class="message">'+ message +'</div></li>');
+            $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">'+ time +'</h3><h2 class="sender">You</h2></div><div class="message">'+ message +'</div></li>');
           });
           
         } else {
@@ -130,6 +136,9 @@ function sendMessage() {
   firebase.auth().onAuthStateChanged(user => {
     if(user) {
       const db = firebase.firestore();
+
+    db.collection("Users").doc(user.uid).get().then(result => {
+      let roomID = result.data().currentChatRoom;
 
       let userRef = db.collection("ChatRooms").doc(roomID).collection("Users").doc(user.uid)
       .get().then(function(doc) {
@@ -156,6 +165,7 @@ function sendMessage() {
       }).catch(function(error) {
           console.log("Error getting document:", error);
       });
+    });
 
     } else {
       console.log('User is not signed in!');

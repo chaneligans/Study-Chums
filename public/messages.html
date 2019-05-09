@@ -77,7 +77,7 @@
         <div id="chatContainer">
           <aside id="leftSide">
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
-              <button id="newChatButton" onclick = "createChatRoom(topic)"><i class="fas fa-plus"></i></button>
+              <button id="newChatButton" onclick = "createChatRoom();"><i class="fas fa-plus"></i></button>
             </header>
             <ul> <!-- SIDE USER LIST -->
               <li>
@@ -102,7 +102,7 @@
               loadChatHistory();
             </script>
             <ul id="chat"> <!-- CHAT -->
-              <li class="you">
+              <!-- <li class="you">
                 <div class="entete">
                   <h2 class="sender">Vincent</h2>
                   <h3 class="timestamp">10:12AM, Today</h3>
@@ -116,7 +116,7 @@
                 <div class="message">
                   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                 </div>
-              </li>
+              </li> -->
             </ul>
             <footer>
               <textarea id="message" placeholder="Type your message"></textarea>
