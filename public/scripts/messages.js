@@ -18,9 +18,29 @@ function createChatRoom() {
 }
 
 function loadChatHistory() {
+  let messages = [];
+  const db = firebase.firestore();
 
+  db.collection("ChatRooms").doc(roomID).collection("Messages")
+  .get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+          console.log(doc.id, " => ", doc.data());
+          messages.push({
+            senderID: doc.data().senderID,
+            senderName: doc.data().senderName,
+            time: doc.data().time.toDate(),
+            message: doc.data().message,
+          });
+      });
+
+      Promise.all(messages).then(results => {
+        displayMessages(results);
+      });
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
 }
-
 
 function sendMessage() {
   const message = document.getElementById("message").value;

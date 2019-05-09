@@ -657,6 +657,7 @@ nav li a {
   padding-left:0;
   margin:0;
   list-style-type:none;
+  overflow-x:auto;
   overflow-y:scroll;
   height:75%;
   border-top:2px solid #fff;
