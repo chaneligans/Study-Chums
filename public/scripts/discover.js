@@ -4,6 +4,9 @@ function Enter() {
     if (event.keyCode === 13) {
       Search();
     }
+    else {
+      Search();
+    }
   });
 }
 
@@ -47,7 +50,7 @@ function SearchName(name_in) {
   // check each name type (as-is, lowercase, uppercase)
   nameTypes.forEach((name_) => {
     firebase.database().ref('Users/').orderByChild("name")
-      .equalTo(name_).once('value', function(snapshot) {
+      .startAt(name_).endAt(name_+"\uf8ff").once('value', function(snapshot) {
         var data;
         snapshot.forEach(function(childSnapshot) {
           var key = childSnapshot.key;
