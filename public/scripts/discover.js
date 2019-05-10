@@ -56,7 +56,7 @@ function SearchName(name_in) {
           var key = childSnapshot.key;
           var childData = childSnapshot.val();
           data = getUserData(childData, key);
-            
+
           var bool = false;
             results.forEach((result)=> {
           if (result[4] === data[4]) {
@@ -87,7 +87,8 @@ function SearchMajor(major_in) {
   // check each major type (as-is, lowercase, uppercase)
   majorTypes.forEach((major_) => {
     firebase.database().ref('Users/').orderByChild("Major")
-      .equalTo(major_).once('value', function(snapshot) {
+      .startAt(major_).endAt(major_+"\uf8ff")
+      .once('value', function(snapshot) {
         var data;
         snapshot.forEach(function(childSnapshot) {
           var key = childSnapshot.key;
@@ -143,7 +144,7 @@ function showSearchResults(results) {
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
       console.log(result);
-      
+
       index = result[0];
       img = result[1];
       name = result[2];
