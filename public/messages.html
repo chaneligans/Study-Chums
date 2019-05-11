@@ -27,6 +27,7 @@
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
     <script type="text/javascript" src="scripts/messages.js"></script>
+    <script type="text/javascript" src="scripts/chums.js"></script>
   </head>
   <body>
     <script>
@@ -85,21 +86,10 @@
                     <label for="topic"><b>Topic</b></label>
                     <input type="text" placeholder="Enter topic" name="topic" required>
 
-
                     <button type="submit" class="btn">Add</button>
                     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                 </form>
             </div>
-
-            <script>
-                function newChat() {
-                    document.getElementById("popup").style.display = "block";
-                }
-
-                function closeForm() {
-                    document.getElementById("popup").style.display = "none";
-                }
-            </script>
             </header>
             <ul> <!-- SIDE USER LIST -->
               <li>
