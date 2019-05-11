@@ -1,8 +1,8 @@
 function Enter() {
   var Enterkey = document.getElementById("query");
   Enterkey.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-      Search();
+    if (event.keyCode === 27) {
+      Enterkey.value = "";
     }
     else {
       Search();
