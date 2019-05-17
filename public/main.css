@@ -770,14 +770,20 @@ body {font-family: Arial, Helvetica, sans-serif;}
   display: none;
   position: fixed;
   bottom: 0;
-  right: 15px;
+  position: absolute;
+  top: 50%;
+  left:50%;
+  width:400px;
+  height: 400px;
+  margin-left: -200px;
+  margin-top: -200px
   border: 3px solid #f1f1f1;
   z-index: 9;
 }
 
 /* Add styles to the form container */
 .form-container {
-  max-width: 300px;
+  max-width: 100%;
   padding: 10px;
   background-color: white;
 }

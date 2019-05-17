@@ -1,4 +1,11 @@
 // var roomID = "123Test";
+function newChat() {
+    document.getElementById("popup").style.display = "block";
+}
+
+function closeForm() {
+    document.getElementById("popup").style.display = "none";
+}
 
 
 

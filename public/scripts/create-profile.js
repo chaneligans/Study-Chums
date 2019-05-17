@@ -21,7 +21,7 @@ function updateProfile() {
 
       if (major_in !== "") {updateMajor(this.userId, major_in);}
 
-      if (bio_in !== "") {updateBio(this.userId, bio_in);
+      if (bio_in !== "") {updateBio(this.userId, bio_in)};
 
       if (FBprofileLink_in !== "") {updateFBProfileLink(this.userId, FBprofileLink_in);}
 

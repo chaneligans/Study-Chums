@@ -3,6 +3,7 @@
   <head>
     <meta charset=utf-8>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="manifest" href="/manifest.json">
 
     <title>Messages | Study Chums</title>
     <link rel="icon" href="images/favicon.ico">
@@ -27,6 +28,7 @@
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
     <script type="text/javascript" src="scripts/messages.js"></script>
+    <script type="text/javascript" src="scripts/chums.js"></script>
   </head>
   <body>
     <script>
@@ -78,7 +80,7 @@
           <aside id="leftSide">
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
               <button id="newChatButton" onclick = "newChat();"><i class="fas fa-plus"></i></button>
-              <div class="form-popup" id="">
+              <div class="form-popup" id="popup">
                 <form action="/action_page.php" class="form-container">
                     <h1>New Chat</h1>
 
@@ -89,16 +91,6 @@
                     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                 </form>
             </div>
-
-            <script>
-                function newChat() {
-                    document.getElementById("chat").style.display = "block";
-                }
-
-                function closeForm() {
-                    document.getElementById("chat").style.display = "none";
-                }
-            </script>
             </header>
             <ul> <!-- SIDE USER LIST -->
               <li>

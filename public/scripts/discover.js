@@ -1,7 +1,10 @@
 function Enter() {
   var Enterkey = document.getElementById("query");
   Enterkey.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 27) {
+      Enterkey.value = "";
+    }
+    else {
       Search();
     }
   });
@@ -47,13 +50,13 @@ function SearchName(name_in) {
   // check each name type (as-is, lowercase, uppercase)
   nameTypes.forEach((name_) => {
     firebase.database().ref('Users/').orderByChild("name")
-      .equalTo(name_).once('value', function(snapshot) {
+      .startAt(name_).endAt(name_+"\uf8ff").once('value', function(snapshot) {
         var data;
         snapshot.forEach(function(childSnapshot) {
           var key = childSnapshot.key;
           var childData = childSnapshot.val();
           data = getUserData(childData, key);
-            
+
           var bool = false;
             results.forEach((result)=> {
           if (result[4] === data[4]) {
@@ -84,7 +87,8 @@ function SearchMajor(major_in) {
   // check each major type (as-is, lowercase, uppercase)
   majorTypes.forEach((major_) => {
     firebase.database().ref('Users/').orderByChild("Major")
-      .equalTo(major_).once('value', function(snapshot) {
+      .startAt(major_).endAt(major_+"\uf8ff")
+      .once('value', function(snapshot) {
         var data;
         snapshot.forEach(function(childSnapshot) {
           var key = childSnapshot.key;
@@ -140,7 +144,7 @@ function showSearchResults(results) {
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
       console.log(result);
-      
+
       index = result[0];
       img = result[1];
       name = result[2];
