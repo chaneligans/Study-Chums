@@ -78,13 +78,12 @@
           <aside id="leftSide">
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
               <button id="newChatButton" onclick = "newChat();"><i class="fas fa-plus"></i></button>
-              <div class="form-popup" id="chat">
+              <div class="form-popup" id="">
                 <form action="/action_page.php" class="form-container">
                     <h1>New Chat</h1>
 
                     <label for="topic"><b>Topic</b></label>
                     <input type="text" placeholder="Enter topic" name="topic" required>
-
 
                     <button type="submit" class="btn">Add</button>
                     <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
