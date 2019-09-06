@@ -702,6 +702,9 @@ nav li a {
 #chat .me{
 	text-align:right;
 }
+#chat .you{
+  text-align: left;
+}
 #chat .you .message{
   color: dimgrey;
   /* background-color:#f2f2f2; */
@@ -756,8 +759,6 @@ nav li a {
   cursor: pointer;
   font-size: 20px;
 }
-
-
 
 /* END CHAT CONTAINER */
 
