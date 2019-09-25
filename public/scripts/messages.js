@@ -1,4 +1,3 @@
-// var roomID = "123Test";
 function showPopUp() {
     document.getElementById("popup").style.display = "block";
 }
@@ -17,7 +16,10 @@ function openChatRoom(roomID) {
 }
 
 //if user creates new chatroom
+//todo #1: take input for topic
+//todo #2: if user not in users database, add user
 function createChatRoom() {
+    //todo #1
     const topic = "Comp Sci";
     firebase.auth().onAuthStateChanged(user => {
         if(user){
@@ -30,6 +32,7 @@ function createChatRoom() {
                 console.log("ChatRoom created with key --- ", docRef.id);
                 const roomID = docRef.id;
 
+                //todo #2
                 db.collection("Users").doc(user.uid).get().then(result => {
                   let name = result.data().name;
 
@@ -54,22 +57,30 @@ function createChatRoom() {
     });
     
 }
-function updateUsers(userId){
-      const db = firebase.firestore();
-      const userName = getUserName(userId);
 
-      let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
-      usersRef.doc(userId).set({
-          name: userName
-      })
-      .then(function(docRef) {
-          console.log("Document userid successfully written!", docRef.id);
-      })
-      .catch(function(error) {
-          console.error("Error writing document: ", error);
-      });
+//add user to ChatRoom
+//todo #1: get username from User Database
+//todo #2: use user current chatroom to get room id, then add user to chatroom and chatroom to user
+function updateUsers(userId){
+      // const db = firebase.firestore();
+
+      // //todo #1
+      // const userName = getUserName(userId);
+
+      // let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
+      // usersRef.doc(userId).set({
+      //     name: userName
+      // })
+      // .then(function(docRef) {
+      //     console.log("Document userid successfully written!", docRef.id);
+      // })
+      // .catch(function(error) {
+      //     console.error("Error writing document: ", error);
+      // });
 }
 
+//todo: update in real-time
+//todo: clear chat then load and display messages
 function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
@@ -175,7 +186,6 @@ function sendMessage() {
     } else {
       console.log('User is not signed in!');
     }
-
-});
+  });
 }
 
