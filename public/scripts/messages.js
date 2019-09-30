@@ -94,15 +94,16 @@ function loadChatHistory() {
     const db = firebase.firestore();
 
     db.collection("Users").doc(user.uid).get().then(result => {
-      let roomID = result.data().currentChatRoom;
-      let messages = [];
+      const roomID = result.data().currentChatRoom;
+      var initial_messages = [];
+      var messages = [];
 
       db.collection("ChatRooms").doc(roomID).collection("Messages")
       .orderBy("time")
       .get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
               console.log(doc.id, " => ", doc.data());
-              messages.push({
+              initial_messages.push({
                 senderID: doc.data().senderID,
                 senderName: doc.data().senderName,
                 time: doc.data().time.toDate(),
@@ -110,13 +111,33 @@ function loadChatHistory() {
               });
           });
 
-          Promise.all(messages).then(results => {
+          Promise.all(initial_messages).then(results => {
             displayMessages(results);
           });
       })
-      .catch(function(error) {
-          console.log("Error getting documents: ", error);
-      });
+
+      db.collection("ChatRooms").doc(roomID).collection("Messages")
+      .orderBy("time")
+      .onSnapshot(function(querySnapshot) {
+          querySnapshot.docChanges().forEach(function(change) {
+            if(change.type == "modified") {
+              console.log(change.doc.id, " => ", change.doc.data());
+              messages.push({
+                senderID: change.doc.data().senderID,
+                senderName: change.doc.data().senderName,
+                time: change.doc.data().time.toDate(),
+                message: change.doc.data().message,
+              });
+            }
+          });
+
+        Promise.all(messages).then(results => {
+          displayMessages(results);
+        });
+      })
+      // .catch(function(error) {
+      //     console.log("Error getting documents: ", error);
+      // });
     });
 
   
@@ -129,7 +150,7 @@ function displayMessages(messages) {
       messages.forEach(result => {
 
         const senderID = result.senderID;
-        const senderName = result.senderName;
+        const senderName = " " + result.senderName;
         const t = result.time;
         const time = t.getMonth() + "/" + t.getDay() + "/" + t.getFullYear() + ', ' + t.getHours() + ':' + t.getMinutes();
         const message = result.message;
