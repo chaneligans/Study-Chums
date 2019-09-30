@@ -17,7 +17,6 @@ function openChatRoom(roomID) {
 
 //if user creates new chatroom
 //todo #1: take input for topic
-//todo #2: if user not in users database, add user
 function createChatRoom() {
     //todo #1
     const topic = "Comp Sci";
@@ -58,25 +57,34 @@ function createChatRoom() {
     
 }
 
-//add user to ChatRoom
-//todo #1: get username from User Database
-//todo #2: use user current chatroom to get room id, then add user to chatroom and chatroom to user
-function updateUsers(userId){
-      // const db = firebase.firestore();
+function addUserToChatRoom(friendId, topic){
+  firebase.auth().onAuthStateChanged(user => {
+    if(user){
+      const db = firebase.firestore();
 
-      // //todo #1
-      // const userName = getUserName(userId);
+      db.collection("Users").doc(user.uid).get().then(userResult => { 
+        let roomID = userResult.data().currentChatRoom;
 
-      // let usersRef = db.collection("ChatRooms").doc(roomID).collection("Users")
-      // usersRef.doc(userId).set({
-      //     name: userName
-      // })
-      // .then(function(docRef) {
-      //     console.log("Document userid successfully written!", docRef.id);
-      // })
-      // .catch(function(error) {
-      //     console.error("Error writing document: ", error);
-      // });
+        db.collection("Users").doc(friendId).get().then(friendResult => { 
+
+          const friendName = friendResult.data().name;
+
+          let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
+          chatRoomRef.doc(userId).set({
+              name: friendName
+          });
+
+          let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
+          usersRef.doc(roomID).set({
+            topic: topic
+          });
+        })
+        .catch(function(error) {
+            console.error("Error retrieving document: ", error);
+        });
+      });
+    }
+  });
 }
 
 //todo: update in real-time
