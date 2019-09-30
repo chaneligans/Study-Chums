@@ -90,13 +90,18 @@
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
               <button id="newChatButton" onclick = "createChatRoom();"><i class="fas fa-plus"></i></button>
             </header>
-            <ul> <!-- SIDE USER LIST -->
+            <script>
+                loadChatRoom();
+            </script>
+            <ul id = "leftSideRooms"> <!-- SIDE USER LIST -->
+<!--
               <li>
                 <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
                 <div>
                   <h2 class="leftChatName">Prénom Nom</h2>
                 </div>
               </li>
+-->
             </ul>
           </aside>
           <main id="rightSide">
