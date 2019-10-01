@@ -76,6 +76,7 @@ function createChatRoom() {
                   currentChatRoom: roomID,
                 });
               });
+              chatPopupId.style.display = "none";
             })
             .catch(function(error) {
               console.error("Error writing document: ", error);
