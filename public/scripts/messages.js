@@ -98,6 +98,10 @@ function loadChatRoom() {
 
         let userLists = [];
         let roomID = result.id;
+        let topic;
+        db.collection("ChatRooms").doc(roomID).get().then(result => {
+            topic = result.data().topic;
+        });
         db.collection("ChatRooms").doc(roomID).collection("Users")
           .get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
@@ -105,7 +109,9 @@ function loadChatRoom() {
               userLists.push({
                 name: doc.data().name,
                 userID: doc.id,
+                topic: topic,
               });
+
             });
             Promise.all(userLists).then(results => {
               displayChatRooms(results);
@@ -124,23 +130,65 @@ function displayChatRooms(userLists) {
     if (user) {
       console.log("print the users details: ", userLists);
       let names = [];
+      let displayName;
+      let roomID;
       userLists.forEach(result => {
         console.log('2223231212121212121!');
         const name = result.name;
         const userid = result.userID;
+        const topic = result.topic;
+        roomID = result.roomID;
         if (user.uid != userid) {
           names.push(name);
           console.log("print the user id: ", userid);
+          if(names.length != 1){
+            displayName = topic;
+          }else{
+            displayName = names[0];
+          }
         }
       });
-      $(document).ready(function() {
-        $("#leftSideRooms").append('<li><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">' + names + '</h2></div></li>');
+      $(document).ready(function () {
+        $("#leftSideRooms").append('<li><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
+//      $(document).ready(function(){
+//                $("h2").click(function(){
+//                    $(this).changeChatRoom(roomID);
+//                });
+//            });
 
     } else {
       console.log('User is not signed in!');
     }
   });
+}
+function changeChatRoom(roomID){ // not complete
+    //change currentchatRoom in users.id
+    //then load the chat history which need to clean before messages
+    firebase.auth().onAuthStateChanged(user => {
+        if(user){
+            console.log("print the need to change room id: ", roomID);
+            const db = firebase.firestore();
+            let userRef = db.collection("Users").doc(user.uid);
+            let beforeRoom;
+            
+            userRef.get().then(doc => {
+                beforeRoom = doc.data().currentChatRoom;
+                console.log("print the change before room id", beforeRoom);
+            })
+            //each time change room need to clean up chat space
+            $(document).ready(function () {
+                $("#chat").empty();
+            });
+            //update current chat Room
+            userRef.update({
+                currentChatRoom: roomID,
+            });
+//            if(!roomID.localeCompare(beforeRoom)){
+                loadChatHistory();
+//            }
+        }
+    });
 }
 
 function addUserToChatRoom(friendId, topic) {
@@ -183,7 +231,7 @@ function loadChatHistory() {
       const roomID = result.data().currentChatRoom;
       var initial_messages = [];
       var messages = [];
-
+//      console.log("print the room2 id: ", roomID);
       db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
         .get().then(function(querySnapshot) {
