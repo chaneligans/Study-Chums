@@ -26,9 +26,10 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script type="text/javascript" src="scripts/firebase-config.js"></script>
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
-
-    <script type="text/javascript" src="scripts/messages.js"></script>
+    
     <script type="text/javascript" src="scripts/chums.js"></script>
+    <script type="text/javascript" src="scripts/messages.js"></script>
+    
   </head>
   <body>
     <script>
@@ -88,8 +89,24 @@
             </ul> -->
 
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
-              <button id="newChatButton" onclick = "createChatRoom();"><i class="fas fa-plus"></i></button>
+              <button id="newChatButton" onclick = "showPopUp();"><i class="fas fa-plus"></i></button>
             </header>
+            <!-- The popup box -->
+            <div id="chatPopupId" class="chatPopup">
+
+              <!-- Popup box content -->
+              <div class="chatPopupContent">
+                <span class="closeChatPopup">&times;</span>
+                <h1>New Chat Room</h1>
+                <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
+                <h2>Chums</h2>
+                <div id="popupResults">
+                  <script>retrievePopupBoxChums();</script>
+                </div>
+                <button id="createNewChatButton" onclick="createChatRoom()">Create New Chat</button>
+              </div>
+
+            </div>
             <script>
                 loadChatRoom();
             </script>

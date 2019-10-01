@@ -6,6 +6,7 @@ function setUserData(childSnapshotValue, childKey) {
 
 
 function retrieveChums() {
+  console.log('Called function retrieveChums()');
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       let results = [];
@@ -30,7 +31,6 @@ function retrieveChums() {
     }
   });
 }
-
 
 function displayChums(results) {
   var html = '<table class="requests">';
@@ -84,3 +84,4 @@ function noChumsFound() {
   });
 
 }
+
