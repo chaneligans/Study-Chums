@@ -25,11 +25,17 @@ function showPopUp() {
 
 //if user opens existing chatroom 
 function openChatRoom(roomID) {
-  db.collection("Users").doc(user.uid).update({
-    currentChatRoom: roomID,
+  console.log('Clicked on chat room: ', roomID);
+    firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      const db = firebase.firestore();
+      db.collection("Users").doc(user.uid).update({
+      currentChatRoom: roomID,
+    }); 
+    clearChat();
+    loadChatHistory();  
+    }
   });
-
-  loadChatHistory();
 }
 
 //if user creates new chatroom
@@ -110,6 +116,7 @@ function loadChatRoom() {
                 name: doc.data().name,
                 userID: doc.id,
                 topic: topic,
+                chatroomID: roomID
               });
 
             });
@@ -137,7 +144,7 @@ function displayChatRooms(userLists) {
         const name = result.name;
         const userid = result.userID;
         const topic = result.topic;
-        roomID = result.roomID;
+        roomID = result.chatroomID;
         if (user.uid != userid) {
           names.push(name);
           console.log("print the user id: ", userid);
@@ -149,7 +156,7 @@ function displayChatRooms(userLists) {
         }
       });
       $(document).ready(function () {
-        $("#leftSideRooms").append('<li><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
+        $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
 //      $(document).ready(function(){
 //                $("h2").click(function(){
@@ -218,6 +225,14 @@ function addUserToChatRoom(friendId, topic) {
           });
       });
     }
+  });
+}
+
+function clearChat() {
+  var html="<p></p>";
+  document.getElementById("chat").innerHTML = html;
+  $("#chat").load(html, function() {
+    console.log("Load was performed.");
   });
 }
 
