@@ -1,4 +1,4 @@
-function facebookSignOut() {
+function siteSignOut() {
     firebase.auth().signOut().then(function() {
       console.log('Signout successful');
       location.href="index.html";
