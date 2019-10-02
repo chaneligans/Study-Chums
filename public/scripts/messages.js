@@ -40,10 +40,8 @@ function openChatRoom(roomID) {
   });
 }
 
-//if user creates new chatroom
-//todo #1: take input for topic
+
 function createChatRoom() {
-  //todo #1
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
@@ -65,7 +63,6 @@ function createChatRoom() {
               console.log("ChatRoom created with key --- ", docRef.id);
               const roomID = docRef.id;
 
-              //todo #2
               members.forEach(function(result) {
                 var member = String(result);
                 console.log('Adding: ' + member + ' to ' + roomID);
@@ -96,25 +93,23 @@ function createChatRoom() {
 
 }
 
-function loadChatRoom() {
+function loadChatRoomSideBar() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
     let chatRoomsRef = db.collection("Users").doc(user.uid).collection("ChatRooms");
     chatRoomsRef.get().then(results => {
       results.forEach(result => {
-        console.log('Found chatrooms with me id:', result.id);
+        console.log('Found chatrooms with user id:', result.data());
 
-        let userLists = [];
-        let roomID = result.id;
-        let topic;
-        db.collection("ChatRooms").doc(roomID).get().then(result => {
-            topic = result.data().topic;
-        });
+        let userList = [];
+        let roomID = result.data().id;
+        let topic = result.data().topic;
+
         db.collection("ChatRooms").doc(roomID).collection("Users")
           .get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
               console.log(doc.id, " => ", doc.data());
-              userLists.push({
+              userList.push({
                 name: doc.data().name,
                 userID: doc.id,
                 topic: topic,
@@ -122,7 +117,7 @@ function loadChatRoom() {
               });
 
             });
-            Promise.all(userLists).then(results => {
+            Promise.all(userList).then(results => {
               displayChatRooms(results);
             });
           })
@@ -134,34 +129,39 @@ function loadChatRoom() {
   });
 }
 
-function displayChatRooms(userLists) {
+function displayChatRooms(userList) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      console.log("print the users details: ", userLists);
+      console.log("print the users details: ", userList);
       let names = [];
       let displayName;
       let roomID;
-      userLists.forEach(result => {
-        console.log('2223231212121212121!');
+
+      userList.forEach(result => {
         const name = result.name;
         const userid = result.userID;
         const topic = result.topic;
         roomID = result.chatroomID;
+
         if (user.uid != userid) {
           names.push(name);
           console.log("print the user id: ", userid);
-          if(names.length != 1){
+
+          if(names.length > 1){
             displayName = topic;
-          }else{
+          } 
+          else{
             displayName = names[0];
           }
         }
       });
+
       $(document).ready(function () {
         $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
 
-    } else {
+    } 
+    else {
       console.log('User is not signed in!');
     }
   });
