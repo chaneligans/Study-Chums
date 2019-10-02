@@ -40,52 +40,47 @@ function openChatRoom(roomID) {
   });
 }
 
-
+//if user creates chatroom
 function createChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
       var topic = document.getElementById("chatTopic").value;
+
       if (topic === "") {
         alert('Please enter a topic.')
-      }else {
+      } 
+      else {
         var membersString = sessionStorage.getItem('chatMembers');
         var members = membersString.split(',');
         console.log('Printing from createChatRoom(): Members: '+members+'. members.length(): '+members.length);
+        
         if (members.length < 1 || membersString === "") {
           alert('Please select member(s) for your chatroom.');
-        } else {
+        } 
+        else {
           members.push(user.uid);
-          db.collection("ChatRooms").add({
+          db.collection("ChatRooms")
+          .add({
               topic: topic
             })
-            .then(function(docRef) {
-              console.log("ChatRoom created with key --- ", docRef.id);
-              const roomID = docRef.id;
+          .then(function(docRef) {
+            console.log("ChatRoom created with key --- ", docRef.id);
+            const roomID = docRef.id;
 
-              members.forEach(function(result) {
-                var member = String(result);
-                console.log('Adding: ' + member + ' to ' + roomID);
-                db.collection("Users").doc(member).get().then(result => {
-                  let name = result.data().name;
-                  db.collection("ChatRooms").doc(roomID).collection("Users").doc(member)
-                    .set({
-                      name: name,
-                    });
-                });
-                db.collection("Users").doc(member).collection("ChatRooms").doc(roomID).set({
-                  topic: topic,
-                });
-
-                db.collection("Users").doc(member).update({
-                  currentChatRoom: roomID,
-                });
-              });
-              chatPopupId.style.display = "none";
-            })
-            .catch(function(error) {
-              console.error("Error writing document: ", error);
+            members.forEach(function(result) {
+              var member = String(result);
+              addUserToChatRoom(member, roomID, topic)
             });
+
+            db.collection("Users").doc(user.uid).update({
+              currentChatRoom: roomID,
+            });
+              chatPopupId.style.display = "none";
+          })
+          .catch(function(error) {
+            console.error("Error writing document: ", error);
+          });
         }
       }
     }
@@ -150,7 +145,7 @@ function displayChatRooms(userList) {
           if(names.length > 1){
             displayName = topic;
           } 
-          else{
+          else {
             displayName = names[0];
           }
         }
@@ -167,34 +162,26 @@ function displayChatRooms(userList) {
   });
 }
 
-function addUserToChatRoom(friendId, topic) {
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      const db = firebase.firestore();
+function addUserToChatRoom(friendID, roomID, topic) {
+  const db = firebase.firestore();
 
-      db.collection("Users").doc(user.uid).get().then(userResult => {
-        let roomID = userResult.data().currentChatRoom;
+    db.collection("Users").doc(friendID).get().then(friendResult => {
 
-        db.collection("Users").doc(friendId).get().then(friendResult => {
+        const friendName = friendResult.data().name;
 
-            const friendName = friendResult.data().name;
+        let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
+        chatRoomRef.doc(friendID).set({
+          name: friendName
+        });
 
-            let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
-            chatRoomRef.doc(userId).set({
-              name: friendName
-            });
-
-            let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
-            usersRef.doc(roomID).set({
-              topic: topic
-            });
-          })
-          .catch(function(error) {
-            console.error("Error retrieving document: ", error);
-          });
+        let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
+        usersRef.doc(roomID).set({
+          topic: topic
+        });
+      })
+      .catch(function(error) {
+        console.error("Error retrieving document: ", error);
       });
-    }
-  });
 }
 function displayHeader(){
     //todo: get the currentChatRoom
