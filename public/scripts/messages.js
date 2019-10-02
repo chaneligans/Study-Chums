@@ -32,6 +32,8 @@ function openChatRoom(roomID) {
       db.collection("Users").doc(user.uid).update({
       currentChatRoom: roomID,
     }); 
+    clearHead();
+    displayHeader();
     clearChat();
     loadChatHistory();  
     }
@@ -158,44 +160,11 @@ function displayChatRooms(userLists) {
       $(document).ready(function () {
         $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
-//      $(document).ready(function(){
-//                $("h2").click(function(){
-//                    $(this).changeChatRoom(roomID);
-//                });
-//            });
 
     } else {
       console.log('User is not signed in!');
     }
   });
-}
-function changeChatRoom(roomID){ // not complete
-    //change currentchatRoom in users.id
-    //then load the chat history which need to clean before messages
-    firebase.auth().onAuthStateChanged(user => {
-        if(user){
-            console.log("print the need to change room id: ", roomID);
-            const db = firebase.firestore();
-            let userRef = db.collection("Users").doc(user.uid);
-            let beforeRoom;
-            
-            userRef.get().then(doc => {
-                beforeRoom = doc.data().currentChatRoom;
-                console.log("print the change before room id", beforeRoom);
-            })
-            //each time change room need to clean up chat space
-            $(document).ready(function () {
-                $("#chat").empty();
-            });
-            //update current chat Room
-            userRef.update({
-                currentChatRoom: roomID,
-            });
-//            if(!roomID.localeCompare(beforeRoom)){
-                loadChatHistory();
-//            }
-        }
-    });
 }
 
 function addUserToChatRoom(friendId, topic) {
@@ -227,7 +196,60 @@ function addUserToChatRoom(friendId, topic) {
     }
   });
 }
-
+function displayHeader(){
+    //todo: get the currentChatRoom
+    //todo: if single get person name and topic
+    //      else group only display topic
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            const db = firebase.firestore();
+             db.collection("Users").doc(user.uid).get().then(userResult => {
+                let roomID = userResult.data().currentChatRoom;
+                let userLists = []; 
+                let topic;
+                db.collection("ChatRooms").doc(roomID).get().then(result => {
+                    topic = result.data().topic;
+                });         db.collection("ChatRooms").doc(roomID).collection("Users")
+                .get().then(function(querySnapshot) {
+                    querySnapshot.forEach(function(doc) {
+                        userLists.push({
+                            name: doc.data().name,
+                            userID: doc.id,
+                        });
+                    });
+                    let names = [];
+                    let displayName;
+                    userLists.forEach(result => {
+                        const name = result.name;
+                        const userid = result.userID;
+                        if (user.uid != userid) {
+                            names.push(name);
+                            console.log("print the user Header id: ", userid);
+                        }
+                    });
+                    if(names.length != 1){
+                        displayName = topic;
+                        $(document).ready(function () {
+                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                        });
+                    }else{
+                        displayName = names[0];
+                        $(document).ready(function () {
+                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                        });
+                    }
+                });
+            });
+        }
+    });
+}
+function clearHead() {
+  var html="<p></p>";
+  document.getElementById("chatHeader").innerHTML = html;
+  $("#chatHeader").load(html, function() {
+    console.log("Load was performed.");
+  });
+}             
 function clearChat() {
   var html="<p></p>";
   document.getElementById("chat").innerHTML = html;
