@@ -23,7 +23,7 @@ function showPopUp() {
   }
 }
 
-//if user opens existing chatroom 
+//if user opens existing chatroom
 function openChatRoom(roomID) {
   console.log('Clicked on chat room: ', roomID);
     firebase.auth().onAuthStateChanged(user => {
@@ -31,11 +31,11 @@ function openChatRoom(roomID) {
       const db = firebase.firestore();
       db.collection("Users").doc(user.uid).update({
       currentChatRoom: roomID,
-    }); 
+    });
     clearHead();
     displayHeader();
     clearChat();
-    loadChatHistory();  
+    loadChatHistory();
     }
   });
 }
@@ -49,15 +49,15 @@ function createChatRoom() {
 
       if (topic === "") {
         alert('Please enter a topic.')
-      } 
+      }
       else {
         var membersString = sessionStorage.getItem('chatMembers');
         var members = membersString.split(',');
         console.log('Printing from createChatRoom(): Members: '+members+'. members.length(): '+members.length);
-        
+
         if (members.length < 1 || membersString === "") {
           alert('Please select member(s) for your chatroom.');
-        } 
+        }
         else {
           members.push(user.uid);
           db.collection("ChatRooms")
@@ -139,21 +139,22 @@ function displayChatRooms(userList) {
 
         if (user.uid != userid) {
           names.push(name);
-
-          if(names.length > 1){
-            displayName = topic;
-          } 
-          else {
-            displayName = names[0];
-          }
         }
       });
+
+      if(names.length > 0){
+        displayName = userList[0].topic;
+      } else {
+        displayName = userList[0].name;
+      }
+
+      // console.log("roomID:"+roomID+"//displayName:"+displayName);
 
       $(document).ready(function () {
         $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
 
-    } 
+    }
     else {
       console.log('User is not signed in!');
     }
@@ -190,11 +191,11 @@ function displayHeader(){
               let roomID = userResult.data().currentChatRoom;
 
               if(roomID.length > 1) {
-                let userLists = []; 
+                let userLists = [];
                 let topic;
                 db.collection("ChatRooms").doc(roomID).get().then(result => {
                     topic = result.data().topic;
-                     
+
                   db.collection("ChatRooms").doc(roomID).collection("Users")
                   .get().then(function(querySnapshot) {
                       querySnapshot.forEach(function(doc) {
@@ -213,19 +214,19 @@ function displayHeader(){
                               console.log("print the user Header id: ", userid);
                           }
                       });
-                      if(names.length > 1){
+                      if(names.length > 0){
                           displayName = topic;
                           $(document).ready(function () {
                               $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
                           });
                       }else{
-                          displayName = names[0];
+                          displayName = userLists[0].name;
                           $(document).ready(function () {
                               $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
                           });
                       }
                   });
-              }); 
+              });
               }
           });
         }
@@ -238,7 +239,7 @@ function clearHead() {
   $("#chatHeader").load(html, function() {
     console.log("Load was performed.");
   });
-}  
+}
 
 function clearChat() {
   var html="<p></p>";
@@ -297,7 +298,7 @@ function loadChatHistory() {
               displayMessages(results);
             });
           })
-      } 
+      }
     });
   });
 }
