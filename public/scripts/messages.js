@@ -94,23 +94,22 @@ function loadChatRoomSideBar() {
     let chatRoomsRef = db.collection("Users").doc(user.uid).collection("ChatRooms");
     chatRoomsRef.get().then(results => {
       results.forEach(result => {
-        console.log('Found chatrooms with user id:', result.data());
+        console.log('Found chatroom with id:', result.id);
+        console.log('Topic:', result.data().topic);
 
         let userList = [];
-        let roomID = result.data().id;
+        let roomID = result.id;
         let topic = result.data().topic;
 
         db.collection("ChatRooms").doc(roomID).collection("Users")
           .get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-              console.log(doc.id, " => ", doc.data());
               userList.push({
                 name: doc.data().name,
                 userID: doc.id,
                 topic: topic,
                 chatroomID: roomID
               });
-
             });
             Promise.all(userList).then(results => {
               displayChatRooms(results);
@@ -140,7 +139,6 @@ function displayChatRooms(userList) {
 
         if (user.uid != userid) {
           names.push(name);
-          console.log("print the user id: ", userid);
 
           if(names.length > 1){
             displayName = topic;
@@ -152,7 +150,7 @@ function displayChatRooms(userList) {
       });
 
       $(document).ready(function () {
-        $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
+        $("#leftSideRooms").append('<li onclick="openChatRoom(\''+roomID+'\')"><div><h2 class = "leftChatName">'+ displayName + '</h2></div></li>');
       });
 
     } 
@@ -184,9 +182,6 @@ function addUserToChatRoom(friendID, roomID, topic) {
       });
 }
 function displayHeader(){
-    //todo: get the currentChatRoom
-    //todo: if single get person name and topic
-    //      else group only display topic
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             const db = firebase.firestore();
@@ -233,13 +228,15 @@ function displayHeader(){
         }
     });
 }
+
 function clearHead() {
   var html="<p></p>";
   document.getElementById("chatHeader").innerHTML = html;
   $("#chatHeader").load(html, function() {
     console.log("Load was performed.");
   });
-}             
+}  
+
 function clearChat() {
   var html="<p></p>";
   document.getElementById("chat").innerHTML = html;
@@ -379,15 +376,6 @@ function setUserData(childSnapshotValue, childKey) {
   return data;
 }
 
-function saveUserID(userID) {
-  sessionStorage.clear();
-  sessionStorage.setItem('userID', userID);
-  var storageData = sessionStorage.getItem('userID');
-  console.log("saved user id ..." + storageData);
-  return true;
-}
-
-
 function noChumsFound() {
   var html = '<table class="requests">';
   html += '<tr class="resultRow">';
@@ -454,7 +442,7 @@ function displayPopupBoxChums(results) {
 
     html += '<tr id="' + row + '" class="popupRow" onclick="selectChum(this,\'' + id + '\')">';
     html += '<td class="popupUserImage"><img src="' + img + '"></td>';
-    html += '<td class="popupUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="popupUserName' + count + '">' + name + '</h2></a></td>';
+    html += '<td class="popupUserName"><<h2 id="popupUserName' + count + '">' + name + '</h2></td>';
     html += '<td class="popupUserMajor"><h3 id="popupUserMajor' + count + '">' + major + '</h3></td>';
     html += '</tr>'
 
