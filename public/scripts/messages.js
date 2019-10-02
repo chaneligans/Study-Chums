@@ -230,7 +230,7 @@ function displayHeader(){
                     if(names.length != 1){
                         displayName = topic;
                         $(document).ready(function () {
-                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
                         });
                     }else{
                         displayName = names[0];
