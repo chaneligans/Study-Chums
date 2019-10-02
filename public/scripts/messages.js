@@ -85,7 +85,6 @@ function createChatRoom() {
       }
     }
   });
-
 }
 
 function loadChatRoomSideBar() {
