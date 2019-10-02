@@ -271,6 +271,7 @@ function loadChatHistory() {
             });
 
             Promise.all(initial_messages).then(results => {
+              console.log("274");
               displayMessages(results);
             });
           })
@@ -278,6 +279,7 @@ function loadChatHistory() {
         db.collection("ChatRooms").doc(roomID).collection("Messages")
           .orderBy("time")
           .onSnapshot(function(querySnapshot) {
+          update_messages = [];
             querySnapshot.docChanges().forEach(function(change) {
               if (change.type == "modified") {
                 console.log(change.doc.id, " => ", change.doc.data());
@@ -291,6 +293,7 @@ function loadChatHistory() {
             });
 
             Promise.all(update_messages).then(results => {
+              console.log(update_messages.length);
               displayMessages(results);
             });
           })
@@ -303,6 +306,7 @@ function displayMessages(messages) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       messages.forEach(result => {
+        console.log("Resutltt:" +result);
 
         const senderID = result.senderID;
         const senderName = " " + result.senderName;
