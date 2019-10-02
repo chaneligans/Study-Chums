@@ -303,8 +303,7 @@ function displayMessages(messages) {
 
         const senderID = result.senderID;
         const senderName = " " + result.senderName;
-        const t = result.time;
-        const time = t.getMonth() + "/" + t.getDay() + "/" + t.getFullYear() + ', ' + t.getHours() + ':' + t.getMinutes();
+        const time = moment(result.time).format('LLL');
         const message = result.message;
 
         if (user.uid == senderID) {
