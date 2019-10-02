@@ -190,8 +190,10 @@ function displayHeader(){
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             const db = firebase.firestore();
-             db.collection("Users").doc(user.uid).get().then(userResult => {
-                let roomID = userResult.data().currentChatRoom;
+            db.collection("Users").doc(user.uid).get().then(userResult => {
+              let roomID = userResult.data().currentChatRoom;
+
+              if(roomID.length > 1) {
                 let userLists = []; 
                 let topic;
                 db.collection("ChatRooms").doc(roomID).get().then(result => {
@@ -226,7 +228,8 @@ function displayHeader(){
                         });
                     }
                 });
-            });
+              }
+          });
         }
     });
 }
@@ -245,60 +248,54 @@ function clearChat() {
   });
 }
 
-//todo: update in real-time
-//todo: clear chat then load and display messages
 function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
     db.collection("Users").doc(user.uid).get().then(result => {
       const roomID = result.data().currentChatRoom;
-      var initial_messages = [];
-      var messages = [];
-//      console.log("print the room2 id: ", roomID);
-      db.collection("ChatRooms").doc(roomID).collection("Messages")
-        .orderBy("time")
-        .get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-            console.log(doc.id, " => ", doc.data());
-            initial_messages.push({
-              senderID: doc.data().senderID,
-              senderName: doc.data().senderName,
-              time: doc.data().time.toDate(),
-              message: doc.data().message,
-            });
-          });
 
-          Promise.all(initial_messages).then(results => {
-            displayMessages(results);
-          });
-        })
-
-      db.collection("ChatRooms").doc(roomID).collection("Messages")
-        .orderBy("time")
-        .onSnapshot(function(querySnapshot) {
-          querySnapshot.docChanges().forEach(function(change) {
-            if (change.type == "modified") {
-              console.log(change.doc.id, " => ", change.doc.data());
-              messages.push({
-                senderID: change.doc.data().senderID,
-                senderName: change.doc.data().senderName,
-                time: change.doc.data().time.toDate(),
-                message: change.doc.data().message,
+      if(roomID.length > 1) {
+        var initial_messages = [];
+        var update_messages = [];
+        db.collection("ChatRooms").doc(roomID).collection("Messages")
+          .orderBy("time")
+          .get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+              initial_messages.push({
+                senderID: doc.data().senderID,
+                senderName: doc.data().senderName,
+                time: doc.data().time.toDate(),
+                message: doc.data().message,
               });
-            }
-          });
+            });
 
-          Promise.all(messages).then(results => {
-            displayMessages(results);
-          });
-        })
-      // .catch(function(error) {
-      //     console.log("Error getting documents: ", error);
-      // });
+            Promise.all(initial_messages).then(results => {
+              displayMessages(results);
+            });
+          })
+
+        db.collection("ChatRooms").doc(roomID).collection("Messages")
+          .orderBy("time")
+          .onSnapshot(function(querySnapshot) {
+            querySnapshot.docChanges().forEach(function(change) {
+              if (change.type == "modified") {
+                console.log(change.doc.id, " => ", change.doc.data());
+                update_messages.push({
+                  senderID: change.doc.data().senderID,
+                  senderName: change.doc.data().senderName,
+                  time: change.doc.data().time.toDate(),
+                  message: change.doc.data().message,
+                });
+              }
+            });
+
+            Promise.all(update_messages).then(results => {
+              displayMessages(results);
+            });
+          })
+      } 
     });
-
-
   });
 }
 
