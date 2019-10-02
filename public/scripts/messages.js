@@ -181,6 +181,7 @@ function addUserToChatRoom(friendID, roomID, topic) {
         console.error("Error retrieving document: ", error);
       });
 }
+
 function displayHeader(){
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
@@ -193,36 +194,38 @@ function displayHeader(){
                 let topic;
                 db.collection("ChatRooms").doc(roomID).get().then(result => {
                     topic = result.data().topic;
-                });         db.collection("ChatRooms").doc(roomID).collection("Users")
-                .get().then(function(querySnapshot) {
-                    querySnapshot.forEach(function(doc) {
-                        userLists.push({
-                            name: doc.data().name,
-                            userID: doc.id,
-                        });
-                    });
-                    let names = [];
-                    let displayName;
-                    userLists.forEach(result => {
-                        const name = result.name;
-                        const userid = result.userID;
-                        if (user.uid != userid) {
-                            names.push(name);
-                            console.log("print the user Header id: ", userid);
-                        }
-                    });
-                    if(names.length != 1){
-                        displayName = topic;
-                        $(document).ready(function () {
-                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
-                        });
-                    }else{
-                        displayName = names[0];
-                        $(document).ready(function () {
-                            $("#chatHeader").append('<img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""><div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
-                        });
-                    }
-                });
+                     
+                  db.collection("ChatRooms").doc(roomID).collection("Users")
+                  .get().then(function(querySnapshot) {
+                      querySnapshot.forEach(function(doc) {
+                          userLists.push({
+                              name: doc.data().name,
+                              userID: doc.id,
+                          });
+                      });
+                      let names = [];
+                      let displayName;
+                      userLists.forEach(result => {
+                          const name = result.name;
+                          const userid = result.userID;
+                          if (user.uid != userid) {
+                              names.push(name);
+                              console.log("print the user Header id: ", userid);
+                          }
+                      });
+                      if(names.length > 1){
+                          displayName = topic;
+                          $(document).ready(function () {
+                              $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                          });
+                      }else{
+                          displayName = names[0];
+                          $(document).ready(function () {
+                              $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                          });
+                      }
+                  });
+              }); 
               }
           });
         }
