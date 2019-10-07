@@ -28,6 +28,8 @@
     <!-- jQuery IMPORT -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <script type="text/javascript" src="scripts/dark-mode.js"></script>
+
     <!-- firebase IMPORT -->
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
     <script type="text/javascript" src="scripts/firebase-config.js"></script>
@@ -44,6 +46,14 @@
       // load the currently viewing profile to the homepage
       nextProfile(false);
     </script>
+
+    <div class="onoffswitch">
+      <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch" onclick="toggleDarkMode()">
+      <label class="onoffswitch-label" for="dark-switch">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+    </div>
 
     <!-- WRAPPER (WHITE BOX) -->
     <div id="wrapper">

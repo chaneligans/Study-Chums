@@ -24,10 +24,20 @@
     <script type="text/javascript" src="scripts/check_login.js"></script>
     <script>window.onload = checkLogin;</script>
 
+    <script type="text/javascript" src="scripts/dark-mode.js"></script>
+
     <!-- EDIT_PROFILE JAVASCRIPT (COLLECT USER INFO) -->
     <script type="text/javascript" src="scripts/edit_profile.js"></script>
   </head>
   <body>
+    <div class="onoffswitch">
+      <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch" onclick="toggleDarkMode()">
+      <label class="onoffswitch-label" for="dark-switch">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+    </div>
+
     <div class="create-profile-box">
       <h1>Edit Profile</h1>
       <button class="create-profile-btn" onclick="location.href='profile.html';">Back to Profile</button>
@@ -55,7 +65,7 @@
           <i class="fab fa-facebook-square"></i>
           <input id="FBprofileLink" type="text" placeholder="Facebook Profile Link" name="" value="" required>
         </div>
-        
+
         <div class="textbox">
           <i class="fas fa-align-justify"></i>
           <textarea id="bio" type="text" placeholder="Tell us about yourself!" name="" value=""></textarea>

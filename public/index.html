@@ -26,16 +26,27 @@
     <script type="text/javascript" src="scripts/check_login.js"></script>
     <!-- <script>window.onload = checkIndexLogin;</script> -->
 
+    <!-- jQuery IMPORT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="scripts/dark-mode.js"></script>
+
   </head>
+  <div class="onoffswitch">
+    <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch" onclick="toggleDarkMode()">
+    <label class="onoffswitch-label" for="dark-switch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+  </div>
+
   <body>
     <!-- (UI) LOGIN BOX -->
-    <div class="login-box" style="text-align:center;">
+    <div class="login-box" style="text-align:center;" id="login-box">
       <h1>Welcome To Study Chums</h1>
       <button id="loginbtn" class="fbbutton" onclick="facebookSignIn()">Facebook Sign In</button>
     </div>
     <!-- END (UI) LOGIN BOX -->
-
-
 
     <footer class="login-bottom" style="text-align:center;">
       Designed and Developed by Team Motivation 2019<br>

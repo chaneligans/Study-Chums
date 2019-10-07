@@ -12,8 +12,20 @@
     <!-- FACEBOOK SIGN OUT-->
     <script type="text/javascript" src="scripts/site_logout.js"></script>
 
+    <!-- jQuery IMPORT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="scripts/dark-mode.js"></script>
   </head>
   <body>
+    <div class="onoffswitch">
+      <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch" onclick="toggleDarkMode()">
+      <label class="onoffswitch-label" for="dark-switch">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+    </div>
+
     <div id="wrapper">
       <!-- NAVIGATION MENU -->
 <!--
