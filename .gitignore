@@ -64,5 +64,8 @@ node_modules/
 # dotenv environment variables file
 .env
 
-#test keys
+# test keys
 swd/secret/keys.json
+
+# archived files
+# public/archived
