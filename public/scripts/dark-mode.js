@@ -77,7 +77,7 @@ function enableDarkModeSettings() {
 
   console.log("dark mode is on!");
 
-  background.css('background', 'url(images/blackbg.png)');
+  background.css('background', 'url(images/greybg.png)');
 
   loginbox.css('background-color','#222222');
   login_h1.css('color', 'white');
