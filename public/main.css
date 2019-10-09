@@ -527,12 +527,6 @@ nav li a {
   border: 1px solid #9DD2EE;
 }
 
-.requests {
-  width: 100%;
-  /* border-collapse: collapse;
-  border: 1px solid #9DD2EE; */
-  padding-bottom: 60px;
-}
 
 .request_description {
   text-align: left;
@@ -565,12 +559,12 @@ nav li a {
 }
 
 #chatContainer{
-  width:95%;
+  width:90%;
   height:800px;
   background:#eff3f7;
   margin:0 auto;
   font-size:0;
-  border-radius:5px;
+  border-radius:0px;
   overflow:hidden;
 }
 #leftSide{
@@ -701,7 +695,7 @@ nav li a {
   text-align: left;
 }
 #chat .you .entete .sender{
-  padding-right: 3px;
+  padding-right: 5px;
 }
 #chat .me .entete .sender{
   padding-left: 5px;

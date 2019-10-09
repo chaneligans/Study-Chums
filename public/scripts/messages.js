@@ -313,7 +313,7 @@ function displayMessages(messages) {
         const time = moment(result.time).format('LLL');
         const message = result.message;
 
-        if (user.uid == senderID) {
+        if (user.uid === senderID) {
 
           $(document).ready(function() {
             $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">' + time + '</h3><h2 class="sender">You</h2></div><div class="message">' + message + '</div></li>');
@@ -321,7 +321,7 @@ function displayMessages(messages) {
 
         } else {
           $(document).ready(function() {
-            $("#chat").append('<li class="you"><div class="entete"><h3 class="timestamp">' + time + '</h3><h2 class="sender">' + senderName + '</h2></div><div class="message">' + message + '</div></li>');
+            $("#chat").append('<li class="you"><div class="entete"><h3 class="timestamp">' + time + '</h3>  <h2 class="sender">' + senderName + '</h2></div><div class="message">' + message + '</div></li>');
           });
         }
 

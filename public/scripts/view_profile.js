@@ -139,20 +139,20 @@ function getStatus(id) {
                 console.log(document.getElementsByClassName("match-btn"));
                 document.getElementsByClassName("match-btn")[0].style.backgroundColor = "white";
                 document.getElementsByClassName("match-btn")[0].style.padding = "8px";
-                
+
                 document.getElementById("status").innerHTML = status;
                 $("#status").load(status, function() {
                   console.log("Load was performed.");
                 });
               })
             } else {
-              console.log(status + "not chums");
+              console.log(status + ", not chums");
               status = '<a onclick="request(\'' + id + '\');" style="color:white">Request To Match</a>';
 
               document.getElementById("status").innerHTML = status;
               $("#status").load(status, function() {console.log("Load was performed.");});
             }
-          });     
+          });
         }
       });
     }
@@ -168,7 +168,7 @@ function request(id) {
       var chumStatus;
       var userDataRef = firebase.database().ref();
       var ChumsStatusRef = userDataRef.child("Chums/" + myid + "/" + id);
-      
+
       ChumsStatusRef.on("value", function(snapshot) {
         var key = snapshot.key;
         if (snapshot.val()) {

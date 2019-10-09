@@ -4,8 +4,10 @@ function setUserData(childSnapshotValue, childKey) {
   return data;
 }
 
+let dark_fn;
 
-function retrieveChums() {
+function retrieveChums(fn) {
+  dark_fn = fn;
   console.log('Called function retrieveChums()');
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
@@ -34,7 +36,7 @@ function retrieveChums() {
 
 function displayChums(results) {
   var html = '<table class="requests">';
-  var index, img, name, major, count;
+  var index, img, name, major, count = 1;
   var id = 0;
 
   results.forEach(function(result) {
@@ -47,7 +49,7 @@ function displayChums(results) {
     html += '<tr class="resultRow">';
     html += '<td class="resultUserImage"><img src="' + img + '"></td>';
     html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-    html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
+    html += '<td class="resultUserMajor"><h3 id="resultUserMajor">' + major + '</h3></td>';
     html += '</tr>'
 
     count++;
@@ -58,6 +60,7 @@ function displayChums(results) {
   document.getElementById("searchResults").innerHTML = html;
   $("#searchResults").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 }
 
@@ -81,6 +84,7 @@ function noChumsFound() {
   document.getElementById("searchResults").innerHTML = html;
   $("#searchResults").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 
 }

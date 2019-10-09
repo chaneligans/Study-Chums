@@ -10,6 +10,12 @@ function Enter() {
   });
 }
 
+var dark_fn;
+
+function setDarkFn(fn) {
+  dark_fn = fn;
+}
+
 function Search() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(function(user) {
@@ -137,7 +143,7 @@ function upperCaseWords(msg) {
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(function(user) {
     var html = '<table id="results">';
-    var index, img, name, major, count;
+    var index, img, name, major, count = 1;
     var id = 0;
     var length = results.length;
 
@@ -155,7 +161,7 @@ function showSearchResults(results) {
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
         html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor' + count + '">' + major + '</h3></td>';
+        html += '<td class="resultUserMajor"><h3 id="resultUserMajor">' + major + '</h3></td>';
         html += '</tr>'
 
         count++;
@@ -173,6 +179,7 @@ function showSearchResults(results) {
     document.getElementById("searchResults").innerHTML = html;
     $("#searchResults").load(html, function() {
       console.log("Load was performed.");
+      dark_fn();
     });
   });
 }
@@ -195,5 +202,6 @@ function noResultsFound() {
   document.getElementById("searchResults").innerHTML = html;
   $("#searchResults").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 }
