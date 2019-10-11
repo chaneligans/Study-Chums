@@ -86,6 +86,19 @@ function createChatRoom() {
     }
   });
 }
+//if user want to delete the chatroom
+function chatOption(){
+    
+}
+function deleteChatRoom(roomID){
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            //read from db with chatroom id
+            //move the chatroom in trash catalog
+            //remove in the side bar that move chatroomid to trash in user info
+        }
+    });
+}
 
 function addMultipleUsersToChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
@@ -179,7 +192,7 @@ function displayChatRooms(userList) {
       if(names.length > 1){
         displayName = userList[0].topic;
       } else {
-        displayName = userList[0].name;
+        displayName = names[0];
       }
 
       // console.log("roomID:"+roomID+"//displayName:"+displayName);
@@ -250,13 +263,18 @@ function displayHeader(){
                       });
                       if(names.length > 1){
                           displayName = topic;
-                          $(document).ready(function () {
-                              $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a href="#add">Add new Chums</a></div></div></div>';
+                          document.getElementById("chatHeader").innerHTML = html;
+                          $("#chatHeader").load(html, function() {
+                             console.log("Load chatroom was performed.");
                           });
                       }else{
-                          displayName = userLists[0].name;
-                          $(document).ready(function () {
-                              $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
+                          displayName = names[0];
+                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a href="#add">Add new Chums</a></div></div></div>';
+                          document.getElementById("chatHeader").innerHTML = html;
+                          console.log(userLists);
+                          $("#chatHeader").load(html, function() {
+                            console.log("Load chatroom was performed.");
                           });
                       }
                   });
@@ -266,7 +284,9 @@ function displayHeader(){
         }
     });
 }
-
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
 function clearHead() {
   var html="<p></p>";
   document.getElementById("chatHeader").innerHTML = html;
