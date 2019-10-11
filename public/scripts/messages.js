@@ -141,7 +141,7 @@ function displayChatRooms(userList) {
         }
       });
 
-      if(names.length > 0){
+      if(names.length > 1){
         displayName = userList[0].topic;
       } else {
         displayName = userList[0].name;
@@ -213,7 +213,7 @@ function displayHeader(){
                               console.log("print the user Header id: ", userid);
                           }
                       });
-                      if(names.length > 0){
+                      if(names.length > 1){
                           displayName = topic;
                           $(document).ready(function () {
                               $("#chatHeader").append('<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button></div>');
