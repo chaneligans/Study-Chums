@@ -87,6 +87,41 @@ function createChatRoom() {
   });
 }
 
+function addMultipleUsersToChatRoom() {
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      const db = firebase.firestore();
+      let chatroomID;
+      let topic;
+
+      db.collection("Users").doc(user.uid)
+      .get().then( userDoc => {
+        chatroomID = userDoc.val().currentChatRoom;
+
+        db.collection("ChatRooms").doc(chatroomID)
+        .get().then( chatroomDoc => {
+          topic = chatroomDoc.val().topic;
+
+          let membersString = sessionStorage.getItem('chatMembers');
+          let members = membersString.split(',');
+          console.log('Printing from addMultipleUsersToChatRoom(): Members: '+members+'. members.length(): '+members.length);
+    
+          if (members.length < 1 || membersString === "") {
+            alert('Please select member(s) for your chatroom.');
+          }
+          else {
+            members.forEach(function(result) {
+              var member = String(result);
+              addUserToChatRoom(member, chatroomID, topic)
+            });
+              chatPopupId.style.display = "none";
+          }
+        });
+      });
+    }
+  });
+}
+
 function loadChatRoomSideBar() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
