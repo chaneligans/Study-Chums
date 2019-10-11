@@ -9,7 +9,7 @@ var checkbox, background,
   footer,
   form, input,
 	search, select,
-  panel;
+  panel, chatPopupContent;
 
 // executes on page ready
 $(document).ready(function() {
@@ -41,7 +41,7 @@ $(document).ready(function() {
   form = $('form'); input = $('input');
 	search = $('.search'); select = $('select');
 
-  panel = $('.panel');
+  panel = $('.panel'); chatPopupContent = $('.chatPopupContent');
 
 	// set dark-switch 'on'/'off' depending on the 'mode' item in local storage
 	if (localStorage.getItem('mode') === 'dark') {
@@ -131,6 +131,7 @@ function enableDarkModeSettings() {
 	select.css('background-color','#222222');
 
   panel.css({'color':'white', 'background-color':'rgba(45, 45, 45, 0.8)'});
+	chatPopupContent.css('background-color', '#222222');
 }
 
 function enableLightModeSettings(alert_) {
@@ -175,4 +176,5 @@ function enableLightModeSettings(alert_) {
 	select.css('background-color', 'white');
 
   panel.css({'color':'black', 'background-color':'rgba(255, 255, 255, 0.8)'});
+	chatPopupContent.css('background-color', '#eff3f7');
 }
