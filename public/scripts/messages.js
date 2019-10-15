@@ -1,14 +1,14 @@
-function showPopUp() {
+function showCreateChatPopup() {
   console.log('Called function showPopUp()');
   // Get the modal
-  var chatPopupId = document.getElementById("chatPopupId");
+  var chatPopupId = document.getElementById("createChatPopup");
   chatPopupId.style.display = "block";
 
   // Get the button that opens the modal
-  var btn = document.getElementById("newChatButton");
+  var btn = document.getElementById("openCreateChatPopup");
 
   // Get the <span> element that closes the modal
-  var span = document.getElementsByClassName("closeChatPopup")[0];
+  var span = document.getElementById("closeCreateChatPopup");
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {

@@ -102,12 +102,12 @@
             </ul> -->
 
             <!-- The popup box -->
-            <div id="chatPopupId" class="chatPopup">
+            <div id="createChatPopup" class="chatPopup">
 
               <!-- Popup box content -->
               <div class="chatPopupContent">
-                <span class="closeChatPopup">&times;</span>
-                <h1 id="popupTitle">New Chat Room</h1>
+                <span id="closeCreateChatPopup">&times;</span>
+                <h1 id="createChatPopupTitle">New Chat Room</h1>
                 <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
                 <h2>Chums</h2>
                 <div id="popupCreateChatResults">
@@ -119,7 +119,7 @@
             </div>
 
             <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
-              <button id="newChatButton" onclick = "showPopUp();"><i class="fas fa-plus"></i></button>
+              <button id="openCreateChatPopup" onclick = "showCreateChatPopup();"><i class="fas fa-plus"></i></button>
             </header>
 
             <script>
@@ -153,9 +153,9 @@
 
             </header>
             <!-- Add Users to Existing Chat Popup -->
-            <div id="addUsersToChat" class="chatPopup">
+            <div id="addFriendToChat" class="chatPopup">
                 <div class="chatPopupContent">
-                  <span class="closeChatPopup">&times;</span>
+                  <span id="closeAddFriendToChatPopup">&times;</span>
                   <h1 id="popupTitle">Add Chums to Chat</h1>
                   <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
                   <h2>Chums</h2>

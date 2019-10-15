@@ -578,7 +578,7 @@ nav li a {
 #leftSide header{
   padding:30px 20px;
 }
-#newChatButton {
+#openCreateChatPopup {
   width: 100%;
   font-size: calc(15px + 0.5vw);
   font-family: 'Sniglet', sans-serif;
@@ -650,7 +650,7 @@ nav li a {
   margin-right: 20px;
 }
 
-#newChatButton {
+#openCreateChatPopup {
   display: inline-block;
   border: 1px solid #24A9E0;
   background: #24A9E0;
@@ -866,8 +866,8 @@ nav li a {
   font-weight: bold;
 }
 
-.closeChatPopup:hover,
-.closeChatPopup:focus {
+#closeCreateChatPopup:hover,
+#closeCreateChatPopup:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
