@@ -1,14 +1,14 @@
 function showCreateChatPopup() {
   console.log('Called function showPopUp()');
   // Get the modal
-  var chatPopupId = document.getElementById("createChatPopup");
+  let chatPopupId = document.getElementById("createChatPopup");
   chatPopupId.style.display = "block";
 
   // Get the button that opens the modal
-  var btn = document.getElementById("openCreateChatPopup");
+  let btn = document.getElementById("openCreateChatPopup");
 
   // Get the <span> element that closes the modal
-  var span = document.getElementById("closeCreateChatPopup");
+  let span = document.getElementById("closeCreateChatPopup");
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {
@@ -45,14 +45,14 @@ function createChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      var topic = document.getElementById("chatTopic").value;
+      let topic = document.getElementById("chatTopic").value;
 
       if (topic === "") {
         alert('Please enter a topic.')
       }
       else {
-        var membersString = sessionStorage.getItem('chatMembers');
-        var members = membersString.split(',');
+        let membersString = sessionStorage.getItem('chatMembers');
+        let members = membersString.split(',');
         console.log('Printing from createChatRoom(): Members: '+members+'. members.length(): '+members.length);
 
         if (members.length < 1 || membersString === "") {
@@ -69,13 +69,14 @@ function createChatRoom() {
             const roomID = docRef.id;
 
             members.forEach(function(result) {
-              var member = String(result);
+              let member = String(result);
               addUserToChatRoom(member, roomID, topic)
             });
 
             db.collection("Users").doc(user.uid).update({
               currentChatRoom: roomID,
             });
+              let chatPopupId = document.getElementById("createChatPopup");
               chatPopupId.style.display = "none";
           })
           .catch(function(error) {
@@ -100,10 +101,26 @@ function deleteChatRoom(roomID){
     });
 }
 
-function loadAddUsersPopup() {
-  retrievePopupBoxChums();
+function showAddFriendToChatPopup() {
+  console.log('Called function showAddFriendToChatPopup()');
+  // Get the modal
+  let chatPopupId = document.getElementById("addFriendToChatPopup");
+  chatPopupId.style.display = "block";
 
+  // Get the <span> element that closes the modal
+  let span = document.getElementById("closeAddFriendToChatPopup");
 
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    chatPopupId.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == chatPopupId) {
+      chatPopupId.style.display = "none";
+    }
+  }
 }
 
 function addMultipleUsersToChatRoom() {
@@ -115,11 +132,11 @@ function addMultipleUsersToChatRoom() {
 
       db.collection("Users").doc(user.uid)
       .get().then( userDoc => {
-        chatroomID = userDoc.val().currentChatRoom;
+        chatroomID = userDoc.data().currentChatRoom;
 
         db.collection("ChatRooms").doc(chatroomID)
         .get().then( chatroomDoc => {
-          topic = chatroomDoc.val().topic;
+          topic = chatroomDoc.data().topic;
 
           let membersString = sessionStorage.getItem('chatMembers');
           let members = membersString.split(',');
@@ -130,9 +147,10 @@ function addMultipleUsersToChatRoom() {
           }
           else {
             members.forEach(function(result) {
-              var member = String(result);
+              let member = String(result);
               addUserToChatRoom(member, chatroomID, topic)
             });
+              let chatPopupId = document.getElementById("addFriendToChatPopup");
               chatPopupId.style.display = "none";
           }
         });
@@ -269,14 +287,14 @@ function displayHeader(){
                       });
                       if(names.length > 1){
                           displayName = topic;
-                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a href="#add">Add new Chums</a></div></div></div>';
+                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  '+ names +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
                           document.getElementById("chatHeader").innerHTML = html;
                           $("#chatHeader").load(html, function() {
                              console.log("Load chatroom was performed.");
                           });
                       }else{
                           displayName = names[0];
-                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a onclick="addMultipleUsersToChatRoom();" href="#add">Add new Chums</a></div></div></div>';
+                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
                           document.getElementById("chatHeader").innerHTML = html;
                           console.log(userLists);
                           $("#chatHeader").load(html, function() {

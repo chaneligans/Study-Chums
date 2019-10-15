@@ -866,12 +866,20 @@ nav li a {
   font-weight: bold;
 }
 
+#closeAddFriendToChatPopup:hover,
+#closeAddFriendToChatPopup:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 #closeCreateChatPopup:hover,
 #closeCreateChatPopup:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
 }
+
 .popupInput {
   width: 80%;
   height: 50px;
@@ -936,7 +944,7 @@ nav li a {
   margin: 5px;
 }
 
-#addUsersToChatButton {
+#addFriendToChatButton {
   width: 200px;
   font-size: calc(15px + 0.5vw);
   font-family: 'Sniglet', sans-serif;
