@@ -101,25 +101,27 @@
               </li>
             </ul> -->
 
-            <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
-              <button id="newChatButton" onclick = "showPopUp();"><i class="fas fa-plus"></i></button>
-            </header>
             <!-- The popup box -->
             <div id="chatPopupId" class="chatPopup">
 
               <!-- Popup box content -->
               <div class="chatPopupContent">
                 <span class="closeChatPopup">&times;</span>
-                <h1>New Chat Room</h1>
+                <h1 id="popupTitle">New Chat Room</h1>
                 <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
                 <h2>Chums</h2>
-                <div id="popupResults">
-                  <script>retrievePopupBoxChums();</script>
+                <div id="popupCreateChatResults">
+                  <script>retrievePopupBoxChums('popupCreateChatResults');</script>
                 </div>
                 <button id="createNewChatButton" onclick="createChatRoom()">Create New Chat</button>
               </div>
 
             </div>
+
+            <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
+              <button id="newChatButton" onclick = "showPopUp();"><i class="fas fa-plus"></i></button>
+            </header>
+
             <script>
                 loadChatRoomSideBar();
             </script>
@@ -150,6 +152,19 @@
 -->
 
             </header>
+            <!-- Add Users to Existing Chat Popup -->
+            <div id="addUsersToChat" class="chatPopup">
+                <div class="chatPopupContent">
+                  <span class="closeChatPopup">&times;</span>
+                  <h1 id="popupTitle">Add Chums to Chat</h1>
+                  <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
+                  <h2>Chums</h2>
+                  <div id="popupAddFriendToChatResults">
+                    <script>retrievePopupBoxChums('popupAddFriendToChatResults');</script>
+                  </div>
+                  <button id="createNewChatButton" onclick="addMultipleUsersToChatRoom();">Create New Chat</button>
+                </div>
+            </div>
 
             <script>
               loadChatHistory();

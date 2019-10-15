@@ -883,7 +883,18 @@ nav li a {
   font-size: calc(12px + 0.5vw);
 }
 
-#popupResults {
+#popupCreateChatResults {
+  width: 82%;
+  height: 40%;
+  margin: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #FFF;
+  border: 1px solid #888;
+  border-radius: 10px;
+}
+
+#popupAddFriendToChatResults {
   width: 82%;
   height: 40%;
   margin: auto;
@@ -914,6 +925,18 @@ nav li a {
 }
 
 #createNewChatButton {
+  width: 200px;
+  font-size: calc(15px + 0.5vw);
+  font-family: 'Sniglet', sans-serif;
+  padding: 15px 0;
+  border: 1px solid #24A9E0;
+  background: #24A9E0;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+}
+
+#addUsersToChatButton {
   width: 200px;
   font-size: calc(15px + 0.5vw);
   font-family: 'Sniglet', sans-serif;

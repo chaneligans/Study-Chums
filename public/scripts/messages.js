@@ -100,6 +100,12 @@ function deleteChatRoom(roomID){
     });
 }
 
+function loadAddUsersPopup() {
+  retrievePopupBoxChums();
+
+
+}
+
 function addMultipleUsersToChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -270,7 +276,7 @@ function displayHeader(){
                           });
                       }else{
                           displayName = names[0];
-                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a href="#add">Add new Chums</a></div></div></div>';
+                          var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  '+ topic +'</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a href="#delete">Delete Chat</a><a onclick="addMultipleUsersToChatRoom();" href="#add">Add new Chums</a></div></div></div>';
                           document.getElementById("chatHeader").innerHTML = html;
                           console.log(userLists);
                           $("#chatHeader").load(html, function() {
@@ -451,7 +457,7 @@ function noChumsFound() {
 
 }
 
-function retrievePopupBoxChums() {
+function retrievePopupBoxChums(htmlID) {
   console.log('Called function retrievePopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
   firebase.auth().onAuthStateChanged(function(user) {
@@ -474,7 +480,7 @@ function retrievePopupBoxChums() {
         Promise.all(results).then(result => {
           console.log('Results found: ' + result.length);
           if (result.length > 0) {
-            displayPopupBoxChums(result);
+            displayPopupBoxChums(result, htmlID);
           } else {
             noChumsFound();
           }
@@ -484,7 +490,7 @@ function retrievePopupBoxChums() {
   });
 }
 
-function displayPopupBoxChums(results) {
+function displayPopupBoxChums(results, htmlID) {
   console.log('Called function displayPopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
   var html = '<table class="requests">';
@@ -513,8 +519,8 @@ function displayPopupBoxChums(results) {
 
   html += '</table>';
 
-  document.getElementById("popupResults").innerHTML = html;
-  $("#popupResults").load(html, function() {
+  document.getElementById(htmlID).innerHTML = html;
+  $(htmlID).load(html, function() {
     console.log("Load was performed.");
   });
 
