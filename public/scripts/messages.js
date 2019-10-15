@@ -91,18 +91,20 @@ function createChatRoom() {
 function chatOption(){
     
 }
-function deleteChatRoom(roomID){
+function deleteChatRoom(){
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-            //read from db with chatroom id
-            //move the chatroom in trash catalog
-            //remove in the side bar that move chatroomid to trash in user info
+            // read from db with user's current chatroom id
+            // get users from chatroom collection. then delete the chatroom from all users' collection
+            // move the chatroom in trash catalog
+            // reload chatroom sidebar
         }
     });
 }
 
 function showAddFriendToChatPopup() {
   console.log('Called function showAddFriendToChatPopup()');
+
   // Get the modal
   let chatPopupId = document.getElementById("addFriendToChatPopup");
   chatPopupId.style.display = "block";
@@ -152,6 +154,8 @@ function addMultipleUsersToChatRoom() {
             });
               let chatPopupId = document.getElementById("addFriendToChatPopup");
               chatPopupId.style.display = "none";
+
+              displayHeader();
           }
         });
       });
