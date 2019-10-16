@@ -13,7 +13,7 @@ var checkbox, background,
 
 // executes on page ready
 $(document).ready(function() {
-  var localStorage = window.localStorage;
+  let localStorage = window.localStorage;
 
   localStorage.setItem('mode', (localStorage.getItem('mode')|| 'dark')
       === 'dark' ? 'dark':'light');
@@ -73,9 +73,9 @@ function refresh_h() {
 function toggleDarkMode(alert_) {
 	// console.log("alert shown? "+ alert_);
 
-  var checkBox = document.getElementById("dark-switch");
+  let localStorage = window.localStorage;
 
-  var localStorage = window.localStorage;
+  checkBox = document.getElementById("dark-switch");
 
   if (checkBox.checked == true) {
 

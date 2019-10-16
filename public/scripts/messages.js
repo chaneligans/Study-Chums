@@ -75,9 +75,12 @@ function createChatRoom() {
 
             db.collection("Users").doc(user.uid).update({
               currentChatRoom: roomID,
+            }).then(function() {
+              reloadChatRoomSideBar();
             });
-              let chatPopupId = document.getElementById("createChatPopup");
-              chatPopupId.style.display = "none";
+
+            let chatPopupId = document.getElementById("createChatPopup");
+            chatPopupId.style.display = "none";
           })
           .catch(function(error) {
             console.error("Error writing document: ", error);
@@ -87,17 +90,21 @@ function createChatRoom() {
     }
   });
 }
+
 //if user want to delete the chatroom
 function chatOption(){
-    
+
 }
+
 function deleteChatRoom(){
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             // read from db with user's current chatroom id
             // get users from chatroom collection. then delete the chatroom from all users' collection
             // move the chatroom in trash catalog
+
             // reload chatroom sidebar
+            reloadChatRoomSideBar();
         }
     });
 }
@@ -143,7 +150,7 @@ function addMultipleUsersToChatRoom() {
           let membersString = sessionStorage.getItem('chatMembers');
           let members = membersString.split(',');
           console.log('Printing from addMultipleUsersToChatRoom(): Members: '+members+'. members.length(): '+members.length);
-    
+
           if (members.length < 1 || membersString === "") {
             alert('Please select member(s) for your chatroom.');
           }
@@ -152,15 +159,25 @@ function addMultipleUsersToChatRoom() {
               let member = String(result);
               addUserToChatRoom(member, chatroomID, topic)
             });
-              let chatPopupId = document.getElementById("addFriendToChatPopup");
-              chatPopupId.style.display = "none";
+            let chatPopupId = document.getElementById("addFriendToChatPopup");
+            chatPopupId.style.display = "none";
 
-              displayHeader();
+            displayHeader();
           }
         });
       });
     }
   });
+}
+
+// empties the side bar of the current list and loads the side bar again
+// this is the last thing to do in the process of:
+// - making a new chatroom
+// - deleting a chatroom
+function reloadChatRoomSideBar() {
+  // clear current chat room side bar
+  $('#leftSideRooms').empty();
+  loadChatRoomSideBar();
 }
 
 function loadChatRoomSideBar() {
@@ -312,9 +329,11 @@ function displayHeader(){
         }
     });
 }
+
 function myFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
 }
+
 function clearHead() {
   var html="<p></p>";
   document.getElementById("chatHeader").innerHTML = html;
@@ -566,6 +585,7 @@ function selectChum(row, id) {
     }
   } catch (TypeError) {
     members = members.split(',');
+
     var index = members.indexOf(id);
     if (index > -1) {
       row.style.backgroundColor = '#FFF';
@@ -575,6 +595,13 @@ function selectChum(row, id) {
       row.style.backgroundColor = '#E1E3E8';
     }
   }
+
+  // console.log(members);
+  if (members[0] === "") {
+    members.shift();
+    // console.log('members:', members);
+  }
+
   sessionStorage.setItem('chatMembers', members);
   console.log('Printing from selectChum(): Members:', members);
   return members

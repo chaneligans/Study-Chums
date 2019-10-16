@@ -590,8 +590,9 @@ nav li a {
   padding-left:0;
   margin:0;
   list-style-type:none;
-  overflow-y:scroll;
-  height:100%;
+  overflow-y:auto;
+  height:85%;
+  margin-top: 5px;
 }
 #leftSide li{
   padding:5px 5px;
