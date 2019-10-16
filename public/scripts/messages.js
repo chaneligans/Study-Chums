@@ -100,6 +100,7 @@ function createChatRoom() {
               currentChatRoom: roomID,
             }).then(function() {
               reloadChatRoomSideBar();
+              openChatRoom(roomID);
             });
 
             let chatPopupId = document.getElementById("createChatPopup");
