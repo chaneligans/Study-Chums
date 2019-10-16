@@ -1,3 +1,9 @@
+var dark_fn;
+
+function setDarkFn(fn) {
+  dark_fn = fn;
+}
+
 function setUserData(childSnapshotValue, childKey) {
   let photo = childSnapshotValue.p1Url + " ";
   let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
@@ -103,6 +109,7 @@ function displayReceivedRequests(results) {
   document.getElementById("recievedRequests").innerHTML = html;
   $("#recievedRequests").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 }
 
@@ -136,6 +143,7 @@ function displaySentRequests(results) {
   document.getElementById("sentRequests").innerHTML = html;
   $("#sentRequests").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 }
 
@@ -159,6 +167,7 @@ function noReceievedRequestsFound() {
   document.getElementById("recievedRequests").innerHTML = html;
   $("#recievedRequests").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 
 }
@@ -175,6 +184,7 @@ function noSentRequestsFound() {
   document.getElementById("sentRequests").innerHTML = html;
   $("#sentRequests").load(html, function() {
     console.log("Load was performed.");
+    dark_fn();
   });
 
 }

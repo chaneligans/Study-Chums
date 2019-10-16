@@ -406,23 +406,28 @@ nav li a {
     border: none;
     border-radius: 10px;
     outline: 0;
-    padding: 8px;
+    padding: 6px;
     color: white;
     background-color: #24A9E0;
     text-align: center;
     cursor: pointer;
-    width: 100%;
+    width: 95%;
     font-size: 18px;
     font-weight: bold;
     font-family: 'Nunito', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
   }
 
   nav ul {
     height: auto;
-    width: 100%;
+    width: 95%;
     margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     padding: 0;
-    border-radius: 1px;
+    border-radius: 5px;
   }
 
   nav li {
@@ -540,6 +545,7 @@ nav li a {
 .resultRow td {
   padding: 10px;
   font-size: calc(12px + .5vw);
+  color: black;
 }
 
 .resultUserImage:first-child {
