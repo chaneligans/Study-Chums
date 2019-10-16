@@ -1,3 +1,8 @@
+function scrollToBottom() {
+  $('#chat').scrollTop($('#chat')[0].scrollHeight - $('#chat')[0].clientHeight);
+  console.log("Scrolled");
+}
+
 function showCreateChatPopup() {
   console.log('Called function showPopUp()');
   // Get the modal
@@ -564,17 +569,17 @@ function displayMessages(messages) {
         const message = result.message;
 
         if (user.uid === senderID) {
-
           $(document).ready(function() {
             $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">' + time + '</h3><h2 class="sender">You</h2></div><div class="message">' + message + '</div></li>');
+            scrollToBottom();
           });
 
         } else {
           $(document).ready(function() {
             $("#chat").append('<li class="you"><div class="entete"><h3 class="timestamp">' + time + '</h3>  <h2 class="sender">' + senderName + '</h2></div><div class="message">' + message + '</div></li>');
+            scrollToBottom();
           });
         }
-
       })
     } else {
       console.log('User is not signed in!');

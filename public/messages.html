@@ -78,32 +78,8 @@
 
         <div id="chatContainer">
           <aside id="leftSide">
-            <!-- <header>after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
-              <!-- <button id="newChatButton" onclick = "showPopUp();"><i class="fas fa-plus"></i></button>
-              <div class="form-popup" id="popup">
-                <form action="/action_page.php" class="form-container">
-                    <h1>New Chat</h1>
-
-                    <label for="topic"><b>Topic</b></label>
-                    <input type="text" placeholder="Enter topic" name="topic" required>
-
-                    <button type="submit" class="btn">Add</button>
-                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-                </form>
-            </div>
-            </header> -->
-            <!-- <ul> SIDE USER LIST -->
-              <!-- <li>
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
-                <div>
-                  <h2 class="leftChatName">Prénom Nom</h2>
-                </div>
-              </li>
-            </ul> -->
-
             <!-- The popup box -->
             <div id="createChatPopup" class="chatPopup">
-
               <!-- Popup box content -->
               <div class="chatPopupContent">
                 <span id="closeCreateChatPopup">&times;</span>
@@ -126,14 +102,6 @@
                 loadChatRoomSideBar();
             </script>
             <ul id = "leftSideRooms"> <!-- SIDE USER LIST -->
-<!--
-              <li>
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
-                <div>
-                  <h2 class="leftChatName">Prénom Nom</h2>
-                </div>
-              </li>
--->
             </ul>
           </aside>
           <main id="rightSide">
@@ -142,15 +110,6 @@
                 
             </script>
             <header id="chatHeader"> <!-- MAIN CHAT HEADER -->
-<!--
-              <img id="chatImage" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
-              <div>
-                <h2 id="chatTitle">Chat with <span id="chatMembers">Vincent Porter</span></h2>
-                <h3 id="chatTopic">Topic: Algorithms</h3>
-                <button id="chatOptions"><i class="fas fa-ellipsis-h"></i></button>
-              </div>
--->
-
             </header>
             <!-- Add Users to Existing Chat Popup -->
             <div id="addFriendToChatPopup" class="chatPopup">
@@ -169,25 +128,10 @@
               loadChatHistory();
             </script>
             <ul id="chat"> <!-- CHAT -->
-              <!-- <li class="you">
-                <div class="entete">
-                  <h2 class="sender">Vincent</h2>
-                  <h3 class="timestamp">10:12AM, Today</h3>
-                </div>
-                <div class="message">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                </div>
-              </li>
-              <li class="me">
-                <div class="entete"><h3 class="timestamp">10:12AM, Today</h3><h2 class="sender">You</h2></div>
-                <div class="message">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                </div>
-              </li> -->
             </ul>
             <footer>
               <textarea id="message" placeholder="Type your message"></textarea>
-              <!-- <input type="text" placeholder="Type your message"></input> -->
+
               <button href="#" onclick="sendMessage();"><i class="fas fa-paper-plane"></i></button>
             </footer>
           </main>
