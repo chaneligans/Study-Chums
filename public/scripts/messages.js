@@ -1,3 +1,20 @@
+$(function enter() {
+  let enter = document.getElementById("message");
+  enter.addEventListener("keyup", function(event) {
+    if (event.keyCode === 27) {
+      clearTextBox();
+    }
+    else if (event.keyCode === 13){
+      sendMessage();
+    }
+  });
+});
+
+function clearTextBox() {
+  let enter = document.getElementById("message");
+  enter.value = "";
+}
+
 function scrollToBottom() {
   $('#chat').scrollTop($('#chat')[0].scrollHeight - $('#chat')[0].clientHeight);
   console.log("Scrolled");
@@ -37,6 +54,7 @@ function openChatRoom(roomID) {
       db.collection("Users").doc(user.uid).update({
       currentChatRoom: roomID,
     });
+    clearTextBox();
     clearHead();
     displayHeader();
     clearChat();
