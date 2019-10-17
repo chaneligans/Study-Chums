@@ -111,148 +111,276 @@ function createChatRoom() {
   });
 }
 
-//if user want to delete the chatroom
-function deleteChatRoom(){
-    firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-            const db = firebase.firestore();
-            let userLists = [];
-            let roomID;
-            db.collection("Users").doc(user.uid).get().then(userResult => {
-              // read from db with user's current chatroom id
-              roomID = userResult.data().currentChatRoom;
-              console.log("Delete ----roomID ", roomID);
-            //get the topic of chat room
-                let topic;
-                db.collection("ChatRooms").doc(roomID).get().then(result => {
-                    topic = result.data().topic;
-                    console.log("Delete ----get topic chatroom ", topic);
-//                db.collection("Trash").doc(roomID).set({
-//                    topic: topic,
-//                });
-                });
-                console.log("Delete ----delete chatroom topic ");
-                //userID and name stored
-                if(roomID.length > 1) {
+// Samantha's new delete function 
+function deleteChat() {
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      const db = firebase.firestore();
 
-                    db.collection("ChatRooms").doc(roomID).collection("Users")
-                    .get().then(function(querySnapshot) {
-                      querySnapshot.forEach(function(doc) {
-                          // get users from chatroom collection.
-                          userLists.push({
-                              name: doc.data().name,
-                              userID: doc.id,
-                          });
-                      });
-                    //then delete the chatroom from all users' collection
-                      Promise.all(userLists).then(results => {
-                        results.forEach(item => {
-                            console.log("sdbsbcwbwdbwegbdvwgedvegwvdgvd", item.userID);
-                            
-                            db.collection("Trash").doc(roomID).collection("Users")
-                                .doc(item.userID).set({
-                                    name: item.name,
-                            });
-                            
-                            //delete each user's chatroom.roomid
-                            //need to delete the subfiled first
-                            let roomRef = db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID);
-                            let removeTopic = roomRef.update({
-                                topic: firebase.firestore.FieldValue.delete()
-                            });
-                            console.log("Delete ----user chatrooms' topic ");
-                            //and then delete roomid
-                            db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID).delete().then(function() {
-                                console.log("roomID in User ChatRooms successfully deleted!");
-                            }).catch(function(error) {
-                                console.error("Error removing document: ", error);
-                            });
-                            
-                             //delete Userlist in chatroom
-                                //delete Userlist field first
-                            db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).update({
-                                name: firebase.firestore.FieldValue.delete()
-                            });
-                            console.log("Delete ----delete chatroom users name "); 
-                           //and then delete userid
-                            db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).delete().then(function() {
-                                console.log("Delete ----delete chatroom userid" );
-                            }).catch(function(error) {
-                                console.error("Error removing document: ", error);
-                            });
-                        });
-                     });
+      // get room id to delete from user's currentChatRoom
+      db.collection("Users").doc(user.uid).get().then(userResult => {
+        const roomID = userResult.data().currentChatRoom;
+        console.log("Delete --- room id: ", roomID);
+
+        // get chatroom topic 
+        const chatroomRef = db.collection("ChatRooms").doc(roomID);
+        chatroomRef.get().then(chatResult => {
+          const topic = chatResult.data().topic;
+
+          //create Trash document
+          db.collection("Trash")
+          .add({
+            topic: topic
+          })
+          .then(function (docRef) {
+            console.log("Trash document created with key --- ", docRef.id);
+            const trashID = docRef.id;
+
+            //get all users in chatroom
+            let users = [];
+            chatroomRef.collection("Users").get().then(allUsers => {
+              allUsers.forEach(doc => {
+                users.push({
+                    name: doc.data().name,
+                    userID: doc.id,
+                });
+              });
+              Promise.all(users).then(allUserList => {
+                allUserList.forEach(user => {
+                  addUserToTrash(user.userID, user.name, trashID);
+                  deleteChatRoomFromUser(user.userID, roomID);
+
+                  //delete user doc from ChatRooms/Users
+                  chatroomRef.collection("Users").doc(user.userID)
+                  .delete().then(function() {
+                    console.log("User document successfully deleted from ChatRoom/Users!");
+                  }).catch(function(error) {
+                      console.error("Error removing document from ChatRoom/Users! ", error);
                   });
-                console.log("Delete ----UserList ", userLists);                
-              }
-                // move the chatroom in trash catalog
-            //Get the document from fromPath location.
-            let messageList = [];
-            console.log("Delete ---- testdhsjbdsbdj ", roomID);
-
-            db.collection("ChatRooms").doc(roomID).collection("Messages")
-                .orderBy("time")
-                .get().then(function(querySnapshot) {
-                    querySnapshot.forEach(function(doc) {
-                        messageList.push({
-                            MessageID: doc.id,
-                            senderID: doc.data().senderID,
-                            senderName: doc.data().senderName,
-                            time: doc.data().time.toDate(),
-                            message: doc.data().message,
-                        });
-                    });
-                
-                    Promise.all(messageList).then(results => {
-                        results.forEach(item => {
-                            console.log("adding message list to trash", item.MessageID);
-                            console.log("adding sendName list to trash", item.senderName); db.collection("Trash").doc(roomID).collection("Messages")
-                            .doc(item.MessageID).set({
-                                senderID: item.senderID,
-                                senderName: item.senderName,
-                                message: item.message,
-                                time: item.time,
-                            });
-                            
-                            //delete message list in chatroom
-                            db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).update({
-                                message: firebase.firestore.FieldValue.delete(),
-                                senderID: firebase.firestore.FieldValue.delete(),
-                                senderName: firebase.firestore.FieldValue.delete(),
-                                time: firebase.firestore.FieldValue.delete()
-                             });
-                                console.log("Delete ----delete chatroom messages "); 
-                            db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).delete().then(function() {
-                                console.log("MessageID in ChatRooms successfully deleted!");
-                            }).catch(function(error) {
-                                console.error("Error removing document: ", error);
-                            });
-                                console.log("Delete ----delete chatroom message id ");
-                        });
-                     });
-            });
-            console.log("Delete ----get messageLists ", messageList);
-                db.collection("ChatRooms").doc(roomID).update({
-                        topic: firebase.firestore.FieldValue.delete()
                 })
-//            //Delete the document from fromPath location.
-                db.collection("ChatRooms").doc(roomID).delete().then(function() {
-                        console.log("roomID in ChatRooms successfully deleted!");
-                }).catch(function(error) {
-                        console.error("Error removing document: ", error);
-                });
-            
-                
+
+                moveMessageToTrash(roomID, trashID);
+                deleteChatRoomData(roomID);
+
+                clearChat();
+                clearHead();
+                reloadChatRoomSideBar();
+              });
             });
-            //reload message page
-            console.log("reload chatroom bar and message, currentChatroom should be null");
-            clearChat();
-            clearHead();
-            reloadChatRoomSideBar();
-      
-        }
+          });
+        });
+      });
+    }
+    else {
+      console.log('No user signed in!')
+    }
   });
 }
+
+function addUserToTrash(userID, name, trashID) {
+  const db = firebase.firestore();
+  db.collection("Trash").doc(trashID).collection("Users").doc(userID)
+  .set({
+    name: name
+  });
+}
+
+// Lili's delete function
+function deleteChatRoomFromUser(userID, roomID) {
+  // if currentChatRoom is roomID, we need to update it to empty
+  const db = firebase.firestore();
+  const userData = db.collection("Users").doc(userID);
+  userData.get().then(userData => {
+    const currentChatRoom = userData.data().currentChatRoom;
+
+    if(currentChatRoom == roomID) {
+      userData.set({
+        currentChatRoom: " ",
+      });
+    }
+  });
+
+  userData.collection("ChatRooms").doc(roomID).delete().then(function() {
+    console.log("ChatRoom document successfully deleted from Users/ChatRooms!");
+  }).catch(function(error) {
+      console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
+  });
+}
+
+function deleteChatRoomData(roomID) {
+  const db = firebase.firestore();
+  db.collection("ChatRooms").doc(roomID).delete().then(function() {
+    console.log("ChatRoom document successfully deleted from ChatRooms!");
+  }).catch(function(error) {
+      console.error("Error removing ChatRoom document from ChatRooms: ", error);
+  });
+}
+
+function moveMessageToTrash(roomID, trashID) {
+  const db = firebase.firestore();
+  let allMessages = [];
+  let messageRef = db.collection("ChatRooms").doc(roomID).collection("Messages");
+  messageRef.get().then(messages => {
+    messages.forEach(message => {
+      allMessages.push({
+            messageID: message.id,
+      });
+    });
+
+    Promise.all(allMessages).then(allMessageList => {
+      allMessageList.forEach(message => {
+        messageRef.doc(message.messageID).delete().then(function() {
+          console.log("Message document successfully deleted from ChatRooms/Messages!");
+        }).catch(function(error) {
+            console.error("Error removing Message document from ChatRooms/Messages: ", error);
+        });
+      });
+    });
+  })
+}
+
+// Lili's delete function
+// function deleteChatRoom(){
+//     firebase.auth().onAuthStateChanged(user => {
+//         if (user) {
+//             const db = firebase.firestore();
+//             let userList = [];
+//             let roomID;
+//             db.collection("Users").doc(user.uid).get().then(userResult => {
+//               // read from db with user's current chatroom id
+//               roomID = userResult.data().currentChatRoom;
+//               console.log("Delete ----roomID ", roomID);
+//             //get the topic of chat room
+//                 let topic;
+//                 db.collection("ChatRooms").doc(roomID).get().then(result => {
+//                     topic = result.data().topic;
+//                     console.log("Delete ----get topic chatroom ", topic);
+// //                db.collection("Trash").doc(roomID).set({
+// //                    topic: topic,
+// //                });
+//                 });
+//                 console.log("Delete ----delete chatroom topic ");
+//                 //userID and name stored
+//                 if(roomID.length > 1) {
+
+//                     db.collection("ChatRooms").doc(roomID).collection("Users")
+//                     .get().then(function(querySnapshot) {
+//                       querySnapshot.forEach(function(doc) {
+//                           // get users from chatroom collection.
+//                           userList.push({
+//                               name: doc.data().name,
+//                               userID: doc.id,
+//                           });
+//                       });
+//                     //then delete the chatroom from all users' collection
+//                       Promise.all(userList).then(results => {
+//                         results.forEach(item => {
+//                             console.log("sdbsbcwbwdbwegbdvwgedvegwvdgvd", item.userID);
+                            
+//                             db.collection("Trash").doc(roomID).collection("Users")
+//                                 .doc(item.userID).set({
+//                                     name: item.name,
+//                             });
+                            
+//                             //delete each user's chatroom.roomid
+//                             //need to delete the subfiled first
+//                             let roomRef = db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID);
+//                             let removeTopic = roomRef.update({
+//                                 topic: firebase.firestore.FieldValue.delete()
+//                             });
+//                             console.log("Delete ----user chatrooms' topic ");
+//                             //and then delete roomid
+//                             db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID).delete().then(function() {
+//                                 console.log("roomID in User ChatRooms successfully deleted!");
+//                             }).catch(function(error) {
+//                                 console.error("Error removing document: ", error);
+//                             });
+                            
+//                              //delete Userlist in chatroom
+//                                 //delete Userlist field first
+//                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).update({
+//                                 name: firebase.firestore.FieldValue.delete()
+//                             });
+//                             console.log("Delete ----delete chatroom users name "); 
+//                            //and then delete userid
+//                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).delete().then(function() {
+//                                 console.log("Delete ----delete chatroom userid" );
+//                             }).catch(function(error) {
+//                                 console.error("Error removing document: ", error);
+//                             });
+//                         });
+//                      });
+//                   });
+//                 console.log("Delete ----UserList ", userList);                
+//               }
+//                 // move the chatroom in trash catalog
+//             //Get the document from fromPath location.
+//             let messageList = [];
+//             console.log("Delete ---- testdhsjbdsbdj ", roomID);
+
+//             db.collection("ChatRooms").doc(roomID).collection("Messages")
+//                 .orderBy("time")
+//                 .get().then(function(querySnapshot) {
+//                     querySnapshot.forEach(function(doc) {
+//                         messageList.push({
+//                             MessageID: doc.id,
+//                             senderID: doc.data().senderID,
+//                             senderName: doc.data().senderName,
+//                             time: doc.data().time.toDate(),
+//                             message: doc.data().message,
+//                         });
+//                     });
+                
+//                     Promise.all(messageList).then(results => {
+//                         results.forEach(item => {
+//                             console.log("adding message list to trash", item.MessageID);
+//                             console.log("adding sendName list to trash", item.senderName); db.collection("Trash").doc(roomID).collection("Messages")
+//                             .doc(item.MessageID).set({
+//                                 senderID: item.senderID,
+//                                 senderName: item.senderName,
+//                                 message: item.message,
+//                                 time: item.time,
+//                             });
+                            
+//                             //delete message list in chatroom
+//                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).update({
+//                                 message: firebase.firestore.FieldValue.delete(),
+//                                 senderID: firebase.firestore.FieldValue.delete(),
+//                                 senderName: firebase.firestore.FieldValue.delete(),
+//                                 time: firebase.firestore.FieldValue.delete()
+//                              });
+//                                 console.log("Delete ----delete chatroom messages "); 
+//                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).delete().then(function() {
+//                                 console.log("MessageID in ChatRooms successfully deleted!");
+//                             }).catch(function(error) {
+//                                 console.error("Error removing document: ", error);
+//                             });
+//                                 console.log("Delete ----delete chatroom message id ");
+//                         });
+//                      });
+//             });
+//             console.log("Delete ----get messageLists ", messageList);
+//                 db.collection("ChatRooms").doc(roomID).update({
+//                         topic: firebase.firestore.FieldValue.delete()
+//                 })
+// //            //Delete the document from fromPath location.
+//                 db.collection("ChatRooms").doc(roomID).delete().then(function() {
+//                         console.log("roomID in ChatRooms successfully deleted!");
+//                 }).catch(function(error) {
+//                         console.error("Error removing document: ", error);
+//                 });
+            
+                
+//             });
+//             //reload message page
+//             console.log("reload chatroom bar and message, currentChatroom should be null");
+//             clearChat();
+//             clearHead();
+//             reloadChatRoomSideBar();
+      
+//         }
+//   });
+// }
 
 function showAddFriendToChatPopup() {
   console.log('Called function showAddFriendToChatPopup()');
@@ -422,7 +550,8 @@ function displayHeader() {
       db.collection("Users").doc(user.uid).get().then(userResult => {
         let roomID = userResult.data().currentChatRoom;
 
-        if (roomID.length > 1) {
+        if (roomID.length > 2) {
+          console.log("Valid currentChatRoom Id!");
           let userLists = [];
           let topic;
           db.collection("ChatRooms").doc(roomID).get().then(result => {
@@ -448,14 +577,14 @@ function displayHeader() {
                 });
                 if (names.length > 1) {
                   displayName = topic;
-                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  ' + names + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChatRoom();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
+                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  ' + names + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChat();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
                   document.getElementById("chatHeader").innerHTML = html;
                   $("#chatHeader").load(html, function () {
                     console.log("Load chatroom was performed.");
                   });
                 } else {
                   displayName = names[0];
-                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  ' + topic + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChatRoom();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
+                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  ' + topic + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChat();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
                   document.getElementById("chatHeader").innerHTML = html;
                   console.log(userLists);
                   $("#chatHeader").load(html, function () {
