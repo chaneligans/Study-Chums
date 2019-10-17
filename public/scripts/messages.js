@@ -53,10 +53,8 @@ function openChatRoom(roomID) {
         currentChatRoom: roomID,
       });
       clearTextBox();
-      clearHead();
-      displayHeader();
-      clearChat();
-      loadChatHistory();
+      reloadHeader();
+      reloadChatHistory();
     }
   });
 }
@@ -111,7 +109,7 @@ function createChatRoom() {
   });
 }
 
-// Samantha's new delete function 
+// Samantha's new delete function
 function deleteChat() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -122,7 +120,7 @@ function deleteChat() {
         const roomID = userResult.data().currentChatRoom;
         console.log("Delete --- room id: ", roomID);
 
-        // get chatroom topic 
+        // get chatroom topic
         const chatroomRef = db.collection("ChatRooms").doc(roomID);
         chatroomRef.get().then(chatResult => {
           const topic = chatResult.data().topic;
@@ -262,7 +260,6 @@ function moveMessageToTrash(roomID, trashID) {
 //                 console.log("Delete ----delete chatroom topic ");
 //                 //userID and name stored
 //                 if(roomID.length > 1) {
-
 //                     db.collection("ChatRooms").doc(roomID).collection("Users")
 //                     .get().then(function(querySnapshot) {
 //                       querySnapshot.forEach(function(doc) {
@@ -276,12 +273,10 @@ function moveMessageToTrash(roomID, trashID) {
 //                       Promise.all(userList).then(results => {
 //                         results.forEach(item => {
 //                             console.log("sdbsbcwbwdbwegbdvwgedvegwvdgvd", item.userID);
-                            
 //                             db.collection("Trash").doc(roomID).collection("Users")
 //                                 .doc(item.userID).set({
 //                                     name: item.name,
 //                             });
-                            
 //                             //delete each user's chatroom.roomid
 //                             //need to delete the subfiled first
 //                             let roomRef = db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID);
@@ -295,13 +290,12 @@ function moveMessageToTrash(roomID, trashID) {
 //                             }).catch(function(error) {
 //                                 console.error("Error removing document: ", error);
 //                             });
-                            
 //                              //delete Userlist in chatroom
 //                                 //delete Userlist field first
 //                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).update({
 //                                 name: firebase.firestore.FieldValue.delete()
 //                             });
-//                             console.log("Delete ----delete chatroom users name "); 
+//                             console.log("Delete ----delete chatroom users name ");
 //                            //and then delete userid
 //                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).delete().then(function() {
 //                                 console.log("Delete ----delete chatroom userid" );
@@ -311,13 +305,12 @@ function moveMessageToTrash(roomID, trashID) {
 //                         });
 //                      });
 //                   });
-//                 console.log("Delete ----UserList ", userList);                
+//                 console.log("Delete ----UserList ", userList);
 //               }
 //                 // move the chatroom in trash catalog
 //             //Get the document from fromPath location.
 //             let messageList = [];
 //             console.log("Delete ---- testdhsjbdsbdj ", roomID);
-
 //             db.collection("ChatRooms").doc(roomID).collection("Messages")
 //                 .orderBy("time")
 //                 .get().then(function(querySnapshot) {
@@ -330,7 +323,6 @@ function moveMessageToTrash(roomID, trashID) {
 //                             message: doc.data().message,
 //                         });
 //                     });
-                
 //                     Promise.all(messageList).then(results => {
 //                         results.forEach(item => {
 //                             console.log("adding message list to trash", item.MessageID);
@@ -341,7 +333,6 @@ function moveMessageToTrash(roomID, trashID) {
 //                                 message: item.message,
 //                                 time: item.time,
 //                             });
-                            
 //                             //delete message list in chatroom
 //                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).update({
 //                                 message: firebase.firestore.FieldValue.delete(),
@@ -349,7 +340,7 @@ function moveMessageToTrash(roomID, trashID) {
 //                                 senderName: firebase.firestore.FieldValue.delete(),
 //                                 time: firebase.firestore.FieldValue.delete()
 //                              });
-//                                 console.log("Delete ----delete chatroom messages "); 
+//                                 console.log("Delete ----delete chatroom messages ");
 //                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).delete().then(function() {
 //                                 console.log("MessageID in ChatRooms successfully deleted!");
 //                             }).catch(function(error) {
@@ -369,15 +360,12 @@ function moveMessageToTrash(roomID, trashID) {
 //                 }).catch(function(error) {
 //                         console.error("Error removing document: ", error);
 //                 });
-            
-                
 //             });
 //             //reload message page
 //             console.log("reload chatroom bar and message, currentChatroom should be null");
 //             clearChat();
 //             clearHead();
 //             reloadChatRoomSideBar();
-      
 //         }
 //   });
 // }
@@ -619,6 +607,16 @@ function clearChat() {
   });
 }
 
+function reloadHeader() {
+  clearHead();
+  displayHeader();
+}
+
+function reloadChatHistory() {
+  clearChat();
+  loadChatHistory();
+}
+
 function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
@@ -636,36 +634,45 @@ function loadChatHistory() {
               initial_messages.push({
                 senderID: doc.data().senderID,
                 senderName: doc.data().senderName,
-                time: doc.data().time.toDate(),
+                // time: doc.data().time.toDate(),
+                time: firebase.firestore.FieldValue.serverTimestamp(),
                 message: doc.data().message,
               });
             });
 
-            Promise.all(initial_messages).then(results => {
-              displayMessages(results);
-            });
+            // Promise.all(initial_messages).then(results => {
+            //   displayMessages(results);
+            // });
           })
 
         db.collection("ChatRooms").doc(roomID).collection("Messages")
           .orderBy("time")
-          .onSnapshot(function (querySnapshot) {        
+          .onSnapshot(function (querySnapshot) {
             update_messages = [];
             querySnapshot.docChanges().forEach(function (change) {
               console.log(change);
-              if (change.type == "modified") {
+              // console.log(change.type);
+              // console.log(change.doc.data());
+
+              let timestamp = change.doc.data().time;
+              if (timestamp === null) {
+                timestamp = firebase.firestore.FieldValue.serverTimestamp();
+              }
+
+              if (change.type === "modified") {
                 console.log(change.doc.id, " => ", change.doc.data());
                 update_messages.push({
                   senderID: change.doc.data().senderID,
                   senderName: change.doc.data().senderName,
-                  time: change.doc.data().time.toDate(),
+                  time: timestamp.toDate(),
                   message: change.doc.data().message,
                 });
               }
-              else if (change.type == "added") {
+              else if (change.type === "added") {
                 update_messages.push({
                   senderID: change.doc.data().senderID,
                   senderName: change.doc.data().senderName,
-                  time: change.doc.data().time.toDate(),
+                  time: timestamp.toDate(),
                   message: change.doc.data().message,
                 });
               }
@@ -733,6 +740,7 @@ function sendMessage() {
                 .then(function (docRef) {
                   console.log("Document written with ID: ", docRef.id);
                   document.getElementById("message").value = "";
+
                 })
                 .catch(function (error) {
                   console.error("Error adding document: ", error);
@@ -870,7 +878,6 @@ function selectChum(row, id) {
     }
   }
 
-  // console.log(members);
   if (members[0] === "") {
     members.shift();
   }
