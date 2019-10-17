@@ -832,7 +832,7 @@ function displayPopupBoxChums(results, htmlID) {
 
     html += '<tr id="' + row + '" class="popupRow" onclick="selectChum(this,\'' + id + '\')">';
     html += '<td class="popupUserImage"><img src="' + img + '"></td>';
-    html += '<td class="popupUserName"><<h2 id="popupUserName' + count + '">' + name + '</h2></td>';
+    html += '<td class="popupUserName"><h2 id="popupUserName' + count + '">' + name + '</h2></td>';
     html += '<td class="popupUserMajor"><h3 id="popupUserMajor' + count + '">' + major + '</h3></td>';
     html += '</tr>'
 
