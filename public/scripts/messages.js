@@ -190,8 +190,8 @@ function deleteChatRoomFromUser(userID, roomID) {
   // if currentChatRoom is roomID, we need to update it to empty
   const db = firebase.firestore();
   const userData = db.collection("Users").doc(userID);
-  userData.get().then(userData => {
-    const currentChatRoom = userData.data().currentChatRoom;
+  userData.get().then(userResult => {
+    const currentChatRoom = userResult.data().currentChatRoom;
 
     if(currentChatRoom == roomID) {
       userData.set({
