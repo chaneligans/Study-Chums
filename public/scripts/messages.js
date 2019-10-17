@@ -64,19 +64,20 @@ function createChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      let topic = document.getElementById("chatTopic").value;
+      let topic = document.getElementById("chatTopicIn").value;
 
       if (topic === "") {
         alert('Please enter a topic.')
       } else {
         let membersString = sessionStorage.getItem('chatMembers');
         let members = membersString.split(',');
-        console.log('Printing from createChatRoom(): Members: ' + members + '. members.length(): ' + members.length);
 
         if (members.length < 1 || membersString === "") {
           alert('Please select member(s) for your chatroom.');
         } else {
           members.push(user.uid);
+          console.log('Printing from createChatRoom(): Members: '
+                    + members + '. members.length(): ' + members.length);
           db.collection("ChatRooms")
             .add({
               topic: topic
@@ -183,7 +184,6 @@ function addUserToTrash(userID, name, trashID) {
   });
 }
 
-// Lili's delete function
 function deleteChatRoomFromUser(userID, roomID) {
   // if currentChatRoom is roomID, we need to update it to empty
   const db = firebase.firestore();
@@ -279,25 +279,29 @@ function moveMessageToTrash(roomID, trashID) {
 //                             });
 //                             //delete each user's chatroom.roomid
 //                             //need to delete the subfiled first
-//                             let roomRef = db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID);
+//                             let roomRef = db.collection("Users").doc(item.userID)
+//                             .collection("ChatRooms").doc(roomID);
 //                             let removeTopic = roomRef.update({
 //                                 topic: firebase.firestore.FieldValue.delete()
 //                             });
 //                             console.log("Delete ----user chatrooms' topic ");
 //                             //and then delete roomid
-//                             db.collection("Users").doc(item.userID).collection("ChatRooms").doc(roomID).delete().then(function() {
+//                             db.collection("Users").doc(item.userID).collection("ChatRooms")
+//                             .doc(roomID).delete().then(function() {
 //                                 console.log("roomID in User ChatRooms successfully deleted!");
 //                             }).catch(function(error) {
 //                                 console.error("Error removing document: ", error);
 //                             });
 //                              //delete Userlist in chatroom
 //                                 //delete Userlist field first
-//                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).update({
+//                             db.collection("ChatRooms").doc(roomID).collection("Users")
+//                             .doc(item.userID).update({
 //                                 name: firebase.firestore.FieldValue.delete()
 //                             });
 //                             console.log("Delete ----delete chatroom users name ");
 //                            //and then delete userid
-//                             db.collection("ChatRooms").doc(roomID).collection("Users").doc(item.userID).delete().then(function() {
+//                             db.collection("ChatRooms").doc(roomID).collection("Users")
+//                             .doc(item.userID).delete().then(function() {
 //                                 console.log("Delete ----delete chatroom userid" );
 //                             }).catch(function(error) {
 //                                 console.error("Error removing document: ", error);
@@ -326,7 +330,8 @@ function moveMessageToTrash(roomID, trashID) {
 //                     Promise.all(messageList).then(results => {
 //                         results.forEach(item => {
 //                             console.log("adding message list to trash", item.MessageID);
-//                             console.log("adding sendName list to trash", item.senderName); db.collection("Trash").doc(roomID).collection("Messages")
+//                             console.log("adding sendName list to trash", item.senderName);
+//                             db.collection("Trash").doc(roomID).collection("Messages")
 //                             .doc(item.MessageID).set({
 //                                 senderID: item.senderID,
 //                                 senderName: item.senderName,
@@ -334,14 +339,16 @@ function moveMessageToTrash(roomID, trashID) {
 //                                 time: item.time,
 //                             });
 //                             //delete message list in chatroom
-//                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).update({
+//                             db.collection("ChatRooms").doc(roomID).collection("Messages")
+//                             .doc(item.MessageID).update({
 //                                 message: firebase.firestore.FieldValue.delete(),
 //                                 senderID: firebase.firestore.FieldValue.delete(),
 //                                 senderName: firebase.firestore.FieldValue.delete(),
 //                                 time: firebase.firestore.FieldValue.delete()
 //                              });
 //                                 console.log("Delete ----delete chatroom messages ");
-//                             db.collection("ChatRooms").doc(roomID).collection("Messages").doc(item.MessageID).delete().then(function() {
+//                             db.collection("ChatRooms").doc(roomID).collection("Messages")
+//                             .doc(item.MessageID).delete().then(function() {
 //                                 console.log("MessageID in ChatRooms successfully deleted!");
 //                             }).catch(function(error) {
 //                                 console.error("Error removing document: ", error);
@@ -410,7 +417,8 @@ function addMultipleUsersToChatRoom() {
 
               let membersString = sessionStorage.getItem('chatMembers');
               let members = membersString.split(',');
-              console.log('Printing from addMultipleUsersToChatRoom(): Members: ' + members + '. members.length(): ' + members.length);
+              console.log('Printing from addMultipleUsersToChatRoom(): Members: '
+                      + members + '. members.length(): ' + members.length);
 
               if (members.length < 1 || membersString === "") {
                 alert('Please select member(s) for your chatroom.');
@@ -500,7 +508,10 @@ function displayChatRooms(userList) {
       }
 
       $(document).ready(function () {
-        $("#leftSideRooms").append('<li onclick="openChatRoom(\'' + roomID + '\')"><div><h2 class = "leftChatName">' + displayName + '</h2></div></li>');
+        $("#leftSideRooms").append(
+          '<li onclick="openChatRoom(\'' + roomID
+          + '\')"><div><h2 class = "leftChatName">'
+          + displayName + '</h2></div></li>');
       });
 
     } else {
@@ -519,11 +530,17 @@ function addUserToChatRoom(friendID, roomID, topic) {
       let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
       chatRoomRef.doc(friendID).set({
         name: friendName
+      })
+      .catch(function (error) {
+        console.error("Error writing to chatrooms: ", error);
       });
 
       let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
       usersRef.doc(roomID).set({
         topic: topic
+      })
+      .catch(function (error) {
+        console.error("Error writing to users: ", error);
       });
     })
     .catch(function (error) {
@@ -564,19 +581,37 @@ function displayHeader() {
                   }
                 });
                 if (names.length > 1) {
-                  displayName = topic;
-                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Chums:  ' + names + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChat();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
-                  document.getElementById("chatHeader").innerHTML = html;
-                  $("#chatHeader").load(html, function () {
-                    console.log("Load chatroom was performed.");
+                  // displayName = topic;
+                  /* var html = '<div><h2 id="chatTitle">' + displayName
+                  + '</h2><h3 id="chatTopic">Chums:  ' + names
+                  + '</h3><div class = "dropdown"><button id="chatOptions" '
+                  + 'onclick="myFunction()"><i class="fas fa-ellipsis-h"></i>'
+                  + '</button><div id="myDropdown" class="dropdown-content">'
+                  + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
+                  + '<a onclick="showAddFriendToChatPopup();" '
+                  + 'href="#add">Add new Chums</a></div></div></div>';*/
+                  // document.getElementById("chatHeader").innerHTML = html;
+                  $("#chatHeader").load("../loaded/message_header.html", function () {
+                    $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
+                    console.log("Load header (multi) was performed.");
                   });
                 } else {
-                  displayName = names[0];
-                  var html = '<div><h2 id="chatTitle">' + displayName + '</h2><h3 id="chatTopic">Topic:  ' + topic + '</h3><div class = "dropdown"><button id="chatOptions" onclick="myFunction()"><i class="fas fa-ellipsis-h"></i></button><div id="myDropdown" class="dropdown-content"><a onclick="deleteChat();" href="#delete">Delete Chat</a><a onclick="showAddFriendToChatPopup();" href="#add">Add new Chums</a></div></div></div>';
-                  document.getElementById("chatHeader").innerHTML = html;
-                  console.log(userLists);
-                  $("#chatHeader").load(html, function () {
-                    console.log("Load chatroom was performed.");
+                  // displayName = names[0];
+                  /* var html = '<div><h2 id="chatTitle">' + displayName
+                  + '</h2><h3 id="chatTopic">Topic:  ' + topic
+                  + '</h3><div class = "dropdown"><button id="chatOptions" '
+                  + 'onclick="myFunction()"><i class="fas fa-ellipsis-h"></i>'
+                  + '</button><div id="myDropdown" class="dropdown-content">'
+                  + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
+                  + '<a onclick="showAddFriendToChatPopup();" '
+                  + 'href="#add">Add new Chums</a></div></div></div>';*/
+                  // document.getElementById("chatHeader").innerHTML = html;
+                  // console.log(userLists);
+                  $("#chatHeader").load("../loaded/message_header.html", function () {
+                    $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
+                    console.log("Load header (single) was performed.");
                   });
                 }
               });
@@ -592,18 +627,18 @@ function myFunction() {
 }
 
 function clearHead() {
-  var html = "<p></p>";
-  document.getElementById("chatHeader").innerHTML = html;
-  $("#chatHeader").load(html, function () {
-    console.log("Load was performed.");
+  // var html = "<p></p>";
+  // document.getElementById("chatHeader").innerHTML = html;
+  $("#chatHeader").load("../loaded/empty.html", function () {
+    console.log("Load for clearHead() was performed.");
   });
 }
 
 function clearChat() {
-  var html = "<p></p>";
-  document.getElementById("chat").innerHTML = html;
-  $("#chat").load(html, function () {
-    console.log("Load was performed.");
+  // var html = "<p></p>";
+  // document.getElementById("chat").innerHTML = html;
+  $("#chat").load("../loaded/empty.html", function () {
+    console.log("Load for clearChat() was performed.");
   });
 }
 
@@ -650,7 +685,7 @@ function loadChatHistory() {
           .onSnapshot(function (querySnapshot) {
             update_messages = [];
             querySnapshot.docChanges().forEach(function (change) {
-              console.log(change);
+              // console.log(change);
               // console.log(change.type);
               // console.log(change.doc.data());
 
@@ -669,6 +704,7 @@ function loadChatHistory() {
                 });
               }
               else if (change.type === "added") {
+                // console.log(change.doc.id, " ++ ", change.doc.data());
                 update_messages.push({
                   senderID: change.doc.data().senderID,
                   senderName: change.doc.data().senderName,
@@ -698,17 +734,24 @@ function displayMessages(messages) {
 
         if (user.uid === senderID) {
           $(document).ready(function () {
-            $("#chat").append('<li class="me"><div class="entete"><h3 class="timestamp">' + time + '</h3><h2 class="sender">You</h2></div><div class="message">' + message + '</div></li>');
+            $("#chat").append(
+              '<li class="me"><div class="entete"><h3 class="timestamp">'+time
+              + '</h3><h2 class="sender">You</h2></div><div class="message">'
+              + message + '</div></li>');
             scrollToBottom();
           });
 
         } else {
           $(document).ready(function () {
-            $("#chat").append('<li class="you"><div class="entete"><h3 class="timestamp">' + time + '</h3>  <h2 class="sender">' + senderName + '</h2></div><div class="message">' + message + '</div></li>');
+            $("#chat").append(
+              '<li class="you"><div class="entete"><h3 class="timestamp">'+time
+              + '</h3>  <h2 class="sender">' + senderName
+              + '</h2></div><div class="message">' + message + '</div></li>');
             scrollToBottom();
           });
         }
-      })
+      });
+      console.log('All messages are displayed.');
     } else {
       console.log('User is not signed in!');
     }
@@ -762,7 +805,13 @@ function sendMessage() {
 
 function setUserData(childSnapshotValue, childKey) {
   var photo = childSnapshotValue.p1Url + " ";
-  var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  var data = [
+    childSnapshotValue.index,
+    photo,
+    childSnapshotValue.name,
+    childSnapshotValue.Major,
+    childKey
+  ];
   return data;
 }
 

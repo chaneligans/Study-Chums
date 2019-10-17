@@ -84,7 +84,7 @@
               <div class="chatPopupContent">
                 <span id="closeCreateChatPopup">&times;</span>
                 <h1 id="createChatPopupTitle">New Chat Room</h1>
-                <input id="chatTopic" type="text" class="popupInput" placeholder="Topic">
+                <input id="chatTopicIn" type="text" class="popupInput" placeholder="Topic">
                 <h2>Chums</h2>
                 <div id="popupCreateChatResults">
                   <script>retrievePopupBoxChums('popupCreateChatResults');</script>
@@ -94,7 +94,9 @@
 
             </div>
 
-            <header><!-- after click on the plus button, pump up the list of chums, auto crate a room id by createROOMID function with the topic input when selecting the user to call addUser functions -->
+            <header>
+              <!-- after click on the plus button, pump up the list of chums, auto-create a room id by createROOMID
+                    function with the topic input when selecting the user to call addUser functions -->
               <button id="openCreateChatPopup" onclick = "showCreateChatPopup();"><i class="fas fa-plus"></i></button>
             </header>
 
