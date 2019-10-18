@@ -82,7 +82,7 @@
             <div id="createChatPopup" class="chatPopup">
               <!-- Popup box content -->
               <div class="chatPopupContent">
-                <span id="closeCreateChatPopup">&times;</span>
+                <span id="closeCreateChatPopup" class="closeChatPopup">&times;</span>
                 <h1 id="createChatPopupTitle">New Chat Room</h1>
                 <input id="chatTopicIn" type="text" class="popupInput" placeholder="Topic">
                 <h2>Chums</h2>
@@ -114,11 +114,11 @@
             <header id="chatHeader"> <!-- MAIN CHAT HEADER -->
             </header>
             <!-- Add Users to Existing Chat Popup -->
-            <div id="addFriendToChatPopup" class="chatPopup">
+            <div id="addFriendToChatPopup">
                 <div class="chatPopupContent">
-                  <span id="closeAddFriendToChatPopup">&times;</span>
-                  <h1 id="addFriendToChatPopupTitle">Add Chums to Chat</h1>
-                  <h2>Chums</h2>
+                  <span id="closeAddFriendToChatPopup" class="closeChatPopup">&times;</span>
+                  <h1 id="addFriendToChatPopupTitle">Add More Chums to Chat</h1>
+                  <h2> </h2>
                   <div id="popupAddFriendToChatResults">
                     <script>retrievePopupBoxChums('popupAddFriendToChatResults');</script>
                   </div>
