@@ -78,8 +78,8 @@ function setIndex(user, index) {
 }
 
 function createUserWithEmailAndPassword() {
-  const email_in = document.getElementById("email").value;
-  const password_in = document.getElementById("password").value;
+  const email_in = document.getElementById("login-email-input").value;
+  const password_in = document.getElementById("login-password-input").value;
 
   firebase.auth().createUserWithEmailAndPassword(email_in, password_in)
   .then(user => {
@@ -98,6 +98,9 @@ function createUserWithEmailAndPassword() {
 }
 
 function emailAndPasswordSignIn() {
+  const email_in = document.getElementById("login-email-input").value;
+  const password_in = document.getElementById("login-password-input").value;
+  
   firebase.auth().signInWithEmailAndPassword(email, password)
   .then(user => {
     window.location.href = "home.html";

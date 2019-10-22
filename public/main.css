@@ -65,7 +65,7 @@ body{
   border-radius: 10px;
 }
 
-.fbbutton {
+.fb-button {
   background-color: #3b5998;
   border: none;
   border-radius: 3px;
@@ -75,6 +75,42 @@ body{
   font-size: 15px;
   margin-bottom: 15px;
   font-family: 'Nunito', sans-serif;
+}
+
+.email-button, #create-account-btn {
+  background-color: #808080;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 15px;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 15px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.email-button:hover{
+  cursor: pointer;  
+}
+
+.login-icon {
+  padding-right: 10px;
+  font-size: 15px;
+}
+
+.login-divider {
+  display: inline-block;
+  width: 30%;
+  padding: 0 5px; 
+}
+
+.login-p {
+  padding: 0;
+  margin: 5px;
+}
+
+#create-account-btn {
+  width: 100%;
 }
 
 /* Create Profile */
