@@ -77,19 +77,26 @@ function setIndex(user, index) {
   });
 }
 
-// function createUserWithEmailAndPassword() {
-//   const email_in = document.getElementById("email").value;
-//   const password_in = document.getElementById("password").value;
+function createUserWithEmailAndPassword() {
+  const email_in = document.getElementById("email").value;
+  const password_in = document.getElementById("password").value;
 
-//   firebase.auth().createUserWithEmailAndPassword(email_in, password_in)
-//   .catch(function(error) {
-//     // Handle Errors here.
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // ...
-//   });
-// }
+  firebase.auth().createUserWithEmailAndPassword(email_in, password_in)
+  .then(user => {
+    const index = incrementTotalUsers();
+    setIndex(user, index);
 
-// function emailAndPasswordSignIn() {
+    setTimeout(() => {
+      location.href = "create_profile.html";
+    }, 1000);
+  })
+  .catch(function(error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ...
+  });
+}
 
-// }
+function emailAndPasswordSignIn() {
+
+}
