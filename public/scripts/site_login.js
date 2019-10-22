@@ -93,10 +93,18 @@ function createUserWithEmailAndPassword() {
   .catch(function(error) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    // ...
+    console.log("Error creating new user with email and password --", errorMessage);
   });
 }
 
 function emailAndPasswordSignIn() {
-
+  firebase.auth().signInWithEmailAndPassword(email, password)
+  .then(user => {
+    window.location.href = "home.html";
+  })
+  .catch(function(error) {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log("Error signing in user with email and password --", errorMessage);
+  });
 }
