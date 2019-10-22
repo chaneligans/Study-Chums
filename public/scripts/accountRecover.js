@@ -1,6 +1,9 @@
 function sendEmail(){
     
 }
+function getUser(){
+    
+}
 function vertifyCode(){
     
 }
