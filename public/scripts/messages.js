@@ -237,146 +237,6 @@ function moveMessageToTrash(roomID, trashID) {
   })
 }
 
-// Lili's delete function
-// function deleteChatRoom(){
-//     firebase.auth().onAuthStateChanged(user => {
-//         if (user) {
-//             const db = firebase.firestore();
-//             let userList = [];
-//             let roomID;
-//             db.collection("Users").doc(user.uid).get().then(userResult => {
-//               // read from db with user's current chatroom id
-//               roomID = userResult.data().currentChatRoom;
-//               console.log("Delete ----roomID ", roomID);
-//             //get the topic of chat room
-//                 let topic;
-//                 db.collection("ChatRooms").doc(roomID).get().then(result => {
-//                     topic = result.data().topic;
-//                     console.log("Delete ----get topic chatroom ", topic);
-// //                db.collection("Trash").doc(roomID).set({
-// //                    topic: topic,
-// //                });
-//                 });
-//                 console.log("Delete ----delete chatroom topic ");
-//                 //userID and name stored
-//                 if(roomID.length > 1) {
-//                     db.collection("ChatRooms").doc(roomID).collection("Users")
-//                     .get().then(function(querySnapshot) {
-//                       querySnapshot.forEach(function(doc) {
-//                           // get users from chatroom collection.
-//                           userList.push({
-//                               name: doc.data().name,
-//                               userID: doc.id,
-//                           });
-//                       });
-//                     //then delete the chatroom from all users' collection
-//                       Promise.all(userList).then(results => {
-//                         results.forEach(item => {
-//                             console.log("sdbsbcwbwdbwegbdvwgedvegwvdgvd", item.userID);
-//                             db.collection("Trash").doc(roomID).collection("Users")
-//                                 .doc(item.userID).set({
-//                                     name: item.name,
-//                             });
-//                             //delete each user's chatroom.roomid
-//                             //need to delete the subfiled first
-//                             let roomRef = db.collection("Users").doc(item.userID)
-//                             .collection("ChatRooms").doc(roomID);
-//                             let removeTopic = roomRef.update({
-//                                 topic: firebase.firestore.FieldValue.delete()
-//                             });
-//                             console.log("Delete ----user chatrooms' topic ");
-//                             //and then delete roomid
-//                             db.collection("Users").doc(item.userID).collection("ChatRooms")
-//                             .doc(roomID).delete().then(function() {
-//                                 console.log("roomID in User ChatRooms successfully deleted!");
-//                             }).catch(function(error) {
-//                                 console.error("Error removing document: ", error);
-//                             });
-//                              //delete Userlist in chatroom
-//                                 //delete Userlist field first
-//                             db.collection("ChatRooms").doc(roomID).collection("Users")
-//                             .doc(item.userID).update({
-//                                 name: firebase.firestore.FieldValue.delete()
-//                             });
-//                             console.log("Delete ----delete chatroom users name ");
-//                            //and then delete userid
-//                             db.collection("ChatRooms").doc(roomID).collection("Users")
-//                             .doc(item.userID).delete().then(function() {
-//                                 console.log("Delete ----delete chatroom userid" );
-//                             }).catch(function(error) {
-//                                 console.error("Error removing document: ", error);
-//                             });
-//                         });
-//                      });
-//                   });
-//                 console.log("Delete ----UserList ", userList);
-//               }
-//                 // move the chatroom in trash catalog
-//             //Get the document from fromPath location.
-//             let messageList = [];
-//             console.log("Delete ---- testdhsjbdsbdj ", roomID);
-//             db.collection("ChatRooms").doc(roomID).collection("Messages")
-//                 .orderBy("time")
-//                 .get().then(function(querySnapshot) {
-//                     querySnapshot.forEach(function(doc) {
-//                         messageList.push({
-//                             MessageID: doc.id,
-//                             senderID: doc.data().senderID,
-//                             senderName: doc.data().senderName,
-//                             time: doc.data().time.toDate(),
-//                             message: doc.data().message,
-//                         });
-//                     });
-//                     Promise.all(messageList).then(results => {
-//                         results.forEach(item => {
-//                             console.log("adding message list to trash", item.MessageID);
-//                             console.log("adding sendName list to trash", item.senderName);
-//                             db.collection("Trash").doc(roomID).collection("Messages")
-//                             .doc(item.MessageID).set({
-//                                 senderID: item.senderID,
-//                                 senderName: item.senderName,
-//                                 message: item.message,
-//                                 time: item.time,
-//                             });
-//                             //delete message list in chatroom
-//                             db.collection("ChatRooms").doc(roomID).collection("Messages")
-//                             .doc(item.MessageID).update({
-//                                 message: firebase.firestore.FieldValue.delete(),
-//                                 senderID: firebase.firestore.FieldValue.delete(),
-//                                 senderName: firebase.firestore.FieldValue.delete(),
-//                                 time: firebase.firestore.FieldValue.delete()
-//                              });
-//                                 console.log("Delete ----delete chatroom messages ");
-//                             db.collection("ChatRooms").doc(roomID).collection("Messages")
-//                             .doc(item.MessageID).delete().then(function() {
-//                                 console.log("MessageID in ChatRooms successfully deleted!");
-//                             }).catch(function(error) {
-//                                 console.error("Error removing document: ", error);
-//                             });
-//                                 console.log("Delete ----delete chatroom message id ");
-//                         });
-//                      });
-//             });
-//             console.log("Delete ----get messageLists ", messageList);
-//                 db.collection("ChatRooms").doc(roomID).update({
-//                         topic: firebase.firestore.FieldValue.delete()
-//                 })
-// //            //Delete the document from fromPath location.
-//                 db.collection("ChatRooms").doc(roomID).delete().then(function() {
-//                         console.log("roomID in ChatRooms successfully deleted!");
-//                 }).catch(function(error) {
-//                         console.error("Error removing document: ", error);
-//                 });
-//             });
-//             //reload message page
-//             console.log("reload chatroom bar and message, currentChatroom should be null");
-//             clearChat();
-//             clearHead();
-//             reloadChatRoomSideBar();
-//         }
-//   });
-// }
-
 function showAddFriendToChatPopup() {
   console.log('Called function showAddFriendToChatPopup()');
 
@@ -674,10 +534,6 @@ function loadChatHistory() {
                 message: doc.data().message,
               });
             });
-
-            // Promise.all(initial_messages).then(results => {
-            //   displayMessages(results);
-            // });
           })
 
         db.collection("ChatRooms").doc(roomID).collection("Messages")
@@ -686,8 +542,6 @@ function loadChatHistory() {
             update_messages = [];
             querySnapshot.docChanges().forEach(function (change) {
               // console.log(change);
-              // console.log(change.type);
-              // console.log(change.doc.data());
 
               let timestamp = change.doc.data().time;
               if (timestamp === null) {

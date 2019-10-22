@@ -95,10 +95,14 @@ function displayReceivedRequests(results) {
 
     html += '<tr class="resultRow">';
     html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
+    html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
 
-    html += '<td class= "resultIcons"><p id="acceptIcon' + id + '"><a onclick="acceptRequest(\'' + id + '\');" style="color:black"><i class="fas fa-user-check fa-lg"></i></a></p></td>';
-    html += '<td class= "resultIcons"><p id="rejectIcon' + id + '"><a onclick="rejectRequest(\'' + id + '\');" style="color:black"><i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
+    html += '<td class= "resultIcons"><p id="acceptIcon' + id + '"><a onclick="acceptRequest(\''
+    html += id + '\');" style="color:black"><i class="fas fa-user-check fa-lg"></i></a></p></td>';
+
+    html += '<td class= "resultIcons"><p id="rejectIcon' + id + '"><a onclick="rejectRequest(\''
+    html += id + '\');" style="color:black"><i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
     html += '</tr>'
 
     count++;
@@ -130,7 +134,8 @@ function displaySentRequests(results) {
 
     html += '<tr class="resultRow">';
     html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\'' + id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
+    html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
 
     html += '<td class= "resultIcons"><i class="fas fa-spinner fa-sm"></i><p>Request Pending</p></td>';
     html += '</tr>'

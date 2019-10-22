@@ -1,15 +1,15 @@
 function sendEmail(){
-    
+
 }
 function getUser(){
-    
+
 }
-function vertifyCode(){
-    
+function verifyCode(){
+
 }
 //function oldPassword(){
-//    
+//
 //}
 function newPassword(){
-    
+
 }

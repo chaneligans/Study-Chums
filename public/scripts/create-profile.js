@@ -25,8 +25,11 @@ function updateProfile() {
 
       if (FBprofileLink_in !== "") {updateFBProfileLink(this.userId, FBprofileLink_in);}
 
-      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "" || FBprofileLink_in === "") {alert("Please fill in all fields.");} 
-      else if (photo_in.value === "") {setTimeout(function() {location.href = "home.html";}, 1000);}
+      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "" || FBprofileLink_in === "") {
+        alert("Please fill in all fields.");
+      } else if (photo_in.value === "") {
+        setTimeout(function() {location.href = "home.html";}, 1000);
+      }
 
       console.log("Updates sent to database.");
     } else {console.log("Who are you? And why do you have access to this?");}
@@ -139,7 +142,7 @@ function updatePhotoURL(uid, photo) {
                   p1Url: photoUrl,
                   "p1Url": photoUrl
                 }, function(error) {
-                  if (error) {console.log("Update failed - p1Url to " + photo);} 
+                  if (error) {console.log("Update failed - p1Url to " + photo);}
                   else {
                     console.log("Update succeeded - p1Url to " + photo);
                     location.href = "home.html";
@@ -155,7 +158,7 @@ function updatePhotoURL(uid, photo) {
     }
   });
 }
-  
+
 
 function updateName(user, name_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -180,7 +183,7 @@ function updateName(user, name_in) {
   });
 }
 
-  
+
 function updateEmail(user) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating email for user id ", user.uid);
@@ -204,7 +207,7 @@ function updateEmail(user) {
     });
   });
 }
-  
+
 
 function updateMajor(user, major_in) {
   firebase.auth().onAuthStateChanged(function(user) {
@@ -228,7 +231,7 @@ function updateMajor(user, major_in) {
   });
 }
 
-  
+
 function updateBio(user, bio_in) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating bio for user id ", user.uid);
@@ -251,7 +254,7 @@ function updateBio(user, bio_in) {
   });
 }
 
-  
+
 function updateFBProfileLink(user, FBprofileLink_in) {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log("Updating FB profile for user id ", user.uid);
@@ -272,7 +275,7 @@ function updateFBProfileLink(user, FBprofileLink_in) {
     });
   });
 }
-  
+
 
 function updateSubscription(user) {
   firebase.auth().onAuthStateChanged(function(user) {
