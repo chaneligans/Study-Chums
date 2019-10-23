@@ -14,8 +14,7 @@ function facebookSignIn() {
 
     // Redirect after signing in
     if(result.additionalUserInfo.isNewUser) {
-      const index = incrementTotalUsers();
-      setIndex(user, index);
+      initializeUserData(user);
 
       setTimeout(() => {
         location.href = "create_profile.html";
@@ -36,7 +35,7 @@ function facebookSignIn() {
   });
 }
 
-function incrementTotalUsers() {
+function initializeUserData(user) {
   let totalUsers;
   const totalRef = firebase.database().ref("TotalUsers");
   totalRef.once("value", function(data) {
@@ -54,10 +53,11 @@ function incrementTotalUsers() {
         console.log("Update suceeded - total to " + totalUsers);
       }
     });
-  });
 
-  Promise.resolve(totalUsers).then(result => {
-    return result-1;
+    Promise.resolve(totalUsers).then(result => {
+      console.log(result-1);
+      setIndex(user, result-1);
+    });
   });
 }
 
@@ -78,13 +78,12 @@ function setIndex(user, index) {
 }
 
 function createUserWithEmailAndPassword() {
-  const email_in = document.getElementById("login-email-input").value;
-  const password_in = document.getElementById("login-password-input").value;
+  const email_in = document.getElementById("create-account-email-input").value;
+  const password_in = document.getElementById("create-account-password-input").value;
 
   firebase.auth().createUserWithEmailAndPassword(email_in, password_in)
-  .then(user => {
-    const index = incrementTotalUsers();
-    setIndex(user, index);
+  .then(userCreds => {
+    initializeUserData(userCreds.user);
 
     setTimeout(() => {
       location.href = "create_profile.html";
@@ -93,7 +92,22 @@ function createUserWithEmailAndPassword() {
   .catch(function(error) {
     const errorCode = error.code;
     const errorMessage = error.message;
+
+    if(errorCode == 'auth/invalid-email') {
+      alert('The password is too weak.');
+    }
+    else if(errorCode == "auth/email-already-in-use") {
+      alert("Email is already in use. Please sign in.");
+    }
+    else if(errorCode == 'auth/weak-password') {
+      alert('Password is too weak. It should be at least 6 characters.');
+    }
+    else if(errorCode == 'auth/operation-not-allowed') {
+      console.log("Uh oh. Auth via email and password is not enabled.");
+    }
+
     console.log("Error creating new user with email and password --", errorMessage);
+    console.log("Error creating new user with email and password --", errorCode);
   });
 }
 
@@ -101,7 +115,7 @@ function emailAndPasswordSignIn() {
   const email_in = document.getElementById("login-email-input").value;
   const password_in = document.getElementById("login-password-input").value;
   
-  firebase.auth().signInWithEmailAndPassword(email, password)
+  firebase.auth().signInWithEmailAndPassword(email_in, password_in)
   .then(user => {
     window.location.href = "home.html";
   })
@@ -109,5 +123,6 @@ function emailAndPasswordSignIn() {
     var errorCode = error.code;
     var errorMessage = error.message;
     console.log("Error signing in user with email and password --", errorMessage);
+    alert("Username and password combination not found.");
   });
 }
