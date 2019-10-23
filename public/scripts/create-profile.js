@@ -14,7 +14,10 @@ function updateProfile() {
       // execute only if something is there
       if (photo_in.value !== "") {updatePhotoURL(this.userId, photo_in);}
 
-      if (name_in !== "") {updateName(this.userId, name_in);}
+      if (name_in !== "") {
+        updateName(this.userId, name_in);
+        addUserToFirestore(this.userId, name_in);
+      }
 
       updateEmail(this.userId);
       updateSubscription(this.userId);
@@ -294,5 +297,15 @@ function updateSubscription(user) {
         console.log("Update succeeded - email pref to true");
       }
     });
+  });
+}
+
+function addUserToFirestore(userId, name) {
+  const firestore = firebase.firestore();
+
+  firestore.collections("Users").doc(userId)
+  .add({
+    name: name,
+    currentChatRoom: "",
   });
 }
