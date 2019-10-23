@@ -15,12 +15,11 @@
     <!-- IMPORT jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <!-- CREATE ACCOUNT JAVASCRIPT-->
+    <script type="text/javascript" src="scripts/site_login.js"></script>
+
     <!-- CREATE PROFILE JAVASCRIPT (COLLECT USER INFO FUNCTIONS) -->
     <script type="text/javascript" src="scripts/create-profile.js"></script>
-
-    <!-- CHECK IF USED IS LOGGED IN -->
-    <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
 
     <script type="text/javascript" src="scripts/dark-mode.js"></script>
 
@@ -50,7 +49,7 @@
         <input id="login-password-input" type="password" placeholder="Please enter your password" name="" value="" required>
       </div>
       
-      <button id="create-account-btn" class="email-button" onclick="createUserWithEmailAndPassword()"><i class="login-icon fas fa-paper-plane"></i>Create Account</button>
+      <button id="create-account-btn" class="email-button" onclick="createUserWithEmailAndPassword();"><i class="login-icon fas fa-paper-plane"></i>Create Account</button>
     </div>
   </body>
 </html>
