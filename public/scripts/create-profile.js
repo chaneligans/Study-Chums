@@ -16,7 +16,7 @@ function updateProfile() {
 
       if (name_in !== "") {
         updateName(this.userId, name_in);
-        addUserToFirestore(this.userId, name_in);
+        addUserToFirestore(name_in);
       }
 
       updateEmail(this.userId);
@@ -300,12 +300,14 @@ function updateSubscription(user) {
   });
 }
 
-function addUserToFirestore(userId, name) {
-  const firestore = firebase.firestore();
-
-  firestore.collections("Users").doc(userId)
-  .add({
-    name: name,
-    currentChatRoom: "",
+function addUserToFirestore(name) {
+  const db = firebase.firestore();
+  firebase.auth().onAuthStateChanged(function(user) {
+    // Hi!!
+    db.collection("Users").doc(user.uid)
+    .add({
+      name: name,
+      currentChatRoom: " ",
+    });
   });
 }

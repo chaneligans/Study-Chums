@@ -94,7 +94,7 @@ function createUserWithEmailAndPassword() {
     const errorMessage = error.message;
 
     if(errorCode == 'auth/invalid-email') {
-      alert('The password is too weak.');
+      alert('Email is not vaild.');
     }
     else if(errorCode == "auth/email-already-in-use") {
       alert("Email is already in use. Please sign in.");
@@ -117,12 +117,29 @@ function emailAndPasswordSignIn() {
   
   firebase.auth().signInWithEmailAndPassword(email_in, password_in)
   .then(user => {
-    window.location.href = "home.html";
+    
+    setTimeout(() => {
+      location.href = "home.html";
+    }, 1000);
   })
   .catch(function(error) {
-    var errorCode = error.code;
-    var errorMessage = error.message;
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    if(errorCode == 'auth/invalid-email') {
+      alert('Email is not vaild.');
+    }
+    else if(errorCode == "auth/user-disabled") {
+      alert("User has been disabled.");
+    }
+    else if(errorCode == 'auth/user-not-found') {
+      alert('Email and password combination not found.');
+    }
+    else if(errorCode == 'auth/wrong-password') {
+      ("Invalid password.");
+    }
+
     console.log("Error signing in user with email and password --", errorMessage);
-    alert("Username and password combination not found.");
+    console.log("Error signing in user with email and password --", errorCode);
   });
 }
