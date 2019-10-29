@@ -301,13 +301,17 @@ function updateSubscription(user) {
 }
 
 function addUserToFirestore(name) {
-  const db = firebase.firestore();
   firebase.auth().onAuthStateChanged(function(user) {
-    // Hi!!
-    db.collection("Users").doc(user.uid)
-    .add({
+    const firestore = firebase.firestore();
+
+    firestore.collection("Users").doc(user.uid).set({
       name: name,
+      "name": name,
       currentChatRoom: " ",
+      "currentChatRoom": " "
+    })
+    .catch(function (error) {
+      console.log('Error adding User data to Firestore --', error);
     });
   });
 }

@@ -15,8 +15,10 @@
     <!-- IMPORT jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <!-- CREATE PROFILE JAVASCRIPT (COLLECT USER INFO FUNCTIONS) -->
-    <script type="text/javascript" src="scripts/create-profile.js"></script>
+    <!-- firebase IMPORT -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
     <!-- CHECK IF USED IS LOGGED IN -->
     <script type="text/javascript" src="scripts/check_login.js"></script>
@@ -24,10 +26,8 @@
 
     <script type="text/javascript" src="scripts/dark-mode.js"></script>
 
-    <!-- firebase IMPORT -->
-    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-    <script type="text/javascript" src="scripts/firebase-config.js"></script>
-    <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
+    <!-- CREATE PROFILE JAVASCRIPT (COLLECT USER INFO FUNCTIONS) -->
+    <script type="text/javascript" src="scripts/create-profile.js"></script>
 
   </head>
   <body>
