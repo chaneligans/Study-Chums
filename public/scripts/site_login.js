@@ -136,7 +136,7 @@ function emailAndPasswordSignIn() {
       alert('Email and password combination not found.');
     }
     else if(errorCode == 'auth/wrong-password') {
-      ("Invalid password.");
+      alert("Invalid password.");
     }
 
     console.log("Error signing in user with email and password --", errorMessage);
