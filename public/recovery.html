@@ -17,6 +17,9 @@
 
     <!-- CREATE ACCOUNT JAVASCRIPT-->
     <script type="text/javascript" src="scripts/site_login.js"></script>
+    
+    <!-- Recovery js -->
+    <script type="text/javascript" src="scripts/account-recover.js"></script>
 
     <!-- CREATE PROFILE JAVASCRIPT (COLLECT USER INFO FUNCTIONS) -->
     <script type="text/javascript" src="scripts/create-profile.js"></script>
@@ -39,12 +42,13 @@
     </div>
 
     <div class="create-profile-box">
-      <h1>Recovey Account</h1>
+      <h1>Recover Account</h1>
+      <p>Please enter your email. A link will be sent to you to reset your password.</p>
       <div class="textbox">
         <i class="fas fa-at"></i>
         <input id="recovey-email-input" type="text" placeholder="Please enter your email" name="" value="" required>
       </div>
-      <button id="send-email-btn" class="email-button" onclick="sendEmail();"><i class="login-icon fas fa-paper-plane"></i>Send Vetify Email</button>
+      <button id="send-email-btn" class="email-button" onclick="sendEmail();"><i class="login-icon fas fa-paper-plane"></i>Send Email</button>
     </div>
   </body>
 </html>
