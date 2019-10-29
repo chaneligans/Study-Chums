@@ -1,8 +1,9 @@
-console.log("helo")
+console.log("hello")
 
 function sendEmail(){
     var auth = firebase.auth();
-    var emailAddress = "a.wsmgrl01@gmail.com";
+    
+    var emailAddress = document.getElementById("recovey-email-input").value;
   
     auth.sendPasswordResetEmail(emailAddress).then(function() {
       console.log("email sent");
