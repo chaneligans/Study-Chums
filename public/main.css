@@ -113,6 +113,10 @@ body{
   width: 100%;
 }
 
+#verify-account-btn {
+  width: 100%;
+}
+
 /* Create Profile */
 .create-profile-box{
   font-family: 'Sniglet', sans-serif;
