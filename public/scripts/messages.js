@@ -296,10 +296,6 @@ function addMultipleUsersToChatRoom() {
   });
 }
 
-// empties the side bar of the current list and loads the side bar again
-// this is the last thing to do in the process of:
-// - making a new chatroom
-// - deleting a chatroom
 function reloadChatRoomSideBar() {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
@@ -307,7 +303,6 @@ function reloadChatRoomSideBar() {
       const db = firebase.firestore();
       let chatRoomData = [];
 
-      // listener path: Firestore -- Users/$uid/ChatRooms
       let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
       .onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
@@ -336,11 +331,11 @@ function reloadChatRoomSideBar() {
             .catch(function (error) {
               console.log("Error getting documents: ", error);
             });
-          } // end of 'change.type === "added"'
-        }); // end of '....forEach()'
+          }
+        });
 
-      }); // end of '....onSnapshot()' listener
-    } // end of 'user'
+      });
+    }
   });
 
 }
