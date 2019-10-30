@@ -86,31 +86,18 @@ function createUserWithEmailAndPassword() {
     initializeUserData(userCreds.user);
 
     const actionCodeSettings = {
-      // URL you want to redirect back to. The domain (www.example.com) for this
-      // URL must be whitelisted in the Firebase Console.
       url: 'https://study-chums.firebaseapp.com/verify_account.html',
-      // This must be true.
       handleCodeInApp: true,
-      iOS: {},
-      android: {},
-      dynamicLinkDomain: ''
     };
     firebase.auth().sendSignInLinkToEmail(email_in, actionCodeSettings)
-    // .then(() => {
-    //   // The link was successfully sent. Inform the user.
-    //   // Save the email locally so you don't need to ask the user for it again
-    //   // if they open the link on the same device.
-    //   window.localStorage.setItem('emailForSignIn', email);
-    // })
+    .then(() => {
+      console.log("Email verification link successfully sent.");
+    })
     .catch(function(error) {
       console.log("Error sending verification email -- ", error.message);
     });
 
     alert('An verification link has been sent to the given email. Please verify to continue!');
-
-    // setTimeout(() => {
-    //   location.href = "create_profile.html";
-    // }, 10000);
   })
   .catch(function(error) {
     const errorCode = error.code;
