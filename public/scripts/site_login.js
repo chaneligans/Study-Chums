@@ -127,10 +127,15 @@ function emailAndPasswordSignIn() {
   
   firebase.auth().signInWithEmailAndPassword(email_in, password_in)
   .then(user => {
-    
-    setTimeout(() => {
-      location.href = "home.html";
-    }, 1000);
+
+    if(user.emailVerified) {
+      setTimeout(() => {
+        location.href = "home.html";
+      }, 1000);
+    }
+    else {
+      alert('A verification email has been sent. You must verify account before signing in.');
+    }
   })
   .catch(function(error) {
     const errorCode = error.code;
