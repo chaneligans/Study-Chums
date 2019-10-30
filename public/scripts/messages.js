@@ -94,7 +94,6 @@ function createChatRoom() {
               db.collection("Users").doc(user.uid).update({
                 currentChatRoom: roomID,
               }).then(function () {
-                reloadChatRoomSideBar();
                 openChatRoom(roomID);
               });
 
@@ -163,7 +162,6 @@ function deleteChat() {
 
                 clearChat();
                 clearHead();
-                reloadChatRoomSideBar();
               });
             });
           });
@@ -303,47 +301,87 @@ function addMultipleUsersToChatRoom() {
 // - making a new chatroom
 // - deleting a chatroom
 function reloadChatRoomSideBar() {
-  // clear current chat room side bar
-  $('#leftSideRooms').empty();
-  loadChatRoomSideBar();
-}
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
 
-function loadChatRoomSideBar() {
-  firebase.auth().onAuthStateChanged(user => {
-    const db = firebase.firestore();
-    let chatRoomsRef = db.collection("Users").doc(user.uid).collection("ChatRooms");
-    chatRoomsRef.get().then(results => {
-      results.forEach(result => {
-        console.log('Found chatroom with id:', result.id);
-        console.log('Topic:', result.data().topic);
+      const db = firebase.firestore();
+      let chatRoomData = [];
 
-        let userList = [];
-        let roomID = result.id;
-        let topic = result.data().topic;
+      // listener path: Firestore -- Users/$uid/ChatRooms
+      let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
+      .onSnapshot(function(snapshot) {
+        snapshot.docChanges().forEach(function(change) {
+          if (change.type === "added") {
 
-        db.collection("ChatRooms").doc(roomID).collection("Users")
-          .get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              userList.push({
-                name: doc.data().name,
-                userID: doc.id,
-                topic: topic,
-                chatroomID: roomID
+            let chatroomDoc = change.doc;
+            let roomID = change.doc.id;
+            let topic = change.doc.data().topic;
+            let userList = [];
+
+            db.collection("ChatRooms").doc(roomID).collection("Users")
+            .get().then(function(querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                userList.push({
+                  name: doc.data().name,
+                  userID: doc.id,
+                  topic: topic,
+                  chatroomID: roomID
+                });
               });
+              Promise.all(userList).then(userResults => {
+                displayChatRoom(userResults);
+              });
+
+            })
+            .catch(function (error) {
+              console.log("Error getting documents: ", error);
             });
-            Promise.all(userList).then(results => {
-              displayChatRooms(results);
-            });
-          })
-          .catch(function (error) {
-            console.log("Error getting documents: ", error);
-          });
-      });
-    });
+          } // end of 'change.type === "added"'
+        }); // end of '....forEach()'
+
+      }); // end of '....onSnapshot()' listener
+    } // end of 'user'
   });
+
 }
 
-function displayChatRooms(userList) {
+// DEPRECATED
+// function loadChatRoomSideBar() {
+//   firebase.auth().onAuthStateChanged(user => {
+//     const db = firebase.firestore();
+//     let chatRoomsRef = db.collection("Users").doc(user.uid).collection("ChatRooms");
+//     chatRoomsRef.get().then(results => {
+//       results.forEach(result => {
+//         console.log('Found chatroom with id:', result.id);
+//         console.log('Topic:', result.data().topic);
+//
+//         let userList = [];
+//         let roomID = result.id;
+//         let topic = result.data().topic;
+//
+//         db.collection("ChatRooms").doc(roomID).collection("Users")
+//           .get().then(function (querySnapshot) {
+//             querySnapshot.forEach(function (doc) {
+//               userList.push({
+//                 name: doc.data().name,
+//                 userID: doc.id,
+//                 topic: topic,
+//                 chatroomID: roomID
+//               });
+//             });
+//             Promise.all(userList).then(results => {
+//               displayChatRoom(results);
+//             });
+//           })
+//           .catch(function (error) {
+//             console.log("Error getting documents: ", error);
+//           });
+//       });
+//     });
+//   });
+// }
+
+function displayChatRoom(userList) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let names = [];
@@ -352,11 +390,11 @@ function displayChatRooms(userList) {
 
       userList.forEach(result => {
         const name = result.name;
-        const userid = result.userID;
+        const userID = result.userID;
         const topic = result.topic;
         roomID = result.chatroomID;
 
-        if (user.uid != userid) {
+        if (user.uid != userID) {
           names.push(name);
         }
       });
@@ -373,6 +411,9 @@ function displayChatRooms(userList) {
           + '\')"><div><h2 class = "leftChatName">'
           + displayName + '</h2></div></li>');
       });
+
+      console.log('displayChatRoom() was properly called');
+      // console.log('userlist:', userList);
 
     } else {
       console.log('User is not signed in!');
@@ -445,7 +486,7 @@ function displayHeader() {
                   /* var html = '<div><h2 id="chatTitle">' + displayName
                   + '</h2><h3 id="chatTopic">Chums:  ' + names
                   + '</h3><div class = "dropdown"><button id="chatOptions" '
-                  + 'onclick="myFunction()"><i class="fas fa-ellipsis-h"></i>'
+                  + 'onclick="toggleChatOptions()"><i class="fas fa-ellipsis-h"></i>'
                   + '</button><div id="myDropdown" class="dropdown-content">'
                   + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
                   + '<a onclick="showAddFriendToChatPopup();" '
@@ -461,7 +502,7 @@ function displayHeader() {
                   /* var html = '<div><h2 id="chatTitle">' + displayName
                   + '</h2><h3 id="chatTopic">Topic:  ' + topic
                   + '</h3><div class = "dropdown"><button id="chatOptions" '
-                  + 'onclick="myFunction()"><i class="fas fa-ellipsis-h"></i>'
+                  + 'onclick="toggleChatOptions()"><i class="fas fa-ellipsis-h"></i>'
                   + '</button><div id="myDropdown" class="dropdown-content">'
                   + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
                   + '<a onclick="showAddFriendToChatPopup();" '
@@ -482,7 +523,7 @@ function displayHeader() {
   });
 }
 
-function myFunction() {
+function toggleChatOptions() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
