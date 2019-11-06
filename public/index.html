@@ -15,6 +15,7 @@
     <!-- END FIREBASE INITIALIZATION -->
 
     <!-- FACEBOOK INITIALIZATION -->
+    <script type="text/javascript" src="scripts/facebook-config.js"></script>
     <script type="text/javascript" src="scripts/facebook_init.js"></script>
     <!-- END FACEBOOK INITIALIZATION-->
 
@@ -28,7 +29,7 @@
 
     <!-- jQuery IMPORT -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    
+
     <!-- Font Awesome import -->
     <script src="https://kit.fontawesome.com/48eb95b02a.js" crossorigin="anonymous"></script>
 
@@ -47,10 +48,14 @@
     <!-- (UI) LOGIN BOX -->
     <div class="login-box" style="text-align:center;" id="login-box">
       <h1>Welcome To Study Chums</h1>
-      <button id="fb-login-btn" class="fb-button" onclick="facebookSignIn()"><i class="login-icon fab fa-facebook-square"></i>Login with Facebook</button>
+      <button id="fb-login-btn" class="fb-button" onclick="facebookSignIn()">
+        <i class="login-icon fab fa-facebook-square"></i>Login with Facebook
+      </button>
       <br>
-      
-      <hr class="login-divider">   Or   <hr class="login-divider">
+
+      <div id="Or_space">
+        <hr class="login-divider">  Or  <hr class="login-divider">
+      </div>
       <!-- <h1>Sign In via Email</h1> -->
       <div class="textbox">
         <i class="fas fa-at"></i>
@@ -60,12 +65,18 @@
         <i class="fas fa-lock"></i>
         <input id="login-password-input" type="password" placeholder="Please enter your password" name="" value="" required>
       </div>
-      
-      <button id="email-login-btn" class="email-button" onclick="emailAndPasswordSignIn()"><i class="login-icon fas fa-paper-plane"></i>Login with Email</button>
-      
-      <p class="login-p"><a href="create-account.html">Create an Account</a></p>
+
+      <button id="email-login-btn" class="email-button" onclick="emailAndPasswordSignIn()">
+        <i class="login-icon fas fa-paper-plane"></i>Login with Email
+      </button>
+
+      <p class="login-p">
+        <a href="create-account.html">Create an Account</a>
+      </p>
         <!-- forget password-->
-      <p class="login-p"><a href="recovery.html">Forgot password?</a></p>
+      <p class="login-p" style="margin-bottom:15px;">
+        <a href="recovery.html">Forgot password?</a>
+      </p>
     </div>
     <!-- END (UI) LOGIN BOX -->
 

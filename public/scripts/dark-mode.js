@@ -1,6 +1,8 @@
 var checkbox, background,
 	loginbox, login_h1, loginbottom,
-	wrapper,create_profile_box, 
+	or_space,
+	fas_fa_at, fas_fa_lock,
+	wrapper,create_profile_box,
 	create_profile_btn,
 	h1, h2, h3, h4, h5,
 	td, p, li,
@@ -27,6 +29,11 @@ $(document).ready(function() {
 	loginbox = $('.login-box');
 	login_h1 = $('.login-box h1');
 	loginbottom = $('.login-bottom');
+
+	or_space = $('#Or_space');
+
+	fas_fa_at = $('i.fas.fa-at');
+	fas_fa_lock = $('i.fas.fa-lock');
 
 	wrapper = $('#wrapper');
 
@@ -124,6 +131,11 @@ function enableDarkModeSettings() {
 
 	loginbottom.css('background-color','#222222');
 
+	or_space.css('color', 'white');
+
+	fas_fa_at.css('color', 'white');
+	fas_fa_lock.css('color','white');
+
 	wrapper.css('background-color','rgba(34, 34, 34, 0.9)');
 
 	create_profile_box.css('background-color', '#222222');
@@ -150,7 +162,7 @@ function enableDarkModeSettings() {
 	footer.css('color','white');
 
 	form.css('color', 'white');
-	input.css({'color':'white', 'background-color':'#222222'});
+	input.css({'color':'white', 'background-color':''});
 	tb_ta.css({'color':'white', 'background-color':'#222222'});
 
 	search.css('color', 'black');
@@ -178,6 +190,11 @@ function enableLightModeSettings(alert_) {
 	login_h1.css('color','black');
 
 	loginbottom.css('background-color','white');
+
+	or_space.css('color','black');
+
+	fas_fa_at.css('color', 'black');
+	fas_fa_lock.css('color','black');
 
 	wrapper.css('background-color','rgba(255,255,255,0.9)');
 

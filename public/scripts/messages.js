@@ -45,7 +45,7 @@ function showCreateChatPopup() {
 
 //if user opens existing chatroom
 function openChatRoom(roomID) {
-  console.log('Clicked on chat room: ', roomID);
+  // console.log('Clicked on chat room: ', roomID);
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
@@ -76,33 +76,33 @@ function createChatRoom() {
           alert('Please select member(s) for your chatroom.');
         } else {
           members.push(user.uid);
-          console.log('Printing from createChatRoom(): Members: '
-                    + members + '. members.length(): ' + members.length);
+          // console.log('Printing from createChatRoom(): Members: '
+          //           + members + '. members.length(): ' + members.length);
           db.collection("ChatRooms")
-            .add({
-              topic: topic
-            })
-            .then(function (docRef) {
-              console.log("ChatRoom created with key --- ", docRef.id);
-              const roomID = docRef.id;
+          .add({
+            topic: topic
+          })
+          .then(function (docRef) {
+            // console.log("ChatRoom created with key --- ", docRef.id);
+            let roomID = docRef.id;
 
-              members.forEach(function (result) {
-                let member = String(result);
-                addUserToChatRoom(member, roomID, topic)
-              });
-
-              db.collection("Users").doc(user.uid).update({
-                currentChatRoom: roomID,
-              }).then(function () {
-                openChatRoom(roomID);
-              });
-
-              let chatPopupId = document.getElementById("createChatPopup");
-              chatPopupId.style.display = "none";
-            })
-            .catch(function (error) {
-              console.error("Error writing document: ", error);
+            members.forEach(function (result) {
+              let member = String(result);
+              addUserToChatRoom(member, roomID, topic)
             });
+
+            db.collection("Users").doc(user.uid).update({
+              currentChatRoom: roomID,
+            }).then(function () {
+              openChatRoom(roomID);
+            });
+
+            let chatPopupId = document.getElementById("createChatPopup");
+            chatPopupId.style.display = "none";
+          })
+          .catch(function (error) {
+            console.error("Error writing document: ", error);
+          });
         }
       }
     }
@@ -118,12 +118,12 @@ function deleteChat() {
       // get room id to delete from user's currentChatRoom
       db.collection("Users").doc(user.uid).get().then(userResult => {
         const roomID = userResult.data().currentChatRoom;
-        console.log("Delete --- room id: ", roomID);
+        // console.log("Delete --- room id: ", roomID);
 
         // get chatroom topic
         const chatroomRef = db.collection("ChatRooms").doc(roomID);
         chatroomRef.get().then(chatResult => {
-          const topic = chatResult.data().topic;
+          let topic = chatResult.data().topic;
 
           //create Trash document
           db.collection("Trash")
@@ -131,16 +131,16 @@ function deleteChat() {
             topic: topic
           })
           .then(function (docRef) {
-            console.log("Trash document created with key --- ", docRef.id);
-            const trashID = docRef.id;
+            // console.log("Trash document created with key --- ", docRef.id);
+            let trashID = docRef.id;
 
             //get all users in chatroom
             let users = [];
             chatroomRef.collection("Users").get().then(allUsers => {
               allUsers.forEach(doc => {
                 users.push({
-                    name: doc.data().name,
-                    userID: doc.id,
+                  name: doc.data().name,
+                  userID: doc.id,
                 });
               });
               Promise.all(users).then(allUserList => {
@@ -153,15 +153,14 @@ function deleteChat() {
                   .delete().then(function() {
                     console.log("User document successfully deleted from ChatRoom/Users!");
                   }).catch(function(error) {
-                      console.error("Error removing document from ChatRoom/Users! ", error);
+                    console.error("Error removing document from ChatRoom/Users! ", error);
                   });
                 })
 
                 moveMessageToTrash(roomID, trashID);
                 deleteChatRoomData(roomID);
 
-                clearChat();
-                clearHead();
+                clearOut();
               });
             });
           });
@@ -185,7 +184,7 @@ function addUserToTrash(userID, name, trashID) {
 function deleteChatRoomFromUser(userID, roomID) {
   // if currentChatRoom is roomID, we need to update it to empty
   const db = firebase.firestore();
-  const userData = db.collection("Users").doc(userID);
+  let userData = db.collection("Users").doc(userID);
   userData.get().then(userResult => {
     const currentChatRoom = userResult.data().currentChatRoom;
 
@@ -199,7 +198,7 @@ function deleteChatRoomFromUser(userID, roomID) {
   userData.collection("ChatRooms").doc(roomID).delete().then(function() {
     console.log("ChatRoom document successfully deleted from Users/ChatRooms!");
   }).catch(function(error) {
-      console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
+    console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
   });
 }
 
@@ -208,7 +207,7 @@ function deleteChatRoomData(roomID) {
   db.collection("ChatRooms").doc(roomID).delete().then(function() {
     console.log("ChatRoom document successfully deleted from ChatRooms!");
   }).catch(function(error) {
-      console.error("Error removing ChatRoom document from ChatRooms: ", error);
+    console.error("Error removing ChatRoom document from ChatRooms: ", error);
   });
 }
 
@@ -219,7 +218,7 @@ function moveMessageToTrash(roomID, trashID) {
   messageRef.get().then(messages => {
     messages.forEach(message => {
       allMessages.push({
-            messageID: message.id,
+        messageID: message.id,
       });
     });
 
@@ -228,7 +227,7 @@ function moveMessageToTrash(roomID, trashID) {
         messageRef.doc(message.messageID).delete().then(function() {
           console.log("Message document successfully deleted from ChatRooms/Messages!");
         }).catch(function(error) {
-            console.error("Error removing Message document from ChatRooms/Messages: ", error);
+          console.error("Error removing Message document from ChatRooms/Messages: ", error);
         });
       });
     });
@@ -262,36 +261,35 @@ function addMultipleUsersToChatRoom() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      let chatroomID;
-      let topic;
+      let chatroomID, topic;
 
       db.collection("Users").doc(user.uid)
-        .get().then(userDoc => {
-          chatroomID = userDoc.data().currentChatRoom;
+      .get().then(userDoc => {
+        chatroomID = userDoc.data().currentChatRoom;
 
-          db.collection("ChatRooms").doc(chatroomID)
-            .get().then(chatroomDoc => {
-              topic = chatroomDoc.data().topic;
+        db.collection("ChatRooms").doc(chatroomID)
+        .get().then(chatroomDoc => {
+          topic = chatroomDoc.data().topic;
 
-              let membersString = sessionStorage.getItem('chatMembers');
-              let members = membersString.split(',');
-              console.log('Printing from addMultipleUsersToChatRoom(): Members: '
-                      + members + '. members.length(): ' + members.length);
+          let membersString = sessionStorage.getItem('chatMembers');
+          let members = membersString.split(',');
+          // console.log('Printing from addMultipleUsersToChatRoom(): Members: '
+          //         + members + '. members.length(): ' + members.length);
 
-              if (members.length < 1 || membersString === "") {
-                alert('Please select member(s) for your chatroom.');
-              } else {
-                members.forEach(function (result) {
-                  let member = String(result);
-                  addUserToChatRoom(member, chatroomID, topic)
-                });
-                let chatPopupId = document.getElementById("addFriendToChatPopup");
-                chatPopupId.style.display = "none";
-
-                displayHeader();
-              }
+          if (members.length < 1 || membersString === "") {
+            alert('Please select member(s) for your chatroom.');
+          } else {
+            members.forEach(function (result) {
+              let member = String(result);
+              addUserToChatRoom(member, chatroomID, topic)
             });
+            let chatPopupId = document.getElementById("addFriendToChatPopup");
+            chatPopupId.style.display = "none";
+
+            displayHeader();
+          }
         });
+      });
     }
   });
 }
@@ -340,53 +338,16 @@ function reloadChatRoomSideBar() {
 
 }
 
-// DEPRECATED
-// function loadChatRoomSideBar() {
-//   firebase.auth().onAuthStateChanged(user => {
-//     const db = firebase.firestore();
-//     let chatRoomsRef = db.collection("Users").doc(user.uid).collection("ChatRooms");
-//     chatRoomsRef.get().then(results => {
-//       results.forEach(result => {
-//         console.log('Found chatroom with id:', result.id);
-//         console.log('Topic:', result.data().topic);
-//
-//         let userList = [];
-//         let roomID = result.id;
-//         let topic = result.data().topic;
-//
-//         db.collection("ChatRooms").doc(roomID).collection("Users")
-//           .get().then(function (querySnapshot) {
-//             querySnapshot.forEach(function (doc) {
-//               userList.push({
-//                 name: doc.data().name,
-//                 userID: doc.id,
-//                 topic: topic,
-//                 chatroomID: roomID
-//               });
-//             });
-//             Promise.all(userList).then(results => {
-//               displayChatRoom(results);
-//             });
-//           })
-//           .catch(function (error) {
-//             console.log("Error getting documents: ", error);
-//           });
-//       });
-//     });
-//   });
-// }
-
 function displayChatRoom(userList) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let names = [];
-      let displayName;
-      let roomID;
+      let displayName, roomID;
 
       userList.forEach(result => {
-        const name = result.name;
-        const userID = result.userID;
-        const topic = result.topic;
+        let name = result.name;
+        let userID = result.userID;
+        let topic = result.topic;
         roomID = result.chatroomID;
 
         if (user.uid != userID) {
@@ -406,7 +367,6 @@ function displayChatRoom(userList) {
           + '\')"><div><h2 class = "leftChatName">'
           + displayName + '</h2></div></li>');
       });
-
       console.log('displayChatRoom() was properly called');
       // console.log('userlist:', userList);
 
@@ -421,27 +381,26 @@ function addUserToChatRoom(friendID, roomID, topic) {
 
   db.collection("Users").doc(friendID).get().then(friendResult => {
 
-      const friendName = friendResult.data().name;
-
-      let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
-      chatRoomRef.doc(friendID).set({
-        name: friendName
-      })
-      .catch(function (error) {
-        console.error("Error writing to chatrooms: ", error);
-      });
-
-      let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
-      usersRef.doc(roomID).set({
-        topic: topic
-      })
-      .catch(function (error) {
-        console.error("Error writing to users: ", error);
-      });
+    let friendName = friendResult.data().name;
+    let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
+    chatRoomRef.doc(friendID).set({
+      name: friendName
     })
     .catch(function (error) {
-      console.error("Error retrieving document: ", error);
+      console.error("Error writing to chatrooms: ", error);
     });
+
+    let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
+    usersRef.doc(roomID).set({
+      topic: topic
+    })
+    .catch(function (error) {
+      console.error("Error writing to users: ", error);
+    });
+  })
+  .catch(function (error) {
+    console.error("Error retrieving document: ", error);
+  });
 }
 
 function displayHeader() {
@@ -459,58 +418,39 @@ function displayHeader() {
             topic = result.data().topic;
 
             db.collection("ChatRooms").doc(roomID).collection("Users")
-              .get().then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  userLists.push({
-                    name: doc.data().name,
-                    userID: doc.id,
-                  });
+            .get().then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                userLists.push({
+                  name: doc.data().name,
+                  userID: doc.id,
                 });
-                let names = [];
-                let displayName;
-                userLists.forEach(result => {
-                  const name = result.name;
-                  const userid = result.userID;
-                  if (user.uid != userid) {
-                    names.push(name);
-                    console.log("print the user Header id: ", userid);
-                  }
-                });
-                if (names.length > 1) {
-                  // displayName = topic;
-                  /* var html = '<div><h2 id="chatTitle">' + displayName
-                  + '</h2><h3 id="chatTopic">Chums:  ' + names
-                  + '</h3><div class = "dropdown"><button id="chatOptions" '
-                  + 'onclick="toggleChatOptions()"><i class="fas fa-ellipsis-h"></i>'
-                  + '</button><div id="myDropdown" class="dropdown-content">'
-                  + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
-                  + '<a onclick="showAddFriendToChatPopup();" '
-                  + 'href="#add">Add new Chums</a></div></div></div>';*/
-                  // document.getElementById("chatHeader").innerHTML = html;
-                  $("#chatHeader").load("../loaded/message_header.html", function () {
-                    $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
-                    console.log("Load header (multi) was performed.");
-                  });
-                } else {
-                  // displayName = names[0];
-                  /* var html = '<div><h2 id="chatTitle">' + displayName
-                  + '</h2><h3 id="chatTopic">Topic:  ' + topic
-                  + '</h3><div class = "dropdown"><button id="chatOptions" '
-                  + 'onclick="toggleChatOptions()"><i class="fas fa-ellipsis-h"></i>'
-                  + '</button><div id="myDropdown" class="dropdown-content">'
-                  + '<a onclick="deleteChat();" href="#delete">Delete Chat</a>'
-                  + '<a onclick="showAddFriendToChatPopup();" '
-                  + 'href="#add">Add new Chums</a></div></div></div>';*/
-                  // document.getElementById("chatHeader").innerHTML = html;
-                  // console.log(userLists);
-                  $("#chatHeader").load("../loaded/message_header.html", function () {
-                    $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
-                    console.log("Load header (single) was performed.");
-                  });
+              });
+              let names = [];
+              let displayName;
+              userLists.forEach(result => {
+                const name = result.name;
+                const userid = result.userID;
+                if (user.uid != userid) {
+                  names.push(name);
+                  // console.log("print the user Header id: ", userid);
                 }
               });
+              if (names.length > 1) {
+                // displayName = topic;
+                $("#chatHeader").load("../loaded/message_header.html", function () {
+                  $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
+                  $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
+                  console.log("Load header (multi) was performed.");
+                });
+              } else {
+                // displayName = names[0];
+                $("#chatHeader").load("../loaded/message_header.html", function () {
+                  $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
+                  $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
+                  console.log("Load header (single) was performed.");
+                });
+              }
+            });
           });
         }
       });
@@ -519,32 +459,28 @@ function displayHeader() {
 }
 
 function toggleChatOptions() {
-  document.getElementById("myDropdown").classList.toggle("show");
+  document.getElementById("chatOptionsDropdown").classList.toggle("show");
 }
 
-function clearHead() {
-  // var html = "<p></p>";
-  // document.getElementById("chatHeader").innerHTML = html;
-  $("#chatHeader").load("../loaded/empty.html", function () {
-    console.log("Load for clearHead() was performed.");
-  });
+function clearOut() {
+  clear_("Header");
+  clear_("Chat");
 }
 
-function clearChat() {
-  // var html = "<p></p>";
-  // document.getElementById("chat").innerHTML = html;
-  $("#chat").load("../loaded/empty.html", function () {
-    console.log("Load for clearChat() was performed.");
+function clear_(clear_type) {
+  let j_query = (clear_type === 'Header') ? "#chat"+clear_type : "#chat";
+  $(j_query).load("../loaded/empty.html", function() {
+    console.log("Load for clear_("+clear_type+") was performed.");
   });
 }
 
 function reloadHeader() {
-  clearHead();
+  clear_("Header");
   displayHeader();
 }
 
 function reloadChatHistory() {
-  clearChat();
+  clear_("Chat");
   loadChatHistory();
 }
 
@@ -553,61 +489,60 @@ function loadChatHistory() {
     const db = firebase.firestore();
 
     db.collection("Users").doc(user.uid).get().then(result => {
-      const roomID = result.data().currentChatRoom;
+      let roomID = result.data().currentChatRoom;
 
       if (roomID.length > 1) {
         let initial_messages = [];
         let update_messages = [];
         db.collection("ChatRooms").doc(roomID).collection("Messages")
-          .orderBy("time")
-          .get().then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              initial_messages.push({
-                senderID: doc.data().senderID,
-                senderName: doc.data().senderName,
-                // time: doc.data().time.toDate(),
-                time: firebase.firestore.FieldValue.serverTimestamp(),
-                message: doc.data().message,
-              });
+        .orderBy("time")
+        .get().then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            initial_messages.push({
+              senderID: doc.data().senderID,
+              senderName: doc.data().senderName,
+              // time: doc.data().time.toDate(),
+              time: firebase.firestore.FieldValue.serverTimestamp(),
+              message: doc.data().message,
             });
-          })
+          });
+        });
 
         db.collection("ChatRooms").doc(roomID).collection("Messages")
-          .orderBy("time")
-          .onSnapshot(function (querySnapshot) {
-            update_messages = [];
-            querySnapshot.docChanges().forEach(function (change) {
-              // console.log(change);
+        .orderBy("time")
+        .onSnapshot(function (querySnapshot) {
+          update_messages = [];
+          querySnapshot.docChanges().forEach(function (change) {
+            // console.log(change);
 
-              let timestamp = change.doc.data().time;
-              if (timestamp === null) {
-                timestamp = firebase.firestore.FieldValue.serverTimestamp();
-              }
+            let timestamp = change.doc.data().time;
+            if (timestamp === null) {
+              timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            }
 
-              if (change.type === "modified") {
-                console.log(change.doc.id, " => ", change.doc.data());
-                update_messages.push({
-                  senderID: change.doc.data().senderID,
-                  senderName: change.doc.data().senderName,
-                  time: timestamp.toDate(),
-                  message: change.doc.data().message,
-                });
-              }
-              else if (change.type === "added") {
-                // console.log(change.doc.id, " ++ ", change.doc.data());
-                update_messages.push({
-                  senderID: change.doc.data().senderID,
-                  senderName: change.doc.data().senderName,
-                  time: timestamp.toDate(),
-                  message: change.doc.data().message,
-                });
-              }
-            });
+            if (change.type === "modified") {
+              // console.log(change.doc.id, " => ", change.doc.data());
+              update_messages.push({
+                senderID: change.doc.data().senderID,
+                senderName: change.doc.data().senderName,
+                time: timestamp.toDate(),
+                message: change.doc.data().message,
+              });
+            } else if (change.type === "added") {
+              // console.log(change.doc.id, " ++ ", change.doc.data());
+              update_messages.push({
+                senderID: change.doc.data().senderID,
+                senderName: change.doc.data().senderName,
+                time: timestamp.toDate(),
+                message: change.doc.data().message,
+              });
+            }
+          });
 
-            Promise.all(update_messages).then(results => {
-              displayMessages(results);
-            });
-          })
+          Promise.all(update_messages).then(results => {
+            displayMessages(results);
+          });
+        })
       }
     });
   });
@@ -630,7 +565,6 @@ function displayMessages(messages) {
               + message + '</div></li>');
             scrollToBottom();
           });
-
         } else {
           $(document).ready(function () {
             $("#chat").append(
@@ -660,33 +594,30 @@ function sendMessage() {
         let roomID = result.data().currentChatRoom;
 
         let userRef = db.collection("ChatRooms").doc(roomID).collection("Users").doc(user.uid)
-          .get().then(function (doc) {
-            if (doc.exists) {
-              let senderName = doc.data().name;
-              let roomRef = db.collection("ChatRooms").doc(roomID).collection("Messages")
-                .add({
-                  senderID: user.uid,
-                  senderName: senderName,
-                  message: message,
-                  time: timestamp,
-                })
-                .then(function (docRef) {
-                  console.log("Document written with ID: ", docRef.id);
-                  document.getElementById("message").value = "";
-
-                })
-                .catch(function (error) {
-                  console.error("Error adding document: ", error);
-                });
-
-            } else {
-              console.log("User is not stored in chat!");
-            }
-          }).catch(function (error) {
-            console.log("Error getting document:", error);
-          });
+        .get().then(function (doc) {
+          if (doc.exists) {
+            let senderName = doc.data().name;
+            let roomRef = db.collection("ChatRooms").doc(roomID).collection("Messages")
+            .add({
+              senderID: user.uid,
+              senderName: senderName,
+              message: message,
+              time: timestamp,
+            })
+            .then(function (docRef) {
+              // console.log("Document written with ID: ", docRef.id);
+              document.getElementById("message").value = "";
+            })
+            .catch(function (error) {
+              console.error("Error adding document: ", error);
+            });
+          } else {
+            console.log("User is not stored in chat!");
+          }
+        }).catch(function (error) {
+          console.log("Error getting document:", error);
+        });
       });
-
     } else {
       console.log('User is not signed in!');
     }
@@ -694,29 +625,16 @@ function sendMessage() {
 }
 
 function setUserData(childSnapshotValue, childKey) {
-  var photo = childSnapshotValue.p1Url + " ";
-  var data = [
-    childSnapshotValue.index,
-    photo,
-    childSnapshotValue.name,
-    childSnapshotValue.Major,
-    childKey
-  ];
+  let photo = childSnapshotValue.p1Url + " ";
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
   return data;
 }
 
 function noChumsFound() {
-  var html = '<table class="requests">';
-  html += '<tr class="resultRow">';
-  html += '<td class="resultUserName"><h2>No Chums Yet!</h2></td>';
-  html += '</tr>'
-  html += '</table>';
-
-  document.getElementById("searchResults").innerHTML = html;
-  $("#searchResults").load(html, function () {
-    console.log("Load was performed.");
+  $("#searchResults").load("../loaded/no_requests.html", function () {
+    $('.resultUserName').html("<h2>No Chums Yet!</h2>");
+    console.log("Load was performed (no chums found).");
   });
-
 }
 
 function retrievePopupBoxChums(htmlID) {
@@ -740,7 +658,7 @@ function retrievePopupBoxChums(htmlID) {
           }))
         });
         Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
+          // console.log('Results found: ' + result.length);
           if (result.length > 0) {
             displayPopupBoxChums(result, htmlID);
           } else {
@@ -755,10 +673,8 @@ function retrievePopupBoxChums(htmlID) {
 function displayPopupBoxChums(results, htmlID) {
   console.log('Called function displayPopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
-  var html = '<table class="requests">';
-  var index, img, name, major, count, row;
-  var id = 0;
-  var chums = [];
+  let index, img, name, major, count, row, id = 0, chums = [];
+  let html = '<table class="requests">';
 
   results.forEach(function (result) {
     index = result[0];
@@ -776,7 +692,6 @@ function displayPopupBoxChums(results, htmlID) {
     html += '</tr>'
 
     count++;
-
   });
 
   html += '</table>';
@@ -789,14 +704,13 @@ function displayPopupBoxChums(results, htmlID) {
 }
 
 function selectChum(row, id) {
-  console.log('clicked chum ' + id);
-  var members = sessionStorage.getItem('chatMembers');
+  let members = sessionStorage.getItem('chatMembers');
   if (members == null || members === false) {
     members = [];
     console.log('members is null');
   }
   try {
-    var index = members.indexOf(id);
+    let index = members.indexOf(id);
     if (index > -1) {
       row.style.backgroundColor = '#FFF';
       members.splice(index, 1);
@@ -807,7 +721,7 @@ function selectChum(row, id) {
   } catch (TypeError) {
     members = members.split(',');
 
-    var index = members.indexOf(id);
+    let index = members.indexOf(id);
     if (index > -1) {
       row.style.backgroundColor = '#FFF';
       members.splice(index, 1);
@@ -823,5 +737,5 @@ function selectChum(row, id) {
 
   sessionStorage.setItem('chatMembers', members);
   console.log('Printing from selectChum(): Members:', members);
-  return members
+  return members;
 }

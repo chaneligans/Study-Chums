@@ -3,13 +3,13 @@ function facebookSignIn() {
 
   const provider = new firebase.auth.FacebookAuthProvider();
   firebase.auth().signInWithPopup(provider).then(function(result) {
-    console.log("Result: ",result);
+    // console.log("Result: ", result);
 
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     const token = result.credential.accessToken;
 
     // The signed-in user info.
-    const user = result.user;
+    let user = result.user;
     console.log("Successfully signed in " + user.displayName);
 
     // Redirect after signing in
@@ -19,7 +19,7 @@ function facebookSignIn() {
       setTimeout(() => {
         location.href = "create_profile.html";
       }, 1000);
-    } 
+    }
     else {
       window.location.href = "home.html";
     }
@@ -124,7 +124,7 @@ function createUserWithEmailAndPassword() {
 function emailAndPasswordSignIn() {
   const email_in = document.getElementById("login-email-input").value;
   const password_in = document.getElementById("login-password-input").value;
-  
+
   firebase.auth().signInWithEmailAndPassword(email_in, password_in)
   .then(user => {
 

@@ -19,28 +19,24 @@ function retrieveReceivedRequests() {
         snapshot.forEach(function(childSnapshot) {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
-
           let data = userDataRef.once("value").then(function(childSnapshotData) {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
             return setUserData(childData, key);
-
           });
           results.push(Promise.resolve(data).then(function() {
             return data;
           }))
         });
         Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
           if (result.length > 0) {
             displayReceivedRequests(result);
           } else {
-            noReceievedRequestsFound()
+            noRequests_("Received");
           }
         })
       });
     }
-
   });
 }
 
@@ -53,38 +49,30 @@ function retrieveSentRequests() {
         snapshot.forEach(function(childSnapshot) {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
-
           let data = userDataRef.once("value").then(function(childSnapshotData) {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
             return setUserData(childData, key);
-
           });
           results.push(Promise.resolve(data).then(function() {
             return data;
           }))
         });
         Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
           if (result.length > 0) {
             displaySentRequests(result);
           } else {
-            noSentRequestsFound()
+            noRequests_("Sent");
           }
         })
       });
     }
-
   });
 }
 
 function displayReceivedRequests(results) {
+  let img, name, major, count, id = 0;
   let html = '<table class="requests">';
-  let img;
-  let name;
-  let major;
-  let count;
-  let id = 0;
 
   results.forEach(function(result) {
     index = result[0];
@@ -110,20 +98,16 @@ function displayReceivedRequests(results) {
 
   html += '</table>';
 
-  document.getElementById("recievedRequests").innerHTML = html;
-  $("#recievedRequests").load(html, function() {
-    console.log("Load was performed.");
+  document.getElementById("receivedRequests").innerHTML = html;
+  $("#receivedRequests").load(html, function() {
+    console.log("Load was performed (received requests).");
     dark_fn();
   });
 }
 
 function displaySentRequests(results) {
+  let img, name, major, count, id = 0;
   let html = '<table class="requests">';
-  let img;
-  let name;
-  let major;
-  let count;
-  let id = 0;
 
   results.forEach(function(result) {
     index = result[0];
@@ -147,7 +131,7 @@ function displaySentRequests(results) {
 
   document.getElementById("sentRequests").innerHTML = html;
   $("#sentRequests").load(html, function() {
-    console.log("Load was performed.");
+    console.log("Load was performed (sent requests).");
     dark_fn();
   });
 }
@@ -156,42 +140,18 @@ function saveUserID(userID) {
   sessionStorage.clear();
   sessionStorage.setItem('userID', userID);
   let storageData = sessionStorage.getItem('userID');
-  console.log("saved user id ..." + storageData);
+  // console.log("saved user id ..." + storageData);
   return true;
 }
 
-function noReceievedRequestsFound() {
-  let html = '<table class="requests">';
-
-  html += '<tr class="resultRow">';
-  html += '<td class="resultUserName"><h2>No Chum Requests Yet!</h2></td>';
-  html += '</tr>'
-
-  html += '</table>';
-
-  document.getElementById("recievedRequests").innerHTML = html;
-  $("#recievedRequests").load(html, function() {
-    console.log("Load was performed.");
+function noRequests_(Request_type) {
+  let request_type = Request_type.toLowerCase();
+  let j_query = "#" + request_type + "Requests";
+  $(j_query).load("../loaded/no_requests.html", function() {
+    $('.resultUserName').html('<h2>No '+Request_type+' Requests Yet!</h2>');
+    console.log("Load was performed (no " + request_type + " requests).");
     dark_fn();
   });
-
-}
-
-function noSentRequestsFound() {
-  let html = '<table class="requests">';
-
-  html += '<tr class="resultRow">';
-  html += '<td class="resultUserName"><h2>No Sent Requests Yet!</h2></td>';
-  html += '</tr>'
-
-  html += '</table>';
-
-  document.getElementById("sentRequests").innerHTML = html;
-  $("#sentRequests").load(html, function() {
-    console.log("Load was performed.");
-    dark_fn();
-  });
-
 }
 
 function acceptRequest(acceptID) {
@@ -202,18 +162,18 @@ function acceptRequest(acceptID) {
 
       let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
       userRef.child(acceptID).remove().then(function() {
-          console.log("Remove succeeded.")
+          console.log("Remove succeeded (accepted_request:user).")
         })
         .catch(function(error) {
-          console.log("Remove failed: " + error.message)
+          console.log("Remove failed (accepted_request:user): " + error.message)
         });
 
       let senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
       senderRef.child(userID).remove().then(function() {
-          console.log("Remove succeeded.")
+          console.log("Remove succeeded (accepted_request:sender).")
         })
         .catch(function(error) {
-          console.log("Remove failed: " + error.message)
+          console.log("Remove failed (accepted_request:sender): " + error.message)
         });
 
       let chums = "Chums";
@@ -221,9 +181,9 @@ function acceptRequest(acceptID) {
         status: chums
       }, function(error) {
         if (error) {
-          console.log("Update to Chum List failed");
+          console.log("Update to Chum List failed (sender->user): " + error.message);
         } else {
-          console.log("Update to Chum List succeeded");
+          console.log("Update to Chum List succeeded (sender->user)");
         }
       });
 
@@ -231,14 +191,14 @@ function acceptRequest(acceptID) {
         status: chums
       }, function(error) {
         if (error) {
-          console.log("Update to Chum List failed");
+          console.log("Update to Chum List failed (user->sender): " + error.message);
         } else {
-          console.log("Update to Chum List succeeded");
+          console.log("Update to Chum List succeeded (user->sender)");
         }
       });
 
       document.getElementById('acceptIcon' + acceptID).innerHTML = "Accepted!";
-      console.log(acceptID);
+      // console.log(acceptID);
 
       document.getElementById('rejectIcon' + acceptID).innerHTML = "";
 
@@ -256,18 +216,18 @@ function rejectRequest(rejectID) {
 
       let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
       userRef.child(rejectID).remove().then(function() {
-          console.log("Remove succeeded.")
+          console.log("Remove succeeded (rejected_request:user).")
         })
         .catch(function(error) {
-          console.log("Remove failed: " + error.message)
+          console.log("Remove failed (rejected_request:user): " + error.message)
         });
 
       let senderRef = firebase.database().ref('Applications/' + rejectID + '/Sent/');
       senderRef.child(userID).remove().then(function() {
-          console.log("Remove succeeded.")
+          console.log("Remove succeeded (rejected_request:sender).")
         })
         .catch(function(error) {
-          console.log("Remove failed: " + error.message)
+          console.log("Remove failed (rejeceted_request:sender): " + error.message)
         });
 
       document.getElementById('rejectIcon' + rejectID).innerHTML = "Rejected!";

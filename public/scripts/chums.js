@@ -76,14 +76,8 @@ function saveUserID(userID) {
 
 
 function noChumsFound() {
-  var html = '<table class="requests">';
-  html += '<tr class="resultRow">';
-  html += '<td class="resultUserName"><h2>No Chums Yet!</h2></td>';
-  html += '</tr>'
-  html += '</table>';
-
-  document.getElementById("searchResults").innerHTML = html;
-  $("#searchResults").load(html, function() {
+  $("#searchResults").load("../loaded/no_requests.html", function() {
+    $('.resultUserName').html("<h2>No Chums Yet!</h2>");
     console.log("Load was performed.");
     dark_fn();
   });

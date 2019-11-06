@@ -32,7 +32,7 @@ function updateEmailPreferences() {
 
 function updateEmail(user, email_in) {
   firebase.auth().onAuthStateChanged(function(user) {
-    console.log("Updating email for user id ", user.uid);
+    // console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
 
     let ref = firebase.database().ref("Users/" + this.userId);
@@ -54,7 +54,7 @@ function updateEmail(user, email_in) {
 
 function updateSubscription(user, preference) {
   firebase.auth().onAuthStateChanged(function(user) {
-    console.log("Updating subscription preferences for user id ", user.uid);
+    // console.log("Updating subscription preferences for user id ", user.uid);
 
     let ref = firebase.database().ref("Subscriptions/" + this.userId);
     this.userId = user.uid;

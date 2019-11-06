@@ -1,19 +1,18 @@
-function Enter() {
-  var Enterkey = document.getElementById("query");
-  Enterkey.addEventListener("keyup", function(event) {
-    if (event.keyCode === 27) {
-      Enterkey.value = "";
-    }
-    else {
-      Search();
-    }
-  });
-}
-
 var dark_fn;
 
 function setDarkFn(fn) {
   dark_fn = fn;
+}
+
+function Enter() {
+  let Enterkey = document.getElementById("query");
+  Enterkey.addEventListener("keyup", function(event) {
+    if (event.keyCode === 27) {
+      Enterkey.value = "";
+    } else {
+      Search();
+    }
+  });
 }
 
 function Search() {
@@ -23,7 +22,7 @@ function Search() {
       let value = document.getElementById("query").value; // value
       let option = document.getElementById("option").value; // dropdown
 
-      var results = [];
+      let results = [];
 
       // execute only if something is there
       if (option === 'name') {
@@ -45,35 +44,36 @@ function Search() {
 }
 
 function getUserData(childSnapshotValue, childKey) {
-  var photo = childSnapshotValue.p1Url + " ";
-  var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  let photo = childSnapshotValue.p1Url + " ";
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
   return data;
 }
 
 function SearchName(name_in) {
-  var results = [];
-  var nameTypes = [name_in, name_in.toLowerCase(), upperCaseWords(name_in)];
+  let results = [];
+  let nameTypes = [name_in, name_in.toLowerCase(), upperCaseWords(name_in)];
   // check each name type (as-is, lowercase, uppercase)
-  nameTypes.forEach((name_) => {
+  nameTypes.forEach(name_ => {
     firebase.database().ref('Users/').orderByChild("name")
       .startAt(name_).endAt(name_+"\uf8ff").once('value', function(snapshot) {
-        var data;
+        let data;
         snapshot.forEach(function(childSnapshot) {
-          var key = childSnapshot.key;
-          var childData = childSnapshot.val();
+          let key = childSnapshot.key;
+          let childData = childSnapshot.val();
           data = getUserData(childData, key);
 
-          var bool = false;
-            results.forEach((result)=> {
-          if (result[4] === data[4]) {
-              bool = true;
-          }
+          let bool = false;
+          results.forEach(result => {
+            if (result[4] === data[4]) {
+                bool = true;
+            }
           });
           if (bool === false) {
-            results.push(data);}
+            results.push(data);
+          }
         });
         Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
+          // console.log('Results found: ' + result.length);
           if (results.length > 0) {
             showSearchResults(results);
           } else {
@@ -87,31 +87,32 @@ function SearchName(name_in) {
 }
 
 function SearchMajor(major_in) {
-  var results = [];
-  var majorTypes = [major_in, major_in.toLowerCase(), upperCaseWords(major_in)];
+  let results = [];
+  let majorTypes = [major_in, major_in.toLowerCase(), upperCaseWords(major_in)];
 
   // check each major type (as-is, lowercase, uppercase)
-  majorTypes.forEach((major_) => {
+  majorTypes.forEach(major_ => {
     firebase.database().ref('Users/').orderByChild("Major")
       .startAt(major_).endAt(major_+"\uf8ff")
       .once('value', function(snapshot) {
-        var data;
+        let data;
         snapshot.forEach(function(childSnapshot) {
-          var key = childSnapshot.key;
-          var childData = childSnapshot.val();
+          let key = childSnapshot.key;
+          let childData = childSnapshot.val();
           data = getUserData(childData, key);
-          var bool = false;
+          let bool = false;
           results.forEach((result)=> {
             if (result[4] === data[4]) {
                 bool = true;
             }
           });
           if (bool === false) {
-            results.push(data);}
+            results.push(data);
+          }
         });
         Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
-          console.log(result);
+          // console.log('Results found: ' + result.length);
+          // console.log(result);
           if (result.length > 0) {
             showSearchResults(result);
           } else {
@@ -125,11 +126,8 @@ function SearchMajor(major_in) {
 }
 
 function upperCaseWords(msg) {
-  var bool = true;
-  var mstr = "";
-  var i = 0;
-  var arr = msg.split(" ");
-  arr.forEach((str) => {
+  let bool = true, mstr = "", i = 0, arr = msg.split(" ");
+  arr.forEach(str => {
     if (str !== "" && str !== " ") {
      mstr += str.charAt(0).toUpperCase() + str.slice(1);
      bool = false;
@@ -142,14 +140,12 @@ function upperCaseWords(msg) {
 
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(function(user) {
-    var html = '<table id="results">';
-    var index, img, name, major, count = 1;
-    var id = 0;
-    var length = results.length;
+    let index, img, name, major, count = 1, id = 0, length = results.length;
+    let html = '<table id="results">';
 
     // iterate through and add a table row for each user (result)
     results.forEach(function(result) {
-      console.log(result);
+      // console.log(result);
 
       index = result[0];
       img = result[1];
@@ -179,7 +175,7 @@ function showSearchResults(results) {
 
     document.getElementById("searchResults").innerHTML = html;
     $("#searchResults").load(html, function() {
-      console.log("Load was performed.");
+      console.log("Load (search results) was performed.");
       dark_fn();
     });
   });
@@ -188,21 +184,15 @@ function showSearchResults(results) {
 function saveUserID(userID) {
   sessionStorage.clear();
   sessionStorage.setItem('userID', userID);
-  var storageData = sessionStorage.getItem('userID');
-  console.log("saved user id ..." + storageData);
+  let storageData = sessionStorage.getItem('userID');
+  // console.log("saved user id ..." + storageData);
   return true;
 }
 
 function noResultsFound() {
-  var html = '<table id="results">';
-  html += '<tr class="resultRow">';
-  html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
-  html += '</tr>'
-  html += '</table>';
-
-  document.getElementById("searchResults").innerHTML = html;
-  $("#searchResults").load(html, function() {
-    console.log("Load was performed.");
+  $("#searchResults").load("../loaded/no_requests.html", function() {
+    $('.resultUserName').html("<h2>No Results Found</h2>");
+    console.log("Load (search results) was performed.");
     dark_fn();
   });
 }

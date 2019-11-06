@@ -1,7 +1,7 @@
 function verifyEmail() {
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        const email_in = document.getElementById("verify-account-email-input").value;
+        let email_in = document.getElementById("verify-account-email-input").value;
         if(!email_in) {
             alert('Please enter email!');
         }
