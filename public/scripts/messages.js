@@ -426,28 +426,40 @@ function displayHeader() {
                 });
               });
               let names = [];
+              let ids = []
+              let userImg; 
               let displayName;
               userLists.forEach(result => {
                 const name = result.name;
                 const userid = result.userID;
                 if (user.uid != userid) {
                   names.push(name);
-                  // console.log("print the user Header id: ", userid);
+                  ids.push(userid);
                 }
               });
               if (names.length > 1) {
-                // displayName = topic;
+                let genericGroupIcon = "https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fgroup.png?alt=media&token=49c3242c-4aec-4a70-8195-04963bf5bed5";
+                
                 $("#chatHeader").load("../loaded/message_header.html", function () {
+                  $('#chatImage').html('<img class="chatImage" src="' + genericGroupIcon + '" alt="' + names + '">');
                   $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
                   $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
                   console.log("Load header (multi) was performed.");
                 });
               } else {
-                // displayName = names[0];
-                $("#chatHeader").load("../loaded/message_header.html", function () {
-                  $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
-                  $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
-                  console.log("Load header (single) was performed.");
+                var loadImg = new Promise((resolve, reject) => {
+                  let userDataRef = firebase.database().ref("Users/" + ids[0]);
+                  userDataRef.once("value", function(snapshot) {
+                    resolve(snapshot.val().p1Url);
+                  });
+                });
+                loadImg.then((result) => {
+                  $("#chatHeader").load("../loaded/message_header.html", function () {
+                    $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names[0] + '">');
+                    $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
+                    console.log("Load header (single) was performed.");
+                  });
                 });
               }
             });

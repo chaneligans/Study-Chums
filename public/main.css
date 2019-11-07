@@ -699,11 +699,13 @@ nav li a {
   text-align: left;
 }
 
-#chatImage{
-  height: 50px;
-  width: 50px; /*FIX THIS*/
-  float:left;
-  margin-right: 20px;
+.chatImage{
+  object-fit: cover;
+  width: 65px;
+  height: 65px;
+  float: left;
+  border-radius: 20px;
+  margin-right: 10px;
 }
 
 #openCreateChatPopup {
