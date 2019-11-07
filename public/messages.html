@@ -118,12 +118,22 @@
                 <div class="chatPopupContent">
                   <span id="closeAddFriendToChatPopup" class="closeChatPopup">&times;</span>
                   <h1 id="addFriendToChatPopupTitle">Add More Chums to Chat</h1>
-                  <h2> </h2>
                   <div id="popupAddFriendToChatResults">
                     <script>retrievePopupBoxChums('popupAddFriendToChatResults');</script>
                   </div>
-                  <button id="addFriendToChatButton" onclick="addMultipleUsersToChatRoom();">Add Chums</button>
+                  <button class="modalButton" onclick="addMultipleUsersToChatRoom();">Add Chums</button>
                 </div>
+            </div>
+            
+            <div id="showEditIconPopup">
+              <div class="showEditIconPopupContent">
+                <span id="closeShowEditIconPopup" class="closeChatPopup">&times;</span>
+                <h1 id="addFriendToChatPopupTitle">Edit the group icon</h1>
+                <input id="newIconInput" type="file" accept="image/*">
+                <p>Upload progress: <span id="editIconProgress"></span>%</p>
+                <br>
+                <button class="modalButton" onclick="editGroupIcon();">Save</button>
+              </div>
             </div>
 
             <script>

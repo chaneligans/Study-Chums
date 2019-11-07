@@ -403,6 +403,154 @@ function addUserToChatRoom(friendID, roomID, topic) {
   });
 }
 
+function showEditIconPopup() {
+  console.log('Called function showEditIconPopup()');
+
+  // Get the modal
+  let chatPopupId = document.getElementById("showEditIconPopup");
+  chatPopupId.style.display = "block";
+
+  // Get the <span> element that closes the modal
+  let span = document.getElementById("closeShowEditIconPopup");
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    chatPopupId.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == chatPopupId) {
+      chatPopupId.style.display = "none";
+    }
+  }
+}
+
+function editGroupIcon() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      const db = firebase.firestore();
+      let photo = document.getElementById("newIconInput");
+      let photoUrl = 'Something went wrong!!!';
+      let max_width = 300;
+      let max_height = 300;
+      let file = photo.files[0];
+      let fileName = photo.files[0].name;
+
+      let fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+      fileReader.onload = function(event) {
+
+        let blob = new Blob([event.target.result]);
+        let blobURL = window.URL.createObjectURL(blob);
+
+        let newImage = new Image();
+        newImage.src = blobURL;
+
+        newImage.onload = function() {
+          var updateImage = new Promise(function(resolve, reject) {
+            if (newImage) {
+              let canvas = document.createElement('canvas');
+              let width = newImage.width;
+              let height = newImage.height;
+
+              if (width > height) {
+                if (width > max_width) {
+                  height = Math.round(height *= max_width / width);
+                  width = max_width;
+                }
+              } else {
+                if (height > max_height) {
+                  width = Math.round(width *= max_height / height);
+                  height = max_height;
+                }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+
+              let context = canvas.getContext("2d");
+              context.drawImage(newImage, 0, 0, width, height);
+
+              let canvasDataURL = canvas.toDataURL("imge/jpeg", 0.7);
+
+              let arr = canvasDataURL.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+              while (n--) {u8arr[n] = bstr.charCodeAt(n);}
+              file = new Blob([u8arr], {type: mime});
+
+              // console.log(file);
+              resolve("It worked!");
+              console.log('Finished updating image');
+            } else {
+              reject("Failed to resize image.");
+            }
+          });
+
+          let tryToUpdateImage = new Promise(function(resolve, reject) {
+            updateImage.then(function(fulfilled) {
+              console.log('Attempting to upload file ' + fileName);
+              let storageRef = firebase.storage().ref('img/groupicons');
+              let uploadTask = storageRef.put(file);
+
+              uploadTask.on('state_changed', function(snapshot) {
+                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                document.getElementById("editIconProgress").innerHTML = progress;
+                switch (snapshot.state) {
+                  case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                  case firebase.storage.TaskState.RUNNING: // or 'running'
+                    console.log('Upload is running');
+                    break;
+                }
+              }, function(error) {
+                console.log('Unsuccessful file upload', error);
+              }, function() {
+                // Handle successful uploads on complete
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                  // console.log('File available at', downloadURL);
+                  photoUrl = downloadURL;
+                  db.collection("Users").doc(user.uid)
+                  .get().then(userDoc => {
+                    chatroomID = userDoc.data().currentChatRoom;
+                    db.collection("ChatRooms").doc(chatroomID)
+                    .get().then(result => {
+                      let topic = result.data().topic;
+                      db.collection("ChatRooms").doc(chatroomID)
+                      .set({
+                        icon: photoUrl,
+                        topic: topic
+                      }), {merge: true};
+                    });
+                  });                
+                });
+              });
+              resolve(fulfilled);
+              console.log(fulfilled);
+            }).catch(function(error) {
+              console.log(error);
+              reject(error);
+            })
+          });
+          tryToUpdateImage.then(res => {
+            console.log('res'+res);
+            let chatPopupId = document.getElementById("showEditIconPopup");
+            chatPopupId.style.display = "none";
+            displayHeader();
+          });
+        }
+      }
+    }
+  });
+}
+
+
+
 function displayHeader() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -439,7 +587,7 @@ function displayHeader() {
               });
               if (names.length > 1) {
                 let loadImg = new Promise((resolve, reject) => {
-                  let genericGroupIcon = "https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fgroup.png?alt=media&token=49c3242c-4aec-4a70-8195-04963bf5bed5";
+                  let genericGroupIcon = "../images/group.png";
                   let icon;
                   let chatDataRef = db.collection("ChatRooms").doc(roomID).get().then(doc => {
                     if (!doc.exists) {
