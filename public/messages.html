@@ -100,17 +100,12 @@
               <button id="openCreateChatPopup" onclick = "showCreateChatPopup();"><i class="fas fa-plus"></i></button>
             </header>
 
-            <script>
-                reloadChatRoomSideBar();
-            </script>
+            <script>reloadChatRoomSideBar();</script>
             <ul id = "leftSideRooms"> <!-- SIDE USER LIST -->
             </ul>
           </aside>
           <main id="rightSide">
-            <script>
-              displayHeader();
-
-            </script>
+            <script>displayHeader();</script>
             <header id="chatHeader"> <!-- MAIN CHAT HEADER -->
             </header>
             <!-- Add Users to Existing Chat Popup -->
@@ -124,21 +119,19 @@
                   <button class="modalButton" onclick="addMultipleUsersToChatRoom();">Add Chums</button>
                 </div>
             </div>
-            
+
             <div id="showEditIconPopup">
               <div class="showEditIconPopupContent">
                 <span id="closeShowEditIconPopup" class="closeChatPopup">&times;</span>
                 <h1 id="addFriendToChatPopupTitle">Edit the group icon</h1>
                 <input id="newIconInput" type="file" accept="image/*">
-                <p>Upload progress: <span id="editIconProgress"></span>%</p>
+                <p>Upload progress: <span id="editIconProgress">--</span>%</p>
                 <br>
                 <button class="modalButton" onclick="editGroupIcon();">Save</button>
               </div>
             </div>
 
-            <script>
-              loadChatHistory();
-            </script>
+            <script>loadChatHistory();</script>
             <ul id="chat"> <!-- CHAT -->
             </ul>
             <footer>

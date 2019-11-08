@@ -311,7 +311,7 @@ function reloadChatRoomSideBar() {
             let topic = change.doc.data().topic;
             let userList = [];
 
-            db.collection("ChatRooms").doc(roomID).collection("Users")
+            let roomListener = db.collection("ChatRooms").doc(roomID).collection("Users")
             .get().then(function(querySnapshot) {
               querySnapshot.forEach(function (doc) {
                 userList.push({
@@ -364,8 +364,8 @@ function displayChatRoom(userList) {
       $(document).ready(function () {
         $("#leftSideRooms").append(
           '<li onclick="openChatRoom(\'' + roomID
-          + '\')"><div><h2 class = "leftChatName">'
-          + displayName + '</h2></div></li>');
+          + '\')"><h2 class = "leftChatName">'
+          + displayName + '</h2></li>');
       });
       console.log('displayChatRoom() was properly called');
       // console.log('userlist:', userList);
@@ -492,64 +492,63 @@ function editGroupIcon() {
 
           let tryToUpdateImage = new Promise(function(resolve, reject) {
             updateImage.then(function(fulfilled) {
-              console.log('Attempting to upload file ' + fileName);
-              let storageRef = firebase.storage().ref('img/groupicons');
-              let uploadTask = storageRef.put(file);
+              db.collection("Users").doc(user.uid).get().then(doc => {
+                console.log('Attempting to upload file ' + fileName);
+                let storageRef = firebase.storage().ref('img/groupicons/' + doc.data().currentChatRoom);
+                let uploadTask = storageRef.put(file);
 
-              uploadTask.on('state_changed', function(snapshot) {
-                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                document.getElementById("editIconProgress").innerHTML = progress;
-                switch (snapshot.state) {
-                  case firebase.storage.TaskState.PAUSED: // or 'paused'
-                    console.log('Upload is paused');
-                    break;
-                  case firebase.storage.TaskState.RUNNING: // or 'running'
-                    console.log('Upload is running');
-                    break;
-                }
-              }, function(error) {
-                console.log('Unsuccessful file upload', error);
-              }, function() {
-                // Handle successful uploads on complete
-                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                  // console.log('File available at', downloadURL);
-                  photoUrl = downloadURL;
-                  db.collection("Users").doc(user.uid)
-                  .get().then(userDoc => {
-                    chatroomID = userDoc.data().currentChatRoom;
-                    db.collection("ChatRooms").doc(chatroomID)
-                    .get().then(result => {
-                      let topic = result.data().topic;
-                      db.collection("ChatRooms").doc(chatroomID)
-                      .set({
-                        icon: photoUrl,
-                        topic: topic
-                      }), {merge: true};
+                uploadTask.on('state_changed', function(snapshot) {
+                  let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  console.log('Upload is ' + progress + '% done');
+                  document.getElementById("editIconProgress").innerHTML = progress;
+                  switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED: // or 'paused'
+                      console.log('Upload is paused');
+                      break;
+                    case firebase.storage.TaskState.RUNNING: // or 'running'
+                      console.log('Upload is running');
+                      break;
+                  }
+                }, function(error) {
+                  console.log('Unsuccessful file upload', error);
+                }, function() {
+                  // Handle successful uploads on complete
+                  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    // console.log('File available at', downloadURL);
+                    photoUrl = downloadURL;
+                    db.collection("Users").doc(user.uid).get().then(userDoc => {
+                      let chatroomID = userDoc.data().currentChatRoom;
+                      db.collection("ChatRooms").doc(chatroomID).get()
+                      .then(result => {
+                        let topic = result.data().topic;
+                        db.collection("ChatRooms").doc(chatroomID).set({
+                          icon: photoUrl,
+                          topic: topic
+                        }), {merge: true};
+                      });
+                      resolve(fulfilled);
+                      console.log(fulfilled);
                     });
-                  });                
+                  });
                 });
               });
-              resolve(fulfilled);
-              console.log(fulfilled);
             }).catch(function(error) {
               console.log(error);
               reject(error);
             })
           });
           tryToUpdateImage.then(res => {
-            console.log('res'+res);
+            console.log('res: '+res);
             let chatPopupId = document.getElementById("showEditIconPopup");
             chatPopupId.style.display = "none";
             displayHeader();
+            $('.showEditIconPopupContent p #editIconProgress').text("--");
           });
         }
       }
     }
   });
 }
-
-
 
 function displayHeader() {
   firebase.auth().onAuthStateChanged(user => {
@@ -575,7 +574,7 @@ function displayHeader() {
               });
               let names = [];
               let ids = []
-              let userImg; 
+              let userImg;
               let displayName;
               userLists.forEach(result => {
                 const name = result.name;
@@ -609,7 +608,7 @@ function displayHeader() {
                     reject(icon);
                   });
                 });
-                
+
                 loadImg.then((result) => {
                   $("#chatHeader").load("../loaded/message_header.html", function () {
                     $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names + '">');
@@ -643,7 +642,17 @@ function displayHeader() {
 }
 
 function toggleChatOptions() {
-  document.getElementById("chatOptionsDropdown").classList.toggle("show");
+  let dropdown = document.getElementById("chatOptionsDropdown");
+  let dropOptions = document.getElementById("chatOptions");
+  let dropEllipsis = $('#chatOptions .fas.fa-ellipsis-h')[0];
+  // console.log("toggleChatOptions");
+  window.onclick = function(event) {
+    if (event.target != dropOptions && event.target != dropEllipsis) {
+      dropdown.classList.remove("show");
+    } else {
+      dropdown.classList.add("show");
+    }
+  }
 }
 
 function clearOut() {
@@ -920,6 +929,6 @@ function selectChum(row, id) {
   }
 
   sessionStorage.setItem('chatMembers', members);
-  console.log('Printing from selectChum(): Members:', members);
+  // console.log('Printing from selectChum(): Members:', members);
   return members;
 }

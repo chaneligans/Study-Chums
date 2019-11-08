@@ -9,21 +9,26 @@ var checkbox, background,
 	i_left, i_right,
 	card, profilecard,
 	nav_ul, nav_li,
-	footer,
+	footer, 
 	form, input, tb_ta,
 	search, select,
 	panel, chatPopupContent,
-	resultrow_td;
+	resultrow_td,
+	editIconPopupContent;
 
-// executes on page ready. checks if the user wants dark mode (defaults to light mode)
+// Executes on page-ready.
+// Checks if the user wanted dark mode on or not (defaults to light mode).
 $(document).ready(function() {
 	let localStorage = window.localStorage;
 
-	localStorage.setItem('mode', (localStorage.getItem('mode')|| 'dark')
-	=== 'dark' ? 'dark':'light');
-	// set local storage item 'mode' to 'dark' or 'light' depending on
-	// if the current item (or 'dark' by default) === 'dark'
+	localStorage.setItem('mode',
+				(localStorage.getItem('mode')|| 'dark') === 'dark' ? 'dark':'light');
+	// Set local storage item 'mode' to 'dark' or 'light' depending on if the
+	// current value of 'mode' in local storage ('dark' by default) === 'dark'
 
+	// ---------------------------------------------------------------------------
+	// The list of vars at the top are assigned here.
+	// JQuery selectors can be empty (size 0); these will not throw errors.
 	background = $('body');
 
 	loginbox = $('.login-box');
@@ -58,71 +63,63 @@ $(document).ready(function() {
 
 	resultrow_td = $('.resultRow td');
 
+	editIconPopupContent = $('.showEditIconPopupContent');
+	// ---------------------------------------------------------------------------
+
+	let checkbox = $('#dark-switch');
 	// set dark-switch 'on'/'off' depending on the 'mode' item in local storage
-	if (localStorage.getItem('mode') === 'dark') {
-		document.getElementById("dark-switch").checked = true;
-	} else {
-		document.getElementById("dark-switch").checked = false;
-	}
-	toggleDarkMode(false); // adjust based on the state of 'dark-switch'
+	checkbox[0].checked = (localStorage.getItem('mode') === 'dark') ? true:false;
+	toggleDarkMode(false); // update current view based on the state of 'dark-switch'
 
 	// set event listener for 'dark-switch'
-	document.getElementById('dark-switch').addEventListener("click", function() {
-		toggleDarkMode(true);
-	}, false);
+	checkbox.on("click", function() {toggleDarkMode(true)});
 });
 
-// this function is meant for chums.js and discover.js
+// This function is meant for chums.js and discover.js.
+// Updates vars h2 and h3 to include h2 and h3 tags added from data results.
 function refresh_h() {
 	console.log('refresh header css');
 	h2 = $('h2'); h3 = $('h3');
-	if (document.getElementById('dark-switch').checked === true) {
-		h2.css('color', 'white');
-		h3.css('color', 'white');
-	} else {
-		h2.css('color', 'black');
-		h3.css('color', 'black');
-	}
+
+	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
+	h2.css('color', color_);
+	h3.css('color', color_);
 }
 
-// this function is meant for applications.js
+// This function is meant for applications.js.
+// Updates var resultrow_td to include tags of class 'rsultsRow td'
+// added from data results.
 function refresh_td() {
 	console.log('refresh td css');
 	resultrow_td = $('.resultRow td');
-	if (document.getElementById('dark-switch').checked === true) {
-		resultrow_td.css('color','white');
-	} else {
-		resultrow_td.css('color','black');
-	}
+
+	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
+	resultrow_td.css('color', color_);
 }
 
-// main function. checks if the user wants dark mode on switch flip. acts on that choice
+// main function.
+// checks if the user wants dark mode or not on switch flip.
+// then it acts on that choice -- on or off (dark/light mode, respectively)
 function toggleDarkMode(alert_) {
-	// console.log("alert shown? "+ alert_);
-
 	let localStorage = window.localStorage;
 
 	checkBox = document.getElementById("dark-switch");
 
-	if (checkBox.checked == true) {
-
+	if (checkBox.checked === true) {
 		enableDarkModeSettings();
-
 		localStorage.setItem('mode', 'dark');
 		// set mode in local storage to 'dark'
 
 	} else {
 		enableLightModeSettings(alert_);
-
 		localStorage.setItem('mode', 'light');
 		// set mode in local storage to' light'
 	}
 }
 
-// modifies css to darker hues.
+// Changes CSS to darker hues.
 function enableDarkModeSettings() {
-
-	console.log("dark mode is on!");
+	console.log("Dark mode is ON!");
 
 	background.css('background', 'url(images/greybg.png)');
 
@@ -172,17 +169,18 @@ function enableDarkModeSettings() {
 	chatPopupContent.css('background-color', '#222222');
 
 	resultrow_td.css('color', 'white');
+
+	editIconPopupContent.css('background-color', "#222222");
 }
 
-// adjusts css to lighter hues.
-// the parameter 'alert_' is true when the switch is used;
-// 'alert_' is false only during the jquery ready() (at the top of this js file)
+// Changes CSS to lighter hues.
+// The parameter 'alert_' is true when the switch is used;
+// 'alert_' is false only during jquery.ready() (at the top of this js file)
 function enableLightModeSettings(alert_) {
-	// only appears when toggling, not when naviagting to different pages
 	if (alert_) {
 		alert("Night-watchers: Prepare your eyes!");
-	}
-	console.log("dark mode is off!");
+	} // only appears when toggling, not when naviagting to different pages
+	console.log("Dark mode is OFF!");
 
 	background.css('background', 'url(images/bluebg.png)');
 
@@ -232,4 +230,6 @@ function enableLightModeSettings(alert_) {
 	chatPopupContent.css('background-color', '#eff3f7');
 
 	resultrow_td.css('color','black');
+
+	editIconPopupContent.css('background-color', 'white');
 }

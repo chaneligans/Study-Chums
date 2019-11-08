@@ -670,6 +670,8 @@ nav li a {
 #leftSide li h2{
   color:#fff;
   font-weight:normal;
+  margin-top:12px;
+  margin-left: 5px;
   margin-bottom:5px;
   font-size: calc(10px + 0.5vw);
 }
@@ -727,25 +729,25 @@ nav li a {
   color: #fff;
   cursor: pointer;
   position: absolute;
-  top: -70px;
-  right: -200px;
+  top: -50px;
+  left: 90%
 }
 
 #chatOptions :hover, #chatOptions:focus {
   background-color: #24A9E0;
 }
 
-
 .dropdown {
   position: relative;
-  display: inline-block;
+  display: flex;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  top: -40px;
-  right: -230px;
+  top: -50px;
+  /* right: -230px; */
+  left: 34%;
   background-color: #f9f9f9;
   min-width: 160px;
   overflow: auto;
@@ -826,6 +828,7 @@ nav li a {
 #rightSide footer{
 	height:10%;
 	padding:20px 30px 10px 20px;
+  background-color: #3b3e49;
 }
 #rightSide footer textarea{
   border: none;
