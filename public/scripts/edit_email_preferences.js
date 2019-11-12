@@ -1,6 +1,6 @@
 function updateEmailPreferences() {
   $('html').addClass('waiting');
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let email_in = document.getElementById("new_email").value;
       let subscribe = document.getElementById("subscribe").checked;
@@ -20,7 +20,7 @@ function updateEmailPreferences() {
         updateSubscription(this.userId, false);
       }
       console.log("Updates sent to database.");
-      setTimeout(function() {
+      setTimeout(() => {
         alert("Email preferences updated.");
         location.href = "home.html";
       }, 1000);
@@ -31,7 +31,7 @@ function updateEmailPreferences() {
 }
 
 function updateEmail(user, email_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
 
@@ -42,9 +42,9 @@ function updateEmail(user, email_in) {
     ref.update({
       email: email_in,
       "email": email_in
-    }, function(error) {
+    }, error => {
       if (error) {
-        console.log("Update failed - email to " + email_in);
+        console.error("Update failed - email to " + email_in + ": " + error);
       } else {
         console.log("Update suceeded - email to " + email_in);
       }
@@ -53,7 +53,7 @@ function updateEmail(user, email_in) {
 }
 
 function updateSubscription(user, preference) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating subscription preferences for user id ", user.uid);
 
     let ref = firebase.database().ref("Subscriptions/" + this.userId);
@@ -63,9 +63,9 @@ function updateSubscription(user, preference) {
       ref.update({
         subscribed: false,
         "subscribed": false
-      }, function(error) {
+      }, error => {
         if (error) {
-          console.log("Update failed - email pref to false");
+          console.error("Update failed - email pref to false: " + error);
         } else {
           console.log("Update succeeded - email pref to false");
         }
@@ -74,9 +74,9 @@ function updateSubscription(user, preference) {
       ref.update({
         subscribed: true,
         "subscribed": true
-      }, function(error) {
+      }, error => {
         if (error) {
-          console.log("Update failed - email pref to true");
+          console.error("Update failed - email pref to true: " + error);
         } else {
           console.log("Update succeeded - email pref to true");
         }

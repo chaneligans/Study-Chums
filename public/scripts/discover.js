@@ -156,8 +156,9 @@ function showSearchResults(results) {
       if (id != user.uid) {
         html += '<tr class="resultRow">';
         html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
-        html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
+        html += '<td class="resultUserName"><a href="view_profile.html"';
+        html += 'onclick="return saveUserID(\'' + id + '\');">'
+        html += '<h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
         html += '<td class="resultUserMajor"><h3 id="resultUserMajor">' + major + '</h3></td>';
         html += '</tr>'
 

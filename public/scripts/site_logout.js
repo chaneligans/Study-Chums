@@ -1,8 +1,8 @@
 function siteSignOut() {
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
       console.log('Signout successful');
       location.href="index.html";
-    }, function(error) {
+    }, error => {
         console.log('Signout failed')
     });
 }

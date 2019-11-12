@@ -9,7 +9,7 @@ var checkbox, background,
 	i_left, i_right,
 	card, profilecard,
 	nav_ul, nav_li,
-	footer, 
+	footer,
 	form, input, tb_ta,
 	search, select,
 	panel, chatPopupContent,
@@ -18,7 +18,7 @@ var checkbox, background,
 
 // Executes on page-ready.
 // Checks if the user wanted dark mode on or not (defaults to light mode).
-$(document).ready(function() {
+$(document).ready(() => {
 	let localStorage = window.localStorage;
 
 	localStorage.setItem('mode',
@@ -72,7 +72,7 @@ $(document).ready(function() {
 	toggleDarkMode(false); // update current view based on the state of 'dark-switch'
 
 	// set event listener for 'dark-switch'
-	checkbox.on("click", function() {toggleDarkMode(true)});
+	checkbox.on("click", () => {toggleDarkMode(true)});
 });
 
 // This function is meant for chums.js and discover.js.

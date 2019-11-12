@@ -22,30 +22,30 @@ const APP_NAME = 'Study Chums';
 // triggers when a user sends a request
 // sends an email to the person they requested
 exports.sendRequestEmail = functions.database.ref('Applications/{uid}/Sent/{values}').onWrite((change, context) => {
-  
+
   var currentUserDisplayName; // the user who triggered the function
   var currentUserID = context.auth.uid; // their ID
   var userDataRef = admin.database().ref(); // general reference to the database
-  
+
   // get current user name
   var userNameRef = userDataRef.child("Users/"+currentUserID+"/name");
   var getUserName = userNameRef.once("value", (snapshot) => {
-    currentUserDisplayName = snapshot.val(); 
+    currentUserDisplayName = snapshot.val();
   }).then(value => {
     return value;
   }).catch(error => {
     console.log(error);
-  }); 
-  
-  
+  });
+
+
   var email = "chanelmdza@gmail.com"; // initialized as chanel's email for testing, but replaced later
   var inputEmail; // email in Users/user_id/email
   //var firebaseEmail; // this is the user's facebook email  (no longer needed)
-  
+
   var recipientName;
   var recipientID;
   var subscriptionPreference;
-  
+
   // get the user that the request was sent to (recipient)
   var recipient = change.after.forEach((snapshot) => {
     recipientID = snapshot.ref.parent.key;
@@ -53,43 +53,42 @@ exports.sendRequestEmail = functions.database.ref('Applications/{uid}/Sent/{valu
     // get recipient name
     var recipientNameRef = userDataRef.child("Users/"+snapshot.ref.parent.key+"/name");
     var getRecipientName = recipientNameRef.once("value", (snapshot) => {
-      recipientName = snapshot.val(); 
-    }).then(value => {
-      return value;
-    }).catch(error => {
-      console.log(error);
-    }); 
-    
-    // get recipient email
-    var recipientEmailRef = userDataRef.child("Users/"+snapshot.ref.parent.key+"/email");
-    var getRecipientEmail = recipientEmailRef.once("value", (snapshot) => {
-      inputEmail = snapshot.val(); 
+      recipientName = snapshot.val();
     }).then(value => {
       return value;
     }).catch(error => {
       console.log(error);
     });
-    
-    // get recipient subscription preference (won't send email if it's false)
-    var recipientSubscriptionRef = userDataRef.child("Subscriptions/"+snapshot.ref.parent.key+"/subscribed");
-    var getRecipientSubscription = recipientSubscriptionRef.once("value", (snapshot) => {
-      subscriptionPreference = snapshot.val(); 
+
+    // get recipient email
+    var recipientEmailRef = userDataRef.child("Users/"+snapshot.ref.parent.key+"/email");
+    var getRecipientEmail = recipientEmailRef.once("value", (snapshot) => {
+      inputEmail = snapshot.val();
     }).then(value => {
       return value;
     }).catch(error => {
       console.log(error);
-    }); 
-    
-    
+    });
+
+    // get recipient subscription preference (won't send email if it's false)
+    var recipientSubscriptionRef = userDataRef.child("Subscriptions/"+snapshot.ref.parent.key+"/subscribed");
+    var getRecipientSubscription = recipientSubscriptionRef.once("value", (snapshot) => {
+      subscriptionPreference = snapshot.val();
+    }).then(value => {
+      return value;
+    }).catch(error => {
+      console.log(error);
+    });
+
     // Firebase email promise (no longer needed, but keeping here bc it took me hours to get)
-//    var getFirebaseEmail = admin.auth().getUser(snapshot.ref.parent.key).then(user => {
-//      firebaseEmail = user.email;
-//      console.log("Firebase email: ", firebaseEmail);
-//      return firebaseEmail;
-//    }).catch(error => {
-//      throw new Error("Error fetching user data: ", error);
-//    });
-    
+    // var getFirebaseEmail = admin.auth().getUser(snapshot.ref.parent.key).then(user => {
+    //   firebaseEmail = user.email;
+    //   console.log("Firebase email: ", firebaseEmail);
+    //   return firebaseEmail;
+    // }).catch(error => {
+    //   throw new Error("Error fetching user data: ", error);
+    // });
+
     // Get all the information, then send the email
     Promise.all([getRecipientName, getRecipientEmail, getRecipientSubscription]).then(values => {
       email = inputEmail; // replace chanel's email with the actual email
@@ -114,18 +113,18 @@ exports.sendRequestEmail = functions.database.ref('Applications/{uid}/Sent/{valu
           else{
             console.log('Request email sent to:', email);
           }
-        });  
+        });
       } else {
         console.log('Email preference for ' + email + 'is set to false');
       }
-      
+
       return values;
     }).catch(error => {
       throw new Error("Error with promise all!!");
     });
-    
-  });  
-  
+
+  });
+
   return null;
 });
 
@@ -134,10 +133,10 @@ exports.sendRequestEmail = functions.database.ref('Applications/{uid}/Sent/{valu
 // notifys the person (request sender) that their request was accepted
 // triggered when the request is removed from the database (the request gets removed when it is accepted or declined)
 exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{values}').onDelete((change, context) => {
-  
+
   var email = "chanelmdza@gmail.com"; // initial email for testing, replaced later
   var inputEmail; // email found in Users/{id}/email
-  
+
   var currentUserID = change.key; // the person who accepted/denied the request
   var senderID = change.ref.parent.parent.key; // the person who is getting accepted/denied
   var userDataRef = admin.database().ref();
@@ -154,33 +153,33 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
   }).catch(error => {
     console.log(error);
   });
-  
+
   // get current user name (the person who accepted the request)
   var currentUserDisplayName;
   var userNameRef = userDataRef.child("Users/"+currentUserID+"/name");
   var getUserName = userNameRef.once("value", (snapshot) => {
-    currentUserDisplayName = snapshot.val(); 
+    currentUserDisplayName = snapshot.val();
   }).then(value => {
     return value;
   }).catch(error => {
     console.log(error);
-  }); 
+  });
 
   // get recipient user name (the person who is getting accepted/denied)
-  var recipientName;    
+  var recipientName;
   var recipientNameRef = userDataRef.child("Users/"+senderID+"/name");
   var getRecipientName = recipientNameRef.once("value", (snapshot) => {
-    recipientName = snapshot.val(); 
+    recipientName = snapshot.val();
   }).then(value => {
     return value;
   }).catch(error => {
     console.log(error);
-  }); 
+  });
 
   // get recipient email
   var recipientEmailRef = userDataRef.child("Users/"+senderID+"/email");
   var getRecipientEmail = recipientEmailRef.once("value", (snapshot) => {
-    inputEmail = snapshot.val(); 
+    inputEmail = snapshot.val();
   }).then(value => {
     return value;
   }).catch(error => {
@@ -191,21 +190,21 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
   var subscriptionPreference;
   var recipientSubscriptionRef = userDataRef.child("Subscriptions/"+senderID+"/subscribed");
   var getRecipientSubscription = recipientSubscriptionRef.once("value", (snapshot) => {
-    subscriptionPreference = snapshot.val(); 
+    subscriptionPreference = snapshot.val();
   }).then(value => {
     return value;
   }).catch(error => {
     console.log(error);
   });
-  
+
   // get all the information necessary (execute promises above) before sending the email
   Promise.all([getChumStatus, getUserName, getRecipientName, getRecipientEmail, getRecipientSubscription]).then(values => {
     email = inputEmail; // replace email with the correct one
-    
+
     // request was accepted
     if (chumStatus === "Chums") {
       console.log('Yall r chums');
-      
+
       if (subscriptionPreference === true) {
         var mailOptions = {
           from: `${APP_NAME} <noreply@firebase.com>`,
@@ -223,7 +222,7 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
           else{
             console.log('Acceptance email sent to:', email);
           }
-        });  
+        });
       } else {
         console.log('Email preference for ' + email + 'is set to false');
       }
@@ -237,6 +236,6 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
     throw new Error("Error with promise all!!");
   });
 
-  
+
   return null;
 });

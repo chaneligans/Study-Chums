@@ -11,20 +11,20 @@ function setUserData(childSnapshotValue, childKey) {
 }
 
 function retrieveReceivedRequests() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
       let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
-      applicationsRef.once("value", function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
+      applicationsRef.once("value", snapshot => {
+        snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
-          let data = userDataRef.once("value").then(function(childSnapshotData) {
+          let data = userDataRef.once("value").then(childSnapshotData => {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
             return setUserData(childData, key);
           });
-          results.push(Promise.resolve(data).then(function() {
+          results.push(Promise.resolve(data).then(() => {
             return data;
           }))
         });
@@ -41,20 +41,20 @@ function retrieveReceivedRequests() {
 }
 
 function retrieveSentRequests() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
       let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
-      applicationsRef.once("value", function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
+      applicationsRef.once("value", snapshot => {
+        snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
-          let data = userDataRef.once("value").then(function(childSnapshotData) {
+          let data = userDataRef.once("value").then(childSnapshotData => {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
             return setUserData(childData, key);
           });
-          results.push(Promise.resolve(data).then(function() {
+          results.push(Promise.resolve(data).then(() => {
             return data;
           }))
         });
@@ -74,7 +74,7 @@ function displayReceivedRequests(results) {
   let img, name, major, count, id = 0;
   let html = '<table class="requests">';
 
-  results.forEach(function(result) {
+  results.forEach(result => {
     index = result[0];
     img = result[1];
     name = result[2];
@@ -99,7 +99,7 @@ function displayReceivedRequests(results) {
   html += '</table>';
 
   document.getElementById("receivedRequests").innerHTML = html;
-  $("#receivedRequests").load(html, function() {
+  $("#receivedRequests").load(html, () => {
     console.log("Load was performed (received requests).");
     dark_fn();
   });
@@ -109,7 +109,7 @@ function displaySentRequests(results) {
   let img, name, major, count, id = 0;
   let html = '<table class="requests">';
 
-  results.forEach(function(result) {
+  results.forEach(result => {
     index = result[0];
     img = result[1];
     name = result[2];
@@ -130,7 +130,7 @@ function displaySentRequests(results) {
   html += '</table>';
 
   document.getElementById("sentRequests").innerHTML = html;
-  $("#sentRequests").load(html, function() {
+  $("#sentRequests").load(html, () => {
     console.log("Load was performed (sent requests).");
     dark_fn();
   });
@@ -147,7 +147,7 @@ function saveUserID(userID) {
 function noRequests_(Request_type) {
   let request_type = Request_type.toLowerCase();
   let j_query = "#" + request_type + "Requests";
-  $(j_query).load("../loaded/no_requests.html", function() {
+  $(j_query).load("../loaded/no_requests.html", () => {
     $('.resultUserName').html('<h2>No '+Request_type+' Requests Yet!</h2>');
     console.log("Load was performed (no " + request_type + " requests).");
     dark_fn();
@@ -156,32 +156,32 @@ function noRequests_(Request_type) {
 
 function acceptRequest(acceptID) {
   let status = "Accepted"
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let userID = user.uid;
 
       let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
-      userRef.child(acceptID).remove().then(function() {
+      userRef.child(acceptID).remove().then(() => {
           console.log("Remove succeeded (accepted_request:user).")
         })
-        .catch(function(error) {
-          console.log("Remove failed (accepted_request:user): " + error.message)
+        .catch(error => {
+          console.error("Remove failed (accepted_request:user): " + error.message)
         });
 
       let senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
-      senderRef.child(userID).remove().then(function() {
+      senderRef.child(userID).remove().then(() => {
           console.log("Remove succeeded (accepted_request:sender).")
         })
-        .catch(function(error) {
-          console.log("Remove failed (accepted_request:sender): " + error.message)
+        .catch(error => {
+          console.error("Remove failed (accepted_request:sender): " + error.message)
         });
 
       let chums = "Chums";
       firebase.database().ref('Chums/' + userID + '/' + acceptID).set({
         status: chums
-      }, function(error) {
+      }, error => {
         if (error) {
-          console.log("Update to Chum List failed (sender->user): " + error.message);
+          console.errpr("Update to Chum List failed (sender->user): " + error.message);
         } else {
           console.log("Update to Chum List succeeded (sender->user)");
         }
@@ -189,9 +189,9 @@ function acceptRequest(acceptID) {
 
       firebase.database().ref('Chums/' + acceptID + '/' + userID).set({
         status: chums
-      }, function(error) {
+      }, error => {
         if (error) {
-          console.log("Update to Chum List failed (user->sender): " + error.message);
+          console.error("Update to Chum List failed (user->sender): " + error.message);
         } else {
           console.log("Update to Chum List succeeded (user->sender)");
         }
@@ -210,30 +210,30 @@ function acceptRequest(acceptID) {
 
 function rejectRequest(rejectID) {
   let status = "Rejected"
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let userID = user.uid;
 
       let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
-      userRef.child(rejectID).remove().then(function() {
+      userRef.child(rejectID).remove().then(() => {
           console.log("Remove succeeded (rejected_request:user).")
         })
-        .catch(function(error) {
-          console.log("Remove failed (rejected_request:user): " + error.message)
+        .catch(error => {
+          console.error("Remove failed (rejected_request:user): " + error.message)
         });
 
       let senderRef = firebase.database().ref('Applications/' + rejectID + '/Sent/');
-      senderRef.child(userID).remove().then(function() {
+      senderRef.child(userID).remove().then(() => {
           console.log("Remove succeeded (rejected_request:sender).")
         })
-        .catch(function(error) {
-          console.log("Remove failed (rejeceted_request:sender): " + error.message)
+        .catch(error => {
+          console.error("Remove failed (rejeceted_request:sender): " + error.message)
         });
 
       document.getElementById('rejectIcon' + rejectID).innerHTML = "Rejected!";
       document.getElementById('acceptIcon' + rejectID).innerHTML = "";
     } else {
-      console.log('Something went wrong!');
+      console.error('Something went wrong!');
     }
   });
 }

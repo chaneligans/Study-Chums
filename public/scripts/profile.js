@@ -1,14 +1,13 @@
 function getUserMajor() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let Major_val;
       let userDataRef = firebase.database().ref();
       let MajorRef = userDataRef.child("Users/" + user.uid);
-      MajorRef.once("value").then(function(snapshot){
+      MajorRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         Major_val = snapshot.val().Major;
-        // console.log(Major_val);
         $("#Major").append(Major_val);
         document.getElementById("major").innerHTML = Major_val;
       });
@@ -19,16 +18,15 @@ function getUserMajor() {
 }
 
 function getUserBio() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let bio_val;
       let userDataRef = firebase.database().ref();
       let bioRef = userDataRef.child("Users/" + user.uid);
-      bioRef.once("value").then(function(snapshot){
+      bioRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         bio_val = snapshot.val().bio;
-        // console.log(bio_val);
         $("#bio").append(bio_val);
         document.getElementById("bio").innerHTML = bio_val;
       });
@@ -40,16 +38,15 @@ function getUserBio() {
 }
 
 function getUserEmail() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let email_val;
       let userDataRef = firebase.database().ref();
       let emailRef = userDataRef.child("Users/" + user.uid);
-      emailRef.once("value").then(function(snapshot){
+      emailRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         email_val = snapshot.val().email;
-        // console.log(email_val);
         $("#email").append(email_val);
         document.getElementById("email").innerHTML = email_val;
       });
@@ -61,16 +58,15 @@ function getUserEmail() {
 }
 
 function getUserName() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let name_val;
       let userDataRef = firebase.database().ref();
       let nameRef = userDataRef.child("Users/" + user.uid);
-      nameRef.once("value").then(function(snapshot){
+      nameRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         name_val = snapshot.val().name;
-        // console.log(name_val);
         document.getElementById("name").innerHTML = name_val;
       });
     }
@@ -81,13 +77,13 @@ function getUserName() {
 }
 
 function getUserP1Url(showGeneric) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log(user.uid);
     if (user) {
       let image_val;
       let userDataRef = firebase.database().ref();
       let imageRef = userDataRef.child("Users/"+ user.uid)
-      imageRef.once("value").then(function(snapshot){
+      imageRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         image_val = snapshot.val().p1Url;

@@ -1,6 +1,6 @@
 function updateProfile() {
   $('html').addClass('waiting');
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let photo_in = document.getElementById("file");
       let name_in = document.getElementById("name").value;
@@ -20,7 +20,7 @@ function updateProfile() {
       if (FBprofileLink_in !== "") {updateFBProfileLink(this.userId, FBprofileLink_in);}
 
       if (photo_in.value === "") {
-        setTimeout(function() {
+        setTimeout(() => {
           location.href = "profile.html";
         }, 1000);
       }
@@ -32,7 +32,7 @@ function updateProfile() {
 }
 
 function updatePhotoURL(uid, photo) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating photo for user id ", user.uid);
     // update photo for this 'user' with file_in
 
@@ -59,8 +59,7 @@ function updatePhotoURL(uid, photo) {
       newImage.src = blobURL;
 
       newImage.onload = function() {
-        let updateImage = new Promise(
-          function(resolve, reject) {
+        let updateImage = new Promise((resolve, reject) => {
             if (newImage) {
               let canvas = document.createElement('canvas');
               let width = newImage.width;
@@ -108,12 +107,12 @@ function updatePhotoURL(uid, photo) {
         );
 
         let tryToUpdateImage = function() {
-          updateImage.then(function(fulfilled) {
+          updateImage.then(fulfilled => {
             // console.log('Attempting to upload file ' + fileName);
             let storageRef = firebase.storage().ref('img/' + this.userId + '/' + this.userId);
             let uploadTask = storageRef.put(file);
 
-            uploadTask.on('state_changed', function(snapshot) {
+            uploadTask.on('state_changed', snapshot => {
               let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               console.log('Upload is ' + progress + '% done');
               switch (snapshot.state) {
@@ -124,30 +123,30 @@ function updatePhotoURL(uid, photo) {
                   console.log('Upload is running');
                   break;
               }
-            }, function(error) {
-              console.log('Unsuccessful file upload');
-            }, function() {
+            }, error => {
+              console.error('Unsuccessful file upload: ' + error);
+            }, () => {
               // Handle successful uploads on complete
               // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-              uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+              uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                 // console.log('File available at', downloadURL);
                 photoUrl = downloadURL;
                 //realtime database
                 ref.update({
                   p1Url: photoUrl,
                   "p1Url": photoUrl
-                }, function(error) {
+                }, error => {
                   if (error) {
-                    console.log("Update failed - p1Url to " + photo);
+                    console.error("Update failed - p1Url updated to " + photo + ": " + error);
                   } else {
-                    console.log("Update succeeded - p1Url to " + photo);
+                    console.log("Update succeeded - p1Url updated to " + photo);
                     location.href = "home.html";
                   }
                 });
               });
             });
             console.log(fulfilled);
-          }).catch(function(error) {console.log(error);})
+          }).catch(error => {console.log(error);})
         }
         tryToUpdateImage();
       }
@@ -157,7 +156,7 @@ function updatePhotoURL(uid, photo) {
 
 
 function updateName(user, name_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating name for user id ", user.uid);
     // update name for this 'user' with name_in
 
@@ -168,16 +167,16 @@ function updateName(user, name_in) {
     ref.update({
       name: name_in,
       "name": name_in
-    }, function(error) {
-      if (error) {console.log("Update failed - name to " + name_in);}
-      else {console.log("Update suceeded - name to " + name_in);}
+    }, error => {
+      if (error) {console.error("Update failed - name updated to " + name_in + ": " + error);}
+      else {console.log("Update suceeded - name updated to " + name_in);}
     });
   });
 }
 
 //DEPRECATED
 function updateEmail(user, email_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
 
@@ -189,16 +188,16 @@ function updateEmail(user, email_in) {
     ref.update({
       email: email_in,
       "email": email_in
-    }, function(error) {
-      if (error) {console.log("Update failed - email to " + email_in);}
-      else {console.log("Update suceeded - email to " + email_in);}
+    }, error => {
+      if (error) {console.error("Update failed - email updated to " + email_in + ": " + error);}
+      else {console.log("Update suceeded - email updated to " + email_in);}
     });
   });
 }
 
 
 function updateMajor(user, major_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating major for user id ", user.uid);
     // update major for this 'user' with major_in
 
@@ -208,16 +207,16 @@ function updateMajor(user, major_in) {
     ref.update({
       Major: major_in,
       "Major": major_in
-    }, function(error) {
-      if (error) {console.log("Update failed - major to " + major_in);}
-      else {console.log("Update succeeded - major to " + major_in);}
+    }, error => {
+      if (error) {console.error("Update failed - major updated to " + major_in + ": " + error);}
+      else {console.log("Update succeeded - major updated to " + major_in);}
     });
   });
 }
 
 
 function updateBio(user, bio_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating bio for user id ", user.uid);
     // update bio for this 'user' with bio_in
 
@@ -227,16 +226,16 @@ function updateBio(user, bio_in) {
     ref.update({
       bio: bio_in,
       "bio": bio_in
-    }, function(error) {
-      if (error) {console.log("Update failed - bio to " + bio_in);}
-      else {console.log("Update succeeded - bio to " + bio_in);}
+    }, error => {
+      if (error) {console.error("Update failed - bio updated to " + bio_in + ": " + error);}
+      else {console.log("Update succeeded - bio updated to " + bio_in);}
     });
   });
 }
 
 
 function updateFBProfileLink(user, FBprofileLink_in) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating FB profile for user id ", user.uid);
 
     let ref = firebase.database().ref("Users/" + this.userId);
@@ -245,9 +244,9 @@ function updateFBProfileLink(user, FBprofileLink_in) {
     ref.update({
       fbProfile: FBprofileLink_in,
       "fbProfile": FBprofileLink_in
-    }, function(error) {
-      if (error) {console.log("Update failed - fbProfile to " + FBprofileLink_in);}
-      else {console.log("Update succeeded - fbProfile to " + FBprofileLink_in);}
+    }, error => {
+      if (error) {console.log("Update failed - fbProfile updated to " + FBprofileLink_in + ": " + error);}
+      else {console.log("Update succeeded - fbProfile updated to " + FBprofileLink_in);}
     });
   });
 }

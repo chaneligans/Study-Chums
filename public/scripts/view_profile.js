@@ -1,14 +1,13 @@
 function getUserMajor(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let Major_val;
       let userDataRef = firebase.database().ref();
       let MajorRef = userDataRef.child("Users/" + id);
-      MajorRef.once("value").then(function(snapshot) {
+      MajorRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         Major_val = snapshot.val().Major;
-        // console.log(Major_val);
         $("#Major").append(Major_val);
         document.getElementById("major").innerHTML = Major_val;
       });
@@ -19,16 +18,15 @@ function getUserMajor(id) {
 }
 
 function getUserBio(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let bio_val;
       let userDataRef = firebase.database().ref();
       let bioRef = userDataRef.child("Users/" + id);
-      bioRef.once("value").then(function(snapshot) {
+      bioRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         bio_val = snapshot.val().bio;
-        // console.log(bio_val);
         $("#bio").append(bio_val);
         document.getElementById("bio").innerHTML = bio_val;
       });
@@ -39,12 +37,12 @@ function getUserBio(id) {
 }
 
 function getUserEmail(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let email_val;
       let userDataRef = firebase.database().ref();
       let emailRef = userDataRef.child("Users/" + id);
-      emailRef.once("value").then(function(snapshot) {
+      emailRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         email_val = snapshot.val().email;
@@ -59,12 +57,12 @@ function getUserEmail(id) {
 }
 
 function getUserName(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let name_val;
       let userDataRef = firebase.database().ref();
       let nameRef = userDataRef.child("Users/" + id);
-      nameRef.once("value").then(function(snapshot) {
+      nameRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         name_val = snapshot.val().name;
@@ -78,13 +76,13 @@ function getUserName(id) {
 }
 
 function getUserP1Url(showGeneric, id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     // console.log(id);
     if (user) {
       let image_val;
       let userDataRef = firebase.database().ref();
       let imageRef = userDataRef.child("Users/" + id)
-      imageRef.once("value").then(function(snapshot) {
+      imageRef.once("value").then(snapshot => {
         let key = snapshot.key;
         let childData = snapshot.val();
         image_val = snapshot.val().p1Url;
@@ -105,40 +103,42 @@ function getUserP1Url(showGeneric, id) {
 }
 
 function getStatus(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let status, myid = user.uid;
-      let userDataRef = firebase.database().ref();
+      let db = firebase.database();
+      let userDataRef = db.ref();
       let statusRef = userDataRef.child("Applications/" + myid + "/Sent/" + id);
-      statusRef.on("value", function(snapshot) {
+      statusRef.on("value", snapshot => {
         let key = snapshot.key;
         if (snapshot.val()) {
           status = 'Requested';
           // console.log(status);
 
           document.getElementById("status").innerHTML = status;
-          $("#status").load(status, function() {
-            console.log("Load was performed.");
+          $("#status").load(status, () => {
+            console.log("Load (status) was performed.");
           });
         } else {
           let ChumsStatusRef = userDataRef.child("Chums/" + myid + "/" + id);
-          ChumsStatusRef.on("value", function(snapshot) {
+          ChumsStatusRef.on("value", snapshot => {
             let key = snapshot.key;
             if (snapshot.val()) {
-              let fbProfileLink = firebase.database().ref('Users/' + id).once("value").then(function(snapshot) {
+              let fbProfileLink = db.ref('Users/' + id).once("value").then(snapshot => {
                 let fbProfile = snapshot.val().fbProfile;
                 return fbProfile;
               });
-              Promise.resolve(fbProfileLink).then(function(value) {
+              Promise.resolve(fbProfileLink).then(value => {
                 // console.log(value);
-                status = '<a href="' + value + '" target="_blank" style="color:#3b5998"><i class="fab fa-facebook-square fa-lg"></i></a>';
+                status = '<a href="' + value + '" target="_blank" style="color:#3b5998">'
+                        + '<i class="fab fa-facebook-square fa-lg"></i></a>';
 
                 // console.log(document.getElementsByClassName("match-btn"));
                 document.getElementsByClassName("match-btn")[0].style.backgroundColor = "white";
                 document.getElementsByClassName("match-btn")[0].style.padding = "8px";
 
                 document.getElementById("status").innerHTML = status;
-                $("#status").load(status, function() {
+                $("#status").load(status, () => {
                   console.log("Load (profile of chum) was performed.");
                 });
               })
@@ -147,7 +147,7 @@ function getStatus(id) {
               status = '<a onclick="request(\'' + id + '\');" style="color:white">Request To Match</a>';
 
               document.getElementById("status").innerHTML = status;
-              $("#status").load(status, function() {
+              $("#status").load(status, () => {
                 console.log("Load (profile of not chum) was performed.");
               });
             }
@@ -159,13 +159,14 @@ function getStatus(id) {
 }
 
 function request(id) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let chumStatus, myid = user.uid;
-      let userDataRef = firebase.database().ref();
+      let db = firebase.database();
+      let userDataRef = db.ref();
       let ChumsStatusRef = userDataRef.child("Chums/" + myid + "/" + id);
 
-      ChumsStatusRef.on("value", function(snapshot) {
+      ChumsStatusRef.on("value", snapshot => {
         let key = snapshot.key;
         if (snapshot.val()) {
           chumStatus = snapshot.val().status;
@@ -177,11 +178,11 @@ function request(id) {
 
       if (chumStatus != "Chums") {
         let status = "Requested";
-        firebase.database().ref('Applications/' + myid + '/Sent/' + id).set({
+        db.ref('Applications/' + myid + '/Sent/' + id).set({
           status: status
         });
 
-        firebase.database().ref('Applications/' + id + '/Received/' + myid).set({
+        db.ref('Applications/' + id + '/Received/' + myid).set({
           status: status
         });
         document.getElementsByClassName("match-btn").value = "Requested";

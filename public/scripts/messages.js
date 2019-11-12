@@ -1,6 +1,6 @@
 $(function enter() {
   let enter = document.getElementById("message");
-  enter.addEventListener("keyup", function (event) {
+  enter.addEventListener("keyup", event => {
     if (event.keyCode === 27) {
       clearTextBox();
     } else if (event.keyCode === 13) {
@@ -82,25 +82,25 @@ function createChatRoom() {
           .add({
             topic: topic
           })
-          .then(function (docRef) {
+          .then(docRef => {
             // console.log("ChatRoom created with key --- ", docRef.id);
             let roomID = docRef.id;
 
-            members.forEach(function (result) {
+            members.forEach(result => {
               let member = String(result);
               addUserToChatRoom(member, roomID, topic)
             });
 
             db.collection("Users").doc(user.uid).update({
               currentChatRoom: roomID,
-            }).then(function () {
+            }).then(() => {
               openChatRoom(roomID);
             });
 
             let chatPopupId = document.getElementById("createChatPopup");
             chatPopupId.style.display = "none";
           })
-          .catch(function (error) {
+          .catch(error => {
             console.error("Error writing document: ", error);
           });
         }
@@ -130,7 +130,7 @@ function deleteChat() {
           .add({
             topic: topic
           })
-          .then(function (docRef) {
+          .then(docRef => {
             // console.log("Trash document created with key --- ", docRef.id);
             let trashID = docRef.id;
 
@@ -195,18 +195,18 @@ function deleteChatRoomFromUser(userID, roomID) {
     }
   });
 
-  userData.collection("ChatRooms").doc(roomID).delete().then(function() {
+  userData.collection("ChatRooms").doc(roomID).delete().then(() => {
     console.log("ChatRoom document successfully deleted from Users/ChatRooms!");
-  }).catch(function(error) {
+  }).catch(error => {
     console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
   });
 }
 
 function deleteChatRoomData(roomID) {
   const db = firebase.firestore();
-  db.collection("ChatRooms").doc(roomID).delete().then(function() {
+  db.collection("ChatRooms").doc(roomID).delete().then(() => {
     console.log("ChatRoom document successfully deleted from ChatRooms!");
-  }).catch(function(error) {
+  }).catch(error => {
     console.error("Error removing ChatRoom document from ChatRooms: ", error);
   });
 }
@@ -224,9 +224,9 @@ function moveMessageToTrash(roomID, trashID) {
 
     Promise.all(allMessages).then(allMessageList => {
       allMessageList.forEach(message => {
-        messageRef.doc(message.messageID).delete().then(function() {
+        messageRef.doc(message.messageID).delete().then(() => {
           console.log("Message document successfully deleted from ChatRooms/Messages!");
-        }).catch(function(error) {
+        }).catch(error => {
           console.error("Error removing Message document from ChatRooms/Messages: ", error);
         });
       });
@@ -279,7 +279,7 @@ function addMultipleUsersToChatRoom() {
           if (members.length < 1 || membersString === "") {
             alert('Please select member(s) for your chatroom.');
           } else {
-            members.forEach(function (result) {
+            members.forEach(result => {
               let member = String(result);
               addUserToChatRoom(member, chatroomID, topic)
             });
@@ -295,15 +295,15 @@ function addMultipleUsersToChatRoom() {
 }
 
 function reloadChatRoomSideBar() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
 
       const db = firebase.firestore();
       let chatRoomData = [];
 
       let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
-      .onSnapshot(function(snapshot) {
-        snapshot.docChanges().forEach(function(change) {
+      .onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
           if (change.type === "added") {
 
             let chatroomDoc = change.doc;
@@ -312,8 +312,8 @@ function reloadChatRoomSideBar() {
             let userList = [];
 
             let roomListener = db.collection("ChatRooms").doc(roomID).collection("Users")
-            .get().then(function(querySnapshot) {
-              querySnapshot.forEach(function (doc) {
+            .get().then(querySnapshot => {
+              querySnapshot.forEach(doc => {
                 userList.push({
                   name: doc.data().name,
                   userID: doc.id,
@@ -326,7 +326,7 @@ function reloadChatRoomSideBar() {
               });
 
             })
-            .catch(function (error) {
+            .catch(error => {
               console.log("Error getting documents: ", error);
             });
           }
@@ -361,7 +361,7 @@ function displayChatRoom(userList) {
         displayName = names[0];
       }
 
-      $(document).ready(function () {
+      $(document).ready(() => {
         $("#leftSideRooms").append(
           '<li onclick="openChatRoom(\'' + roomID
           + '\')"><h2 class = "leftChatName">'
@@ -386,7 +386,7 @@ function addUserToChatRoom(friendID, roomID, topic) {
     chatRoomRef.doc(friendID).set({
       name: friendName
     })
-    .catch(function (error) {
+    .catch(error => {
       console.error("Error writing to chatrooms: ", error);
     });
 
@@ -394,11 +394,11 @@ function addUserToChatRoom(friendID, roomID, topic) {
     usersRef.doc(roomID).set({
       topic: topic
     })
-    .catch(function (error) {
+    .catch(error => {
       console.error("Error writing to users: ", error);
     });
   })
-  .catch(function (error) {
+  .catch(error => {
     console.error("Error retrieving document: ", error);
   });
 }
@@ -427,7 +427,7 @@ function showEditIconPopup() {
 }
 
 function editGroupIcon() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
       let photo = document.getElementById("newIconInput");
@@ -448,7 +448,7 @@ function editGroupIcon() {
         newImage.src = blobURL;
 
         newImage.onload = function() {
-          var updateImage = new Promise(function(resolve, reject) {
+          let updateImage = new Promise((resolve, reject) => {
             if (newImage) {
               let canvas = document.createElement('canvas');
               let width = newImage.width;
@@ -490,14 +490,14 @@ function editGroupIcon() {
             }
           });
 
-          let tryToUpdateImage = new Promise(function(resolve, reject) {
-            updateImage.then(function(fulfilled) {
+          let tryToUpdateImage = new Promise((resolve, reject) => {
+            updateImage.then(fulfilled => {
               db.collection("Users").doc(user.uid).get().then(doc => {
                 console.log('Attempting to upload file ' + fileName);
                 let storageRef = firebase.storage().ref('img/groupicons/' + doc.data().currentChatRoom);
                 let uploadTask = storageRef.put(file);
 
-                uploadTask.on('state_changed', function(snapshot) {
+                uploadTask.on('state_changed', snapshot => {
                   let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                   console.log('Upload is ' + progress + '% done');
                   document.getElementById("editIconProgress").innerHTML = progress;
@@ -509,11 +509,11 @@ function editGroupIcon() {
                       console.log('Upload is running');
                       break;
                   }
-                }, function(error) {
+                }, error => {
                   console.log('Unsuccessful file upload', error);
-                }, function() {
+                }, () => {
                   // Handle successful uploads on complete
-                  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                  uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                     // console.log('File available at', downloadURL);
                     photoUrl = downloadURL;
                     db.collection("Users").doc(user.uid).get().then(userDoc => {
@@ -532,7 +532,7 @@ function editGroupIcon() {
                   });
                 });
               });
-            }).catch(function(error) {
+            }).catch(error => {
               console.log(error);
               reject(error);
             })
@@ -565,8 +565,8 @@ function displayHeader() {
             topic = result.data().topic;
 
             db.collection("ChatRooms").doc(roomID).collection("Users")
-            .get().then(function (querySnapshot) {
-              querySnapshot.forEach(function (doc) {
+            .get().then(querySnapshot => {
+              querySnapshot.forEach(doc => {
                 userLists.push({
                   name: doc.data().name,
                   userID: doc.id,
@@ -609,8 +609,8 @@ function displayHeader() {
                   });
                 });
 
-                loadImg.then((result) => {
-                  $("#chatHeader").load("../loaded/message_header.html", function () {
+                loadImg.then(result => {
+                  $("#chatHeader").load("../loaded/message_header.html", () => {
                     $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names + '">');
                     $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
                     $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
@@ -620,12 +620,12 @@ function displayHeader() {
               } else {
                 let loadImg = new Promise((resolve, reject) => {
                   let userDataRef = firebase.database().ref("Users/" + ids[0]);
-                  userDataRef.once("value", function(snapshot) {
+                  userDataRef.once("value", snapshot => {
                     resolve(snapshot.val().p1Url);
                   });
                 });
                 loadImg.then((result) => {
-                  $("#chatHeader").load("../loaded/message_header.html", function () {
+                  $("#chatHeader").load("../loaded/message_header.html", () => {
                     $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names[0] + '">');
                     $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
                     $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
@@ -662,7 +662,7 @@ function clearOut() {
 
 function clear_(clear_type) {
   let j_query = (clear_type === 'Header') ? "#chat"+clear_type : "#chat";
-  $(j_query).load("../loaded/empty.html", function() {
+  $(j_query).load("../loaded/empty.html", () => {
     console.log("Load for clear_("+clear_type+") was performed.");
   });
 }
@@ -689,8 +689,8 @@ function loadChatHistory() {
         let update_messages = [];
         db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
-        .get().then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
+        .get().then(querySnapshot => {
+          querySnapshot.forEach(doc => {
             initial_messages.push({
               senderID: doc.data().senderID,
               senderName: doc.data().senderName,
@@ -703,9 +703,9 @@ function loadChatHistory() {
 
         db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
-        .onSnapshot(function (querySnapshot) {
+        .onSnapshot(querySnapshot => {
           update_messages = [];
-          querySnapshot.docChanges().forEach(function (change) {
+          querySnapshot.docChanges().forEach(change => {
             // console.log(change);
 
             let timestamp = change.doc.data().time;
@@ -751,7 +751,7 @@ function displayMessages(messages) {
         const message = result.message;
 
         if (user.uid === senderID) {
-          $(document).ready(function () {
+          $(document).ready(() => {
             $("#chat").append(
               '<li class="me"><div class="entete"><h3 class="timestamp">'+time
               + '</h3><h2 class="sender">You</h2></div><div class="message">'
@@ -759,7 +759,7 @@ function displayMessages(messages) {
             scrollToBottom();
           });
         } else {
-          $(document).ready(function () {
+          $(document).ready(() => {
             $("#chat").append(
               '<li class="you"><div class="entete"><h3 class="timestamp">'+time
               + '</h3>  <h2 class="sender">' + senderName
@@ -786,8 +786,8 @@ function sendMessage() {
       db.collection("Users").doc(user.uid).get().then(result => {
         let roomID = result.data().currentChatRoom;
 
-        let userRef = db.collection("ChatRooms").doc(roomID).collection("Users").doc(user.uid)
-        .get().then(function (doc) {
+        let userRef = db.collection("ChatRooms").doc(roomID).collection("Users")
+        .doc(user.uid).get().then(doc => {
           if (doc.exists) {
             let senderName = doc.data().name;
             let roomRef = db.collection("ChatRooms").doc(roomID).collection("Messages")
@@ -797,17 +797,17 @@ function sendMessage() {
               message: message,
               time: timestamp,
             })
-            .then(function (docRef) {
+            .then(docRef => {
               // console.log("Document written with ID: ", docRef.id);
               document.getElementById("message").value = "";
             })
-            .catch(function (error) {
+            .catch(error => {
               console.error("Error adding document: ", error);
             });
           } else {
             console.log("User is not stored in chat!");
           }
-        }).catch(function (error) {
+        }).catch(error => {
           console.log("Error getting document:", error);
         });
       });
@@ -824,7 +824,7 @@ function setUserData(childSnapshotValue, childKey) {
 }
 
 function noChumsFound() {
-  $("#searchResults").load("../loaded/no_requests.html", function () {
+  $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Chums Yet!</h2>");
     console.log("Load was performed (no chums found).");
   });
@@ -833,20 +833,20 @@ function noChumsFound() {
 function retrievePopupBoxChums(htmlID) {
   console.log('Called function retrievePopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
       let applicationsRef = firebase.database().ref('Chums/' + user.uid);
-      applicationsRef.once("value", function (snapshot) {
+      applicationsRef.once("value", snapshot => {
         snapshot.forEach(function (childSnapshot) {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
 
-          let data = userDataRef.once("value").then(function (childSnapshotData) {
+          let data = userDataRef.once("value").then(childSnapshotData => {
             let childData = childSnapshotData.val();
             return setUserData(childData, key);
           });
-          results.push(Promise.resolve(data).then(function () {
+          results.push(Promise.resolve(data).then(() => {
             return data;
           }))
         });
@@ -869,7 +869,7 @@ function displayPopupBoxChums(results, htmlID) {
   let index, img, name, major, count, row, id = 0, chums = [];
   let html = '<table class="requests">';
 
-  results.forEach(function (result) {
+  results.forEach(result => {
     index = result[0];
     img = result[1];
     name = result[2];
@@ -890,7 +890,7 @@ function displayPopupBoxChums(results, htmlID) {
   html += '</table>';
 
   document.getElementById(htmlID).innerHTML = html;
-  $(htmlID).load(html, function () {
+  $(htmlID).load(html, () => {
     console.log("Load was performed.");
   });
 

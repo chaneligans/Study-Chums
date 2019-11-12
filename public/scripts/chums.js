@@ -4,7 +4,7 @@ function setUserData(childSnapshotValue, childKey) {
   return data;
 }
 
-let dark_fn;
+var dark_fn;
 
 function retrieveChums(fn) {
   dark_fn = fn;
