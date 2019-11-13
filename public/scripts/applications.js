@@ -14,11 +14,12 @@ function retrieveReceivedRequests() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
-      let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Received/');
+      let db = firebase.database();
+      let applicationsRef = db.ref('Applications/' + user.uid + '/Received/');
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
-          let userDataRef = firebase.database().ref('Users/' + key);
+          let userDataRef = db.ref('Users/' + key);
           let data = userDataRef.once("value").then(childSnapshotData => {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
@@ -44,11 +45,12 @@ function retrieveSentRequests() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
-      let applicationsRef = firebase.database().ref('Applications/' + user.uid + '/Sent/');
+      let db = firebase.database();
+      let applicationsRef = db.ref('Applications/' + user.uid + '/Sent/');
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
-          let userDataRef = firebase.database().ref('Users/' + key);
+          let userDataRef = db.ref('Users/' + key);
           let data = userDataRef.once("value").then(childSnapshotData => {
             let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
@@ -82,15 +84,19 @@ function displayReceivedRequests(results) {
     id = result[4];
 
     html += '<tr class="resultRow">';
-    html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
-    html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+    html += '<td class="resultUserImage"><img src="'+img+'"></td>';
+    html += '<td class="resultUserName"><a href="view_profile.html" ';
+    html += 'onclick="return saveUserID(\''+id+'\');">';
+    html += '<h2 id="resultUserName'+count+'">'+name+'<br /></h2>';
+    html += '<h4>'+major+'</h4></a></td>';
 
-    html += '<td class= "resultIcons"><p id="acceptIcon' + id + '"><a onclick="acceptRequest(\''
-    html += id + '\');" style="color:black"><i class="fas fa-user-check fa-lg"></i></a></p></td>';
+    html += '<td class= "resultIcons"><p id="acceptIcon'+id+'">';
+    html += '<a onclick="acceptRequest(\''+id+'\');" style="color:black">';
+    html += '<i class="fas fa-user-check fa-lg"></i></a></p></td>';
 
-    html += '<td class= "resultIcons"><p id="rejectIcon' + id + '"><a onclick="rejectRequest(\''
-    html += id + '\');" style="color:black"><i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
+    html += '<td class= "resultIcons"><p id="rejectIcon'+id+'">';
+    html += '<a onclick="rejectRequest(\''+id+'\');" style="color:black">';
+    html += '<i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
     html += '</tr>'
 
     count++;
@@ -117,11 +123,14 @@ function displaySentRequests(results) {
     id = result[4];
 
     html += '<tr class="resultRow">';
-    html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
-    html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '<br /></h2><h4>' + major + '</h4></a></td>';
+    html += '<td class="resultUserImage"><img src="'+img+'"></td>';
+    html += '<td class="resultUserName"><a href="view_profile.html" ';
+    html += 'onclick="return saveUserID(\''+id+'\');">';
+    html += '<h2 id="resultUserName'+count+'">'+ name +'<br /></h2>';
+    html += '<h4>'+ major +'</h4></a></td>';
 
-    html += '<td class= "resultIcons"><i class="fas fa-spinner fa-sm"></i><p>Request Pending</p></td>';
+    html += '<td class= "resultIcons"><i class="fas fa-spinner fa-sm"></i>';
+    html += '<p>Request Pending</p></td>';
     html += '</tr>'
 
     count++;
@@ -159,8 +168,9 @@ function acceptRequest(acceptID) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let userID = user.uid;
+      let db = firebase.database();
 
-      let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
+      let userRef = db.ref('Applications/' + userID + '/Received/');
       userRef.child(acceptID).remove().then(() => {
           console.log("Remove succeeded (accepted_request:user).")
         })
@@ -168,7 +178,7 @@ function acceptRequest(acceptID) {
           console.error("Remove failed (accepted_request:user): " + error.message)
         });
 
-      let senderRef = firebase.database().ref('Applications/' + acceptID + '/Sent/');
+      let senderRef = db.ref('Applications/' + acceptID + '/Sent/');
       senderRef.child(userID).remove().then(() => {
           console.log("Remove succeeded (accepted_request:sender).")
         })
@@ -213,8 +223,9 @@ function rejectRequest(rejectID) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let userID = user.uid;
+      let db = firebase.database();
 
-      let userRef = firebase.database().ref('Applications/' + userID + '/Received/');
+      let userRef = db.ref('Applications/' + userID + '/Received/');
       userRef.child(rejectID).remove().then(() => {
           console.log("Remove succeeded (rejected_request:user).")
         })
@@ -222,7 +233,7 @@ function rejectRequest(rejectID) {
           console.error("Remove failed (rejected_request:user): " + error.message)
         });
 
-      let senderRef = firebase.database().ref('Applications/' + rejectID + '/Sent/');
+      let senderRef = db.ref('Applications/' + rejectID + '/Sent/');
       senderRef.child(userID).remove().then(() => {
           console.log("Remove succeeded (rejected_request:sender).")
         })

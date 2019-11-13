@@ -1,23 +1,27 @@
 var dark_fn;
-
 function setDarkFn(fn) {
   dark_fn = fn;
 }
 
 function Enter() {
   let Enterkey = document.getElementById("query");
-  Enterkey.addEventListener("keyup", function(event) {
-    if (event.keyCode === 27) {
-      Enterkey.value = "";
-    } else {
-      Search();
+  let Option = document.getElementById("option");
+
+  Enterkey.addEventListener("keyup", event => {
+    switch (event.keyCode) {
+      case 13: Search(); break;            // enter key
+      case 27: Enterkey.value = ""; break; // escape key
+      default: Search(); // warning: VERY resource-heavy
     }
   });
+
+  // will Search() on selector change
+  Option.addEventListener("change", event => Search());
 }
 
 function Search() {
   $('html').addClass('waiting');
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let value = document.getElementById("query").value; // value
       let option = document.getElementById("option").value; // dropdown
@@ -25,18 +29,21 @@ function Search() {
       let results = [];
 
       // execute only if something is there
-      if (option === 'name') {
-        if (value !== "") {
-          SearchName(value);
-        }
-      } else if (option === 'major') {
-        if (value !== "") {
-          results = SearchMajor(value);
+      if (option === 'name' || option === 'major') {
+        if (option === 'name' && value !== "") {
+          console.log('searching by name...')
+          Search_('name', value);
+          // SearchName(value);
+        } else if (option === 'major' && value !== "") {
+          console.log('searching by major...')
+          Search_('Major', value);
+          // SearchMajor(value);
         }
       } else {
         alert('Invalid!');
       }
-      console.log("Search sent to database.");
+
+      // console.log("Search sent to database.");
     } else {
       console.log("Who are you? And why do you have access to this?");
     }
@@ -49,15 +56,15 @@ function getUserData(childSnapshotValue, childKey) {
   return data;
 }
 
-function SearchName(name_in) {
+function Search_(searchType, input) {
   let results = [];
-  let nameTypes = [name_in, name_in.toLowerCase(), upperCaseWords(name_in)];
+  let nameTypes = [input, input.toLowerCase(), upperCaseWords(input)];
   // check each name type (as-is, lowercase, uppercase)
   nameTypes.forEach(name_ => {
-    firebase.database().ref('Users/').orderByChild("name")
-      .startAt(name_).endAt(name_+"\uf8ff").once('value', function(snapshot) {
+    firebase.database().ref('Users/').orderByChild(searchType)
+      .startAt(name_).endAt(name_+"\uf8ff").once('value', snapshot => {
         let data;
-        snapshot.forEach(function(childSnapshot) {
+        snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let childData = childSnapshot.val();
           data = getUserData(childData, key);
@@ -86,45 +93,6 @@ function SearchName(name_in) {
   });
 }
 
-function SearchMajor(major_in) {
-  let results = [];
-  let majorTypes = [major_in, major_in.toLowerCase(), upperCaseWords(major_in)];
-
-  // check each major type (as-is, lowercase, uppercase)
-  majorTypes.forEach(major_ => {
-    firebase.database().ref('Users/').orderByChild("Major")
-      .startAt(major_).endAt(major_+"\uf8ff")
-      .once('value', function(snapshot) {
-        let data;
-        snapshot.forEach(function(childSnapshot) {
-          let key = childSnapshot.key;
-          let childData = childSnapshot.val();
-          data = getUserData(childData, key);
-          let bool = false;
-          results.forEach((result)=> {
-            if (result[4] === data[4]) {
-                bool = true;
-            }
-          });
-          if (bool === false) {
-            results.push(data);
-          }
-        });
-        Promise.all(results).then(result => {
-          // console.log('Results found: ' + result.length);
-          // console.log(result);
-          if (result.length > 0) {
-            showSearchResults(result);
-          } else {
-            noResultsFound();
-          }
-        });
-      }).catch(function(error) {
-        console.log("Error getting results: ", error);
-      });
-  });
-}
-
 function upperCaseWords(msg) {
   let bool = true, mstr = "", i = 0, arr = msg.split(" ");
   arr.forEach(str => {
@@ -139,12 +107,14 @@ function upperCaseWords(msg) {
 }
 
 function showSearchResults(results) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     let index, img, name, major, count = 1, id = 0, length = results.length;
-    let html = '<table id="results">';
+
+    // let html = '<table id="results">';
+    let html = "";
 
     // iterate through and add a table row for each user (result)
-    results.forEach(function(result) {
+    results.forEach(result => {
       // console.log(result);
 
       index = result[0];
@@ -153,29 +123,31 @@ function showSearchResults(results) {
       major = result[3];
       id = result[4];
 
+      if (img === "undefined ") { // set img to the generic image
+        img = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
+      }
+
       if (id != user.uid) {
-        html += '<tr class="resultRow">';
-        html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-        html += '<td class="resultUserName"><a href="view_profile.html"';
-        html += 'onclick="return saveUserID(\'' + id + '\');">'
-        html += '<h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-        html += '<td class="resultUserMajor"><h3 id="resultUserMajor">' + major + '</h3></td>';
-        html += '</tr>'
+        html += "<tr class=\"resultRow\">";
+        html += "<td class=\"resultUserImage\"><img src=\"" + img + "\"></td>";
+        html += "<td class=\"resultUserName\"><a href=\"view_profile.html\"";
+        html += "onclick=\"return saveUserID('" + id + "');\">";
+        html += "<h2 id=\"resultUserName" + count + "\">"+ name + "</h2></a></td>";
+        html += "<td class=\"resultUserMajor\"><h3 id=\"resultUserMajor\">"+ major +"</h3></td>";
+        html += "</tr>";
 
         count++;
       } else {
         if (length == 1) {
-          html += '<tr class="resultRow">';
-          html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
-          html += '</tr>'
+          html += "<tr class=\"resultRow\">";
+          html += "<td class=\"resultUserName\"><h2>No Results Found</h2></td>";
+          html += "</tr>";
         }
       }
     });
 
-    html += '</table>';
-
-    document.getElementById("searchResults").innerHTML = html;
-    $("#searchResults").load(html, function() {
+    $("#searchResults").load("../loaded/search_results.html", function() {
+      $('#results').html(html);
       console.log("Load (search results) was performed.");
       dark_fn();
     });

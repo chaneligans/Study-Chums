@@ -323,10 +323,12 @@ textarea {
   margin: auto;
   text-align: center;
   font-family: 'Nunito', sans-serif;
+  padding-top: 15px;
 }
 
 .card #imageBox, .profilecard #img {
-  width: 40vmin;
+  max-width: 35vmin;
+  max-height: 35vmin;
 }
 
 .card h2, .profilecard h2 {
@@ -607,8 +609,8 @@ nav li a {
 
 .resultUserImage img {
   object-fit: cover;
-  width: 40vmin;
-  height: 40vmin;
+  max-width: 25vmin;
+  max-height: 25vmin;
 }
 
 /* CHAT CONTAINER */
@@ -629,7 +631,7 @@ nav li a {
   font-size:0;
 /*  border-radius:0px;*/
   overflow:hidden;
-    
+
   border-radius: 15px !important;
   background-color: rgba(0,0,0,0.4) !important;
 }
@@ -659,7 +661,7 @@ nav li a {
 /*  overflow-y:auto;*/
   height:85%;
   margin-top: 5px;
-    
+
   padding:  0.75rem 0 !important;
   overflow-y: auto;
   white-space: nowrap;
@@ -731,13 +733,12 @@ nav li a {
   background-color: rgba(0,0,0,0);
   color: #fff;
   cursor: pointer;
-  
+
 }
 
 #chatOptions {
   float: right;
   font-family: 'Sniglet', sans-serif;
-    
 }
 
 #chatOptions .fas.fa-ellipsis-h{
@@ -751,9 +752,9 @@ nav li a {
   top: -50px;
   left: 90%
 */
-    
+
     position: absolute;
-    left: 95%;
+    left: 90%;
     top: -50px;
     color: white;
     cursor: pointer;
@@ -777,7 +778,7 @@ nav li a {
   display: none;
   position: absolute;
   top: -50px;
-  right: -230px; 
+  right: -230px;
   left: 34%;
   background-color: #f9f9f9;
   min-width: 160px;
@@ -786,8 +787,7 @@ nav li a {
 */
     z-index: 1;
     position: absolute;
-    padding: 15px 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.95);
     color: white;
     border-radius: 15px;
     top: -50px;
@@ -824,6 +824,9 @@ nav li a {
   display:inline-block;
   font-size: calc(10px + 0.5vw);
   font-weight:normal;
+}
+#chat h2 {
+  color: ##d61;
 }
 #chat h3{
   color:#bbb;

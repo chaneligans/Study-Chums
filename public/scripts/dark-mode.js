@@ -14,7 +14,8 @@ var checkbox, background,
 	search, select,
 	panel, chatPopupContent,
 	resultrow_td,
-	editIconPopupContent;
+	editIconPopupContent,
+	card_p, profilecard_p;
 
 // Executes on page-ready.
 // Checks if the user wanted dark mode on or not (defaults to light mode).
@@ -64,6 +65,8 @@ $(document).ready(() => {
 	resultrow_td = $('.resultRow td');
 
 	editIconPopupContent = $('.showEditIconPopupContent');
+
+	card_p = $('.card p'); profilecard_p = $('.profilecard p');
 	// ---------------------------------------------------------------------------
 
 	let checkbox = $('#dark-switch');
@@ -78,7 +81,7 @@ $(document).ready(() => {
 // This function is meant for chums.js and discover.js.
 // Updates vars h2 and h3 to include h2 and h3 tags added from data results.
 function refresh_h() {
-	console.log('refresh header css');
+	// console.log('refresh header css');
 	h2 = $('h2'); h3 = $('h3');
 
 	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
@@ -90,7 +93,7 @@ function refresh_h() {
 // Updates var resultrow_td to include tags of class 'rsultsRow td'
 // added from data results.
 function refresh_td() {
-	console.log('refresh td css');
+	// console.log('refresh td css');
 	resultrow_td = $('.resultRow td');
 
 	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
@@ -150,8 +153,8 @@ function enableDarkModeSettings() {
 	i_right.css('color','white');
 	li.css('color','white');
 
-	card.css('background-color','rgba(45, 45, 45, 0.8)');
-	profilecard.css('background-color','rgba(45, 45, 45, 0.8)');
+	card.css('background-color','rgba(30, 30, 30, 0.8)');
+	profilecard.css('background-color','rgba(30, 30, 30, 0.8)');
 
 	nav_ul.css('background-color','black');
 	nav_li.css('background-color', 'rgba(0,0,0,0)');
@@ -159,7 +162,7 @@ function enableDarkModeSettings() {
 	footer.css('color','white');
 
 	form.css('color', 'white');
-	input.css({'color':'white', 'background-color':''});
+	input.css({'color':'white', 'background-color':'#222222'});
 	tb_ta.css({'color':'white', 'background-color':'#222222'});
 
 	search.css('color', 'black');
@@ -171,6 +174,9 @@ function enableDarkModeSettings() {
 	resultrow_td.css('color', 'white');
 
 	editIconPopupContent.css('background-color', "#222222");
+
+	card_p.css('background-color','rgba(30, 30, 30, 0)');
+	profilecard_p.css('background-color','rgba(30, 30, 30, 0)');
 }
 
 // Changes CSS to lighter hues.
@@ -211,8 +217,8 @@ function enableLightModeSettings(alert_) {
 	i_right.css('color','black');
 	li.css('color','black');
 
-	card.css('background-color','rgba(255, 255, 255, 0.8)');
-	profilecard.css('background-color','rgba(255, 255, 255, 0.8)');
+	card.css('background-color','rgba(180, 215, 240, 0.8)');
+	profilecard.css('background-color','rgba(180, 215, 240, 0.8)');
 
 	nav_ul.css('background-color','white');
 	nav_li.css('background-color','rgba(255,255,255,0.5)');
@@ -232,4 +238,7 @@ function enableLightModeSettings(alert_) {
 	resultrow_td.css('color','black');
 
 	editIconPopupContent.css('background-color', 'white');
+
+	card_p.css('background-color','rgba(180, 215, 240, 0)');
+	profilecard_p.css('background-color','rgba(180, 215, 240, 0)');
 }

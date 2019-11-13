@@ -1,3 +1,8 @@
+var dark_fn;
+function setDarkFn(fn) {
+  dark_fn = fn;
+}
+
 $(function enter() {
   let enter = document.getElementById("message");
   enter.addEventListener("keyup", event => {
@@ -615,6 +620,7 @@ function displayHeader() {
                     $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
                     $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
                     console.log("Load header (multi) was performed.");
+                    dark_fn();
                   });
                 });
               } else {
@@ -630,6 +636,7 @@ function displayHeader() {
                     $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
                     $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
                     console.log("Load header (single) was performed.");
+                    dark_fn();
                   });
                 });
               }
