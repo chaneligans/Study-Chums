@@ -126,15 +126,27 @@ function emailAndPasswordSignIn() {
   const password_in = document.getElementById("login-password-input").value;
 
   firebase.auth().signInWithEmailAndPassword(email_in, password_in)
-  .then(user => {
+  .then(result => {
+    result.user.reload;
 
-    if(user.emailVerified) {
+    if(result.user.emailVerified) {
       setTimeout(() => {
         location.href = "home.html";
       }, 1000);
     }
     else {
-      alert('A verification email has been sent. You must verify account before signing in.');
+      const actionCodeSettings = {
+        url: 'https://study-chums.firebaseapp.com/verify_account.html',
+        handleCodeInApp: true,
+      };
+      firebase.auth().sendSignInLinkToEmail(email_in, actionCodeSettings)
+      .then(() => {
+        console.log("Email verification link successfully sent.");
+        alert('A verification email has been sent. You must verify account before signing in.');
+      })
+      .catch(function(error) {
+        console.log("Error sending verification email -- ", error.message);
+      });
     }
   })
   .catch(function(error) {

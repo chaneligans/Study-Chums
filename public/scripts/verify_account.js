@@ -9,9 +9,11 @@ function verifyEmail() {
         firebase.auth().signInWithEmailLink(email_in, window.location.href)
         .then(result => {
             alert("Your email has been verified! You will now be directed to the Home page...");
+            result.user.reload;
+
             setTimeout(() => {
               location.href = "create_profile.html";
-            }, 2000);
+            }, 3000);
         })
         .catch(function(error) {
             console.log("Error verifying email -- ", error.message);
