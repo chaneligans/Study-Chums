@@ -6,10 +6,10 @@ function setDarkFn(fn) {
 $(function enter() {
   let enter = document.getElementById("message");
   enter.addEventListener("keyup", event => {
-    if (event.keyCode === 27) {
-      clearTextBox();
-    } else if (event.keyCode === 13) {
-      sendMessage();
+    switch(event.keyCode) {
+      case 13: sendMessage(); break; // on enter key
+      case 27: clearTextBox(); break; // on escape key
+      default: // nothing
     }
   });
 });
@@ -616,9 +616,9 @@ function displayHeader() {
 
                 loadImg.then(result => {
                   $("#chatHeader").load("../loaded/message_header.html", () => {
-                    $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names + '">');
-                    $('#chatTitle').html('<h2 id="chatTitle">' + topic + '</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  ' + names + '</h3>');
+                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names +'">');
+                    $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
                     console.log("Load header (multi) was performed.");
                     dark_fn();
                   });
@@ -632,9 +632,9 @@ function displayHeader() {
                 });
                 loadImg.then((result) => {
                   $("#chatHeader").load("../loaded/message_header.html", () => {
-                    $('#chatImage').html('<img class="chatImage" src="' + result + '" alt="' + names[0] + '">');
-                    $('#chatTitle').html('<h2 id="chatTitle">' + names[0] + '</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  ' + topic + '</h3>');
+                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names[0] +'">');
+                    $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  '+ topic +'</h3>');
                     console.log("Load header (single) was performed.");
                     dark_fn();
                   });
@@ -792,13 +792,12 @@ function sendMessage() {
 
       db.collection("Users").doc(user.uid).get().then(result => {
         let roomID = result.data().currentChatRoom;
+        let ref = db.collection("ChatRooms").doc(roomID);
 
-        let userRef = db.collection("ChatRooms").doc(roomID).collection("Users")
-        .doc(user.uid).get().then(doc => {
+        let userRef = ref.collection("Users").doc(user.uid).get().then(doc => {
           if (doc.exists) {
             let senderName = doc.data().name;
-            let roomRef = db.collection("ChatRooms").doc(roomID).collection("Messages")
-            .add({
+            let roomRef = ref.collection("Messages").add({
               senderID: user.uid,
               senderName: senderName,
               message: message,
@@ -843,11 +842,12 @@ function retrievePopupBoxChums(htmlID) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
-      let applicationsRef = firebase.database().ref('Chums/' + user.uid);
+      let db = firebase.database();
+      let applicationsRef = db.ref('Chums/' + user.uid);
       applicationsRef.once("value", snapshot => {
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
-          let userDataRef = firebase.database().ref('Users/' + key);
+          let userDataRef = db.ref('Users/' + key);
 
           let data = userDataRef.once("value").then(childSnapshotData => {
             let childData = childSnapshotData.val();
@@ -883,12 +883,21 @@ function displayPopupBoxChums(results, htmlID) {
     major = result[3];
     id = result[4];
     row = 'row' + id;
+
+    if (img === "undefined ") { // set img to the generic image
+      img = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/'
+      + 'img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
+      + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
+    }
+
     chums.push(row);
 
-    html += '<tr id="' + row + '" class="popupRow" onclick="selectChum(this,\'' + id + '\')">';
-    html += '<td class="popupUserImage"><img src="' + img + '"></td>';
-    html += '<td class="popupUserName"><h2 id="popupUserName' + count + '">' + name + '</h2></td>';
-    html += '<td class="popupUserMajor"><h3 id="popupUserMajor' + count + '">' + major + '</h3></td>';
+    html += '<tr id="'+ row +'" class="popupRow" onclick="selectChum(this,\''+ id +'\')">';
+    html += '<td class="popupUserImage"><img src="'+img+'"></td>';
+    html += '<td class="popupUserName">';
+    html += '<h2 id="popupUserName'+count+'">'+ name +'</h2></td>';
+    html += '<td class="popupUserMajor">';
+    html += '<h3 id="popupUserMajor'+count+'">'+ major +'</h3></td>';
     html += '</tr>'
 
     count++;

@@ -4,7 +4,7 @@ window.fbAsyncInit = function() {
   FB.AppEvents.logPageView();
 };
 
-(function(d, s, id){
+((d, s, id) => {
    let js, fjs = d.getElementsByTagName(s)[0];
    if (d.getElementById(id)) {return;}
    js = d.createElement(s); js.id = id;
@@ -16,4 +16,4 @@ window.fbAsyncInit = function() {
    js.src = "https://connect.facebook.net/en_US/sdk.js" + "#xfbml="+x
                +"&version="+v +"&appId="+a +"&autoLogAppEvents=1";
    fjs.parentNode.insertBefore(js, fjs);
- }(document, 'script', 'facebook-jssdk'));
+ })(document, 'script', 'facebook-jssdk');

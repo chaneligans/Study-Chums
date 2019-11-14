@@ -865,19 +865,19 @@ nav li a {
   text-align: left;
 }
 #chat .you .message{
-  color: dimgrey;
+  color: darkslategrey;
   font-size: 13px;
-  background-color: white;
+  background-color: #ff8d3b;
 }
 #chat .me .message{
-    color: dimgrey;
+  color: dimgrey;
   font-size: 13px;
 	background-color:#82ccdd;
 }
 
 #rightSide footer{
 	height:10%;
-    padding:20px 30px 10px 20px;
+    padding:10px;
     border-radius: 15px !important;
   background-color: rgba(0,0,0,0.1) !important;
 }

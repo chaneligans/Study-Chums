@@ -29,15 +29,18 @@ function Search() {
       let results = [];
 
       // execute only if something is there
-      if (option === 'name' || option === 'major') {
-        if (option === 'name' && value !== "") {
-          console.log('searching by name...')
-          Search_('name', value);
-          // SearchName(value);
-        } else if (option === 'major' && value !== "") {
-          console.log('searching by major...')
-          Search_('Major', value);
-          // SearchMajor(value);
+      if (value !== "") {
+        switch (option) {
+          case 'name':
+            console.log('Searching by name...');
+            Search_('name', value);
+            break;
+          case 'major':
+            console.log('Searching by major...')
+            Search_('Major', value);
+            break;
+          default: Search_(undefined, value);
+          // general option; shouldn't happen normally
         }
       } else {
         alert('Invalid!');
@@ -50,32 +53,25 @@ function Search() {
   });
 }
 
-function getUserData(childSnapshotValue, childKey) {
-  let photo = childSnapshotValue.p1Url + " ";
-  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
-  return data;
-}
-
 function Search_(searchType, input) {
   let results = [];
   let nameTypes = [input, input.toLowerCase(), upperCaseWords(input)];
   // check each name type (as-is, lowercase, uppercase)
-  nameTypes.forEach(name_ => {
-    firebase.database().ref('Users/').orderByChild(searchType)
-      .startAt(name_).endAt(name_+"\uf8ff").once('value', snapshot => {
-        let data;
-        snapshot.forEach(childSnapshot => {
-          let key = childSnapshot.key;
-          let childData = childSnapshot.val();
-          data = getUserData(childData, key);
+  let db_Users_by_searchType = firebase.database().ref('Users/');
+  if (searchType !== undefined) {
+    db_Users_by_searchType.orderByChild(searchType);
+  }
 
-          let bool = false;
-          results.forEach(result => {
-            if (result[4] === data[4]) {
-                bool = true;
-            }
-          });
-          if (bool === false) {
+  nameTypes.forEach(name_ => {
+    db_Users_by_searchType.startAt(name_).endAt(name_+"\uf8ff")
+    .once('value', snapshot => {
+        let key, childData, userData;
+        snapshot.forEach(childSnapshot => {
+          key = childSnapshot.key;
+          childData = childSnapshot.val();
+          userData = getUserData(childData, key);
+
+          if (isDuplicateOf_In_(userData[4], results) === false) {
             results.push(data);
           }
         });
@@ -106,6 +102,20 @@ function upperCaseWords(msg) {
   return bool ? msg : mstr;
 }
 
+function getUserData(childSnapshotValue, childKey) {
+  let photo = childSnapshotValue.p1Url + " ";
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  return data;
+}
+
+function isDuplicateOf_In_(source, given_list) {
+  let bool = false;
+  given_list.forEach(given_item => {
+    if (given_item === source) { bool = true; }
+  })
+  return bool;
+}
+
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(user => {
     let index, img, name, major, count = 1, id = 0, length = results.length;
@@ -124,24 +134,27 @@ function showSearchResults(results) {
       id = result[4];
 
       if (img === "undefined ") { // set img to the generic image
-        img = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
+        img = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/'
+        + 'img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
+        + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
       }
 
       if (id != user.uid) {
-        html += "<tr class=\"resultRow\">";
-        html += "<td class=\"resultUserImage\"><img src=\"" + img + "\"></td>";
-        html += "<td class=\"resultUserName\"><a href=\"view_profile.html\"";
-        html += "onclick=\"return saveUserID('" + id + "');\">";
-        html += "<h2 id=\"resultUserName" + count + "\">"+ name + "</h2></a></td>";
-        html += "<td class=\"resultUserMajor\"><h3 id=\"resultUserMajor\">"+ major +"</h3></td>";
-        html += "</tr>";
+        html += '<tr class="resultRow">';
+        html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
+        html += '<td class="resultUserName"><a href="view_profile.html"';
+        html += 'onclick="return saveUserID(\''+ id +'\');">';
+        html += '<h2 id="resultUserName'+ count +'">'+ name +'</h2></a></td>';
+        html += '<td class="resultUserMajor">';
+        html += '<h3 id="resultUserMajor">'+ major +'</h3></td>';
+        html += '</tr>';
 
         count++;
       } else {
         if (length == 1) {
-          html += "<tr class=\"resultRow\">";
-          html += "<td class=\"resultUserName\"><h2>No Results Found</h2></td>";
-          html += "</tr>";
+          html += '<tr class="resultRow">';
+          html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
+          html += '"</tr>"';
         }
       }
     });

@@ -69,53 +69,51 @@ function updatePhotoURL(uid, photo) {
       newImage.src = blobURL;
 
       newImage.onload = function() {
-        let updateImage = new Promise(
-          (resolve, reject) => {
-            if (newImage) {
-              let canvas = document.createElement('canvas');
-              let width = newImage.width;
-              let height = newImage.height;
+        let updateImage = new Promise((resolve, reject) => {
+          if (newImage) {
+            let canvas = document.createElement('canvas');
+            let width = newImage.width;
+            let height = newImage.height;
 
-              // console.log("Old values: " + width + ", " + height);
+            // console.log("Old values: " + width + ", " + height);
 
-              if (width > height) {
-                if (width > max_width) {
-                  height = Math.round(height *= max_width / width);
-                  width = max_width;
-                }
-              } else {
-                if (height > max_height) {
-                  width = Math.round(width *= max_height / height);
-                  height = max_height;
-                }
+            if (width > height) {
+              if (width > max_width) {
+                height = Math.round(height *= max_width / width);
+                width = max_width;
               }
-
-              canvas.width = width;
-              canvas.height = height;
-
-              // console.log("New values: " + canvas.width + ", " + canvas.height);
-
-              let context = canvas.getContext("2d");
-              context.drawImage(newImage, 0, 0, width, height);
-
-              let canvasDataURL = canvas.toDataURL("imge/jpeg", 0.7);
-
-              let arr = canvasDataURL.split(','),
-                mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]),
-                n = bstr.length,
-                u8arr = new Uint8Array(n);
-              while (n--) {u8arr[n] = bstr.charCodeAt(n);}
-              file = new Blob([u8arr], {type: mime});
-
-              // console.log(file);
-              resolve("It worked!");
-              console.log('Finished updating image');
             } else {
-              reject("Failed to resize image.");
+              if (height > max_height) {
+                width = Math.round(width *= max_height / height);
+                height = max_height;
+              }
             }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // console.log("New values: " + canvas.width + ", " + canvas.height);
+
+            let context = canvas.getContext("2d");
+            context.drawImage(newImage, 0, 0, width, height);
+
+            let canvasDataURL = canvas.toDataURL("imge/jpeg", 0.7);
+
+            let arr = canvasDataURL.split(','),
+              mime = arr[0].match(/:(.*?);/)[1],
+              bstr = atob(arr[1]),
+              n = bstr.length,
+              u8arr = new Uint8Array(n);
+            while (n--) {u8arr[n] = bstr.charCodeAt(n);}
+            file = new Blob([u8arr], {type: mime});
+
+            // console.log(file);
+            resolve("It worked!");
+            console.log('Finished updating image');
+          } else {
+            reject("Failed to resize image.");
           }
-        );
+        });
 
         let tryToUpdateImage = function() {
           updateImage.then(fulfilled => {
@@ -146,8 +144,9 @@ function updatePhotoURL(uid, photo) {
                   p1Url: photoUrl,
                   "p1Url": photoUrl
                 }, error => {
-                  if (error) {console.log("Update failed - p1Url to " + photo);}
-                  else {
+                  if (error) {
+                    console.log("Update failed - p1Url to " + photo + ": " + error);
+                  } else {
                     console.log("Update succeeded - p1Url to " + photo);
                     location.href = "home.html";
                   }
@@ -177,7 +176,7 @@ function updateName(user, name_in) {
       "name": name_in
     }, error => {
       if (error) {
-        console.log("Update failed - name to " + name_in);
+        console.log("Update failed - name to " + name_in + ": " + error);
       } else {
         console.log("Update suceeded - name to " + name_in);
       }
@@ -200,7 +199,7 @@ function updateEmail(user) {
       "email": email_in
     }, error => {
       if (error) {
-        console.log("Update failed - email to " + email_in);
+        console.log("Update failed - email to " + email_in + ": " + error);
       } else {
         console.log("Update suceeded - email to " + email_in);
       }
@@ -221,7 +220,7 @@ function updateMajor(user, major_in) {
       "Major": major_in
     }, error => {
       if (error) {
-        console.log("Update failed - major to " + major_in);
+        console.log("Update failed - major to " + major_in + ": " + error);
       } else {
         console.log("Update succeeded - major to " + major_in)
       }
@@ -242,7 +241,7 @@ function updateBio(user, bio_in) {
       "bio": bio_in
     }, error => {
       if (error) {
-        console.log("Update failed - bio to " + bio_in);
+        console.log("Update failed - bio to " + bio_in + ": " + error);
       } else {
         console.log("Update succeeded - bio to " + bio_in)
       }
@@ -262,7 +261,7 @@ function updateFBProfileLink(user, FBprofileLink_in) {
       "fbProfile": FBprofileLink_in
     }, error => {
       if (error) {
-        console.log("Update failed - fbProfile to " + FBprofileLink_in);
+        console.log("Update failed - fbProfile to " + FBprofileLink_in + ": " + error);
       } else {
         console.log("Update succeeded - fbProfile to " + FBprofileLink_in)
       }
@@ -282,7 +281,7 @@ function updateSubscription(user) {
       "subscribed": true
     }, error => {
       if (error) {
-        console.log("Update failed - email pref to true");
+        console.log("Update failed - email pref to true: " + error);
       } else {
         console.log("Update succeeded - email pref to true");
       }
@@ -292,9 +291,9 @@ function updateSubscription(user) {
 
 function addUserToFirestore(name) {
   firebase.auth().onAuthStateChanged(user => {
-    const firestore = firebase.firestore();
+    const db = firebase.firestore();
 
-    firestore.collection("Users").doc(user.uid).set({
+    db.collection("Users").doc(user.uid).set({
       name: name,
       "name": name,
       currentChatRoom: " ",
