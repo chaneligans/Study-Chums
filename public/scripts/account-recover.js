@@ -1,13 +1,11 @@
-console.log("hello")
-
-function sendEmail(){
+function passwordResetEmail(){
     var auth = firebase.auth();
     
     var emailAddress = document.getElementById("recovey-email-input").value;
   
     auth.sendPasswordResetEmail(emailAddress).then(function() {
       console.log("email sent");
-    // Email sent.
+      alert('An reset password link has been sent to the given email!');
     }).catch(function(error) {
       console.log(error);
     // An error happened.
