@@ -21,8 +21,8 @@
     <script>firebase.initializeApp(config);</script><!--Initialize Firebase-->
 
     <!-- CHECK IF USED IS LOGGED IN -->
-    <script type="text/javascript" src="scripts/check_login.js"></script>
-    <script>window.onload = checkLogin;</script>
+    <!-- <script type="text/javascript" src="scripts/check_login.js"></script>
+    <script>window.onload = checkLogin;</script> -->
 
     <script type="text/javascript" src="scripts/dark-mode.js"></script>
 
@@ -44,10 +44,12 @@
       <form id="profileForm">
         <label class="upload-photo">
           Upload Profile Photo
+          <span class="form-required" title="This field is required." aria-hidden="true">*</span>
           <input id="file" type="file" class="upload-photo" value="image/png" id="file" required>
         </label>
         <div class="textbox">
           <i class="fas fa-user"></i>
+          <span class="form-required" title="This field is required." aria-hidden="true" style="float: left">*</span>
           <input id="name" type="text" placeholder="First Name" name="" value="" required>
         </div>
 <!--
@@ -58,6 +60,7 @@
 -->
         <div class="textbox">
           <i class="fas fa-glasses"></i>
+          <span class="form-required" title="This field is required." aria-hidden="true" style="float: left">*</span>
           <input id="major" type="text" placeholder="Major" name="" value="" required>
         </div>
 
@@ -68,6 +71,7 @@
 
         <div class="textbox">
           <i class="fas fa-align-justify"></i>
+          <span class="form-required" title="This field is required." aria-hidden="true" style="float: left">*</span>
           <textarea id="bio" type="text" placeholder="Tell us about yourself!" name="" value="" required></textarea>
         </div>
         <input class="create-profile-btn" type="button" name=""

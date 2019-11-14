@@ -167,13 +167,18 @@ body{
   outline: none;
   background: none;
   font-size: 18px;
-  width: 80%;
+  width: 70%;
   float: left;
   margin: 0 10px;
 }
 .textbox textarea {
   font-family: 'Nunito', sans-serif;
   font-size: 18px;
+}
+.form-required {
+  color: #f00;
+  text-align: left;
+  /* float: left; */
 }
 ::placeholder{
   opacity: 1;

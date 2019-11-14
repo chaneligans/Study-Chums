@@ -28,9 +28,11 @@ function updateProfile() {
 
       if (FBprofileLink_in !== "") {updateFBProfileLink(this.userId, FBprofileLink_in);}
 
-      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "" || FBprofileLink_in === "") {
-        alert("Please fill in all fields.");
-      } else if (photo_in.value === "") {
+      if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "") {
+        alert("Please fill in all required fields.");
+      } 
+      else {
+        alert("Your profile info has been updated!");
         setTimeout(function() {location.href = "home.html";}, 1000);
       }
 
