@@ -6,18 +6,18 @@ function updateEmailPreferences() {
       let subscribe = document.getElementById("subscribe").checked;
       let unsubscribe = document.getElementById("unsubscribe").checked;
 
-      this.userId = user.uid;
+      let userId = user.uid;
 
       // execute only if something is there
       if (email_in !== undefined) {
-        updateEmail(this.userId, email_in);
+        updateEmail(userId, email_in);
       }
       if (subscribe) {
         console.log(email_in + ' has subscribed to emails');
-        updateSubscription(this.userId, true);
+        updateSubscription(userId, true);
       } else {
         console.log(email_in + ' has unsubscribed to emails');
-        updateSubscription(this.userId, false);
+        updateSubscription(userId, false);
       }
       console.log("Updates sent to database.");
       setTimeout(() => {
@@ -30,12 +30,12 @@ function updateEmailPreferences() {
   });
 }
 
-function updateEmail(user, email_in) {
+function updateEmail(userId, email_in) {
   firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
 
-    let ref = firebase.database().ref("Users/" + this.userId);
+    let ref = firebase.database().ref("Users/" + userId);
     this.userId = user.uid;
 
     //realtime database
@@ -52,12 +52,11 @@ function updateEmail(user, email_in) {
   });
 }
 
-function updateSubscription(user, preference) {
+function updateSubscription(userId, preference) {
   firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating subscription preferences for user id ", user.uid);
 
-    let ref = firebase.database().ref("Subscriptions/" + this.userId);
-    this.userId = user.uid;
+    let ref = firebase.database().ref("Subscriptions/" + userId);
     //realtime database
     if (preference === false) {
       ref.update({
