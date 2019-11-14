@@ -10,7 +10,7 @@ function updateEmailPreferences() {
 
       // execute only if something is there
       if (email_in !== undefined) {
-        updateEmail(userId, email_in);
+        updateEmail(user, email_in);
       }
       if (subscribe) {
         console.log(email_in + ' has subscribed to emails');
@@ -31,55 +31,45 @@ function updateEmailPreferences() {
 }
 
 function updateEmail(userId, email_in) {
-  firebase.auth().onAuthStateChanged(user => {
-    // console.log("Updating email for user id ", user.uid);
-    // update email for this 'user' with email_in
+  let ref = firebase.database().ref("Users/" + userId);
 
-    let ref = firebase.database().ref("Users/" + userId);
-    this.userId = user.uid;
-
-    //realtime database
-    ref.update({
-      email: email_in,
-      "email": email_in
-    }, error => {
-      if (error) {
-        console.error("Update failed - email to " + email_in + ": " + error);
-      } else {
-        console.log("Update suceeded - email to " + email_in);
-      }
-    });
+  //realtime database
+  ref.update({
+    email: email_in,
+    "email": email_in
+  }, error => {
+    if (error) {
+      console.error("Update failed - email to " + email_in + ": " + error);
+    } else {
+      console.log("Update suceeded - email to " + email_in);
+    }
   });
 }
 
 function updateSubscription(userId, preference) {
-  firebase.auth().onAuthStateChanged(user => {
-    // console.log("Updating subscription preferences for user id ", user.uid);
-
-    let ref = firebase.database().ref("Subscriptions/" + userId);
-    //realtime database
-    if (preference === false) {
-      ref.update({
-        subscribed: false,
-        "subscribed": false
-      }, error => {
-        if (error) {
-          console.error("Update failed - email pref to false: " + error);
-        } else {
-          console.log("Update succeeded - email pref to false");
-        }
-      });
-    } else {
-      ref.update({
-        subscribed: true,
-        "subscribed": true
-      }, error => {
-        if (error) {
-          console.error("Update failed - email pref to true: " + error);
-        } else {
-          console.log("Update succeeded - email pref to true");
-        }
-      });
-    }
-  });
+  let ref = firebase.database().ref("Subscriptions/" + userId);
+  //realtime database
+  if (preference === false) {
+    ref.update({
+      subscribed: false,
+      "subscribed": false
+    }, error => {
+      if (error) {
+        console.error("Update failed - email pref to false: " + error);
+      } else {
+        console.log("Update succeeded - email pref to false");
+      }
+    });
+  } else {
+    ref.update({
+      subscribed: true,
+      "subscribed": true
+    }, error => {
+      if (error) {
+        console.error("Update failed - email pref to true: " + error);
+      } else {
+        console.log("Update succeeded - email pref to true");
+      }
+    });
+  }
 }
