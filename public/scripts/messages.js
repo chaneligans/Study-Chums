@@ -874,7 +874,7 @@ function displayPopupBoxChums(results, htmlID) {
   console.log('Called function displayPopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
   let index, img, name, major, count, row, id = 0, chums = [];
-  let html = '<table class="requests">';
+  let html = '<table id="popupChums">';
 
   results.forEach(result => {
     index = result[0];
@@ -895,9 +895,9 @@ function displayPopupBoxChums(results, htmlID) {
     html += '<tr id="'+ row +'" class="popupRow" onclick="selectChum(this,\''+ id +'\')">';
     html += '<td class="popupUserImage"><img src="'+img+'"></td>';
     html += '<td class="popupUserName">';
-    html += '<h2 id="popupUserName'+count+'">'+ name +'</h2></td>';
+    html += '<p id="popupUserName'+count+'">'+ name +'</p></td>';
     html += '<td class="popupUserMajor">';
-    html += '<h3 id="popupUserMajor'+count+'">'+ major +'</h3></td>';
+    html += '<p id="popupUserMajor'+count+'">'+ major +'</p></td>';
     html += '</tr>'
 
     count++;
