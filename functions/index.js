@@ -241,3 +241,27 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
 });
 
 //cloud function to send push notifications
+exports.sendMessageNotification = functions.firestore.document('ChatRooms/{chatRoomID}/Messages').onCreate((change, context) => {
+  //send notification to each user
+  const roomID = context.params.chatRoomID;
+  const payload = {
+    notification: {
+      title: `New Message from ${change.after.data().senderName}`,
+      body: change.after.data().message,
+      //icons:
+      //click_action:
+    }
+  };
+
+  console.info('payload');
+
+  return admin.firestore().collection('ChatRooms').doc(roomID).collection('Tokens')
+    .get((snapshots) => {
+      let tokens = [];
+      snapshots.forEach((snapshot) => {
+        tokens.push(snapshot.data().token);
+      });
+
+      return admin.messaging.sendToDevice(tokens, payload);
+    })
+});
