@@ -5,12 +5,10 @@
   background: #FFBD33;
 }
 
-/* scrollbar width */
-/*
+/* scrollbar width */ 
 ::-webkit-scrollbar {
   width: 10px;
 }
-*/
 
 /* scrollbar Track */
 ::-webkit-scrollbar-track {
@@ -25,10 +23,7 @@
 /* scrollbar Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
-
-.element::-webkit-scrollbar { width: 0 !important }
-
+} 
 
 body{
   margin: 0;
@@ -631,7 +626,6 @@ nav li a {
 #chatContainer{
   width:90%;
   height:800px;
-/*  background:#eff3f7;*/
   margin:0 auto;
   font-size:0;
 /*  border-radius:0px;*/
@@ -934,27 +928,13 @@ nav li a {
 /* END CHAT CONTAINER */
 
 /* NEW CHAT POPUP */
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
 /* Modal Content */
 /* The Modal (background) */
 .chatPopup {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 50px; /* Location of the box */
+  padding-top: 10%; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -993,7 +973,6 @@ nav li a {
 }
 
 .showEditIconPopupContent {
-  background-color: #eff3f7;
   border-radius: 10px;
   margin: auto;
   padding: 20px;
@@ -1004,25 +983,32 @@ nav li a {
 }
 
 .chatPopupContent {
-  background-color: #eff3f7;
   border-radius: 10px;
   margin: auto;
   padding: 20px;
-  width: 65%;
-  height: 85%;
+  width: 30%;
+  height: auto;
   max-height: 85%;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
-.chatPopupContent h1 {
+.chatPopupContent:hover {
+  overflow: auto;
+}
+
+#createChatPopupTitle {
   margin: 10px;
+  font-family: 'Sniglet', sans-serif;
+  font-weight: bold;
+ font-size: calc(20px + 1vw);
 }
 
 /* The Close Button */
 .closeChatPopup {
   color: #aaaaaa;
   float: right;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -1042,7 +1028,7 @@ nav li a {
 
 .popupInput {
   width: 80%;
-  height: 50px;
+  height: 25px;
   color: #9DD2EE;
   margin: 0;
   padding: 0;
@@ -1056,11 +1042,14 @@ nav li a {
   height: 50%;
   max-height: 50%;
   margin: auto;
-  overflow-y: auto;
-  overflow-x: auto;
+  overflow: hidden;
   background-color: #FFF;
   border: 1px solid #888;
   border-radius: 10px;
+}
+
+#popupCreateChatResults:hover {
+  overflow: auto;
 }
 
 #popupAddFriendToChatResults {
@@ -1079,9 +1068,16 @@ nav li a {
   padding-bottom: 10px;
 }
 
+#popupChums {
+  margin: auto;
+  width: 100%;
+}
+
 .popupRow td {
-  padding: 10px;
-  font-size: calc(12px + .5vw);
+  padding: 5px;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: bold;
 }
 
 .popupUserImage:first-child {
@@ -1090,8 +1086,8 @@ nav li a {
 
 .popupUserImage img {
   object-fit: cover;
-  width: 10vmin;
-  height: 10vmin;
+  width: 5vmin;
+  height: 5vmin;
 }
 
 #createNewChatButton {
