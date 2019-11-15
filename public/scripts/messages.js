@@ -81,8 +81,8 @@ function createChatRoom() {
           alert('Please select member(s) for your chatroom.');
         } else {
           members.push(user.uid);
-          // console.log('Printing from createChatRoom(): Members: '
-          //           + members + '. members.length(): ' + members.length);
+          // console.log('Printing from createChatRoom():\nMembers: ['
+          //           + members + ']\nmembers.length(): ' + members.length);
           db.collection("ChatRooms")
           .add({
             topic: topic
@@ -193,8 +193,8 @@ function deleteChatRoomFromUser(userID, roomID) {
   userData.get().then(userResult => {
     const currentChatRoom = userResult.data().currentChatRoom;
 
-    if(currentChatRoom == roomID) {
-      userData.set({
+    if(currentChatRoom === roomID) {
+      userData.update({
         currentChatRoom: " ",
       });
     }
@@ -566,10 +566,16 @@ function displayHeader() {
           console.log("Valid currentChatRoom Id!");
           let userLists = [];
           let topic;
-          db.collection("ChatRooms").doc(roomID).get().then(result => {
-            topic = result.data().topic;
+          let chatroomRef = db.collection("ChatRooms").doc(roomID);
+          chatroomRef.get().then(result => {
+            let res_data = result.data();
+            if (res_data === undefined) {
+              console.log('No chatrooms found.');
+              return;
+            }
+            topic = res_data.topic;
 
-            db.collection("ChatRooms").doc(roomID).collection("Users")
+            chatroomRef.collection("Users")
             .get().then(querySnapshot => {
               querySnapshot.forEach(doc => {
                 userLists.push({
@@ -916,7 +922,6 @@ function selectChum(row, id) {
   let members = sessionStorage.getItem('chatMembers');
   if (members == null || members === false) {
     members = [];
-    console.log('members is null');
   }
   try {
     let index = members.indexOf(id);

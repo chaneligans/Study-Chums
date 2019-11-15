@@ -1,7 +1,7 @@
 var checkbox, background,
 	loginbox, login_h1, loginbottom,
 	or_space,
-	fas_fa_at, fas_fa_lock,
+	fas, fas_fa_at, fas_fa_lock,
 	wrapper,create_profile_box,
 	create_profile_btn,
 	h1, h2, h3, h4, h5,
@@ -38,7 +38,7 @@ $(document).ready(() => {
 
 	or_space = $('#Or_space');
 
-	fas_fa_at = $('i.fas.fa-at');
+	fas = $('.fas'); fas_fa_at = $('i.fas.fa-at');
 	fas_fa_lock = $('i.fas.fa-lock');
 
 	wrapper = $('#wrapper');
@@ -133,6 +133,7 @@ function enableDarkModeSettings() {
 
 	or_space.css('color', 'white');
 
+	fas.css('color', 'white');
 	fas_fa_at.css('color', 'white');
 	fas_fa_lock.css('color','white');
 
@@ -197,6 +198,7 @@ function enableLightModeSettings(alert_) {
 
 	or_space.css('color','black');
 
+	fas.css('color', 'black');
 	fas_fa_at.css('color', 'black');
 	fas_fa_lock.css('color','black');
 
