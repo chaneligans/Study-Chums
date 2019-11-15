@@ -738,9 +738,7 @@ nav li a {
 #chatOptions {
   float: right;
   font-family: 'Sniglet', sans-serif;
-}
 
-#chatOptions .fas.fa-ellipsis-h{
 /*
   display: inline-block;
   border: 1px solid #24A9E0;
@@ -753,11 +751,13 @@ nav li a {
 */
 
     position: absolute;
-    left: 95%;
+    left: 93%;
     top: -50px;
     color: white;
     cursor: pointer;
     font-size: 20px;
+    border: 1px solid rgba(0,0,0,0);
+    background: rgba(0,0,0,0);
 }
 
 /*
