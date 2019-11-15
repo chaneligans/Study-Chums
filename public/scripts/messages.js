@@ -1,5 +1,3 @@
-importScripts('scripts/cloud-messaging.js');
-
 var dark_fn;
 function setDarkFn(fn) {
   dark_fn = fn;
@@ -787,7 +785,6 @@ function displayMessages(messages) {
 function sendMessage() {
   const message = document.getElementById("message").value;
   const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-  sendNotification(message);
 
   firebase.auth().onAuthStateChanged(user => {
     if (user) {

@@ -21,7 +21,7 @@ function handleTokenRefresh() {
       console.log(token);
       firebase.auth().onAuthStateChanged(user => {
         firestore.collection("Users").doc(user.uid).collection("ChatRooms")
-        .get.then((chatRooms) => {
+        .get().then((chatRooms) => {
           chatRooms.forEach(room => {
             firestore.collection("ChatRooms").doc(room.id).collection("Tokens")
             .add({
