@@ -239,3 +239,5 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
 
   return null;
 });
+
+//cloud function to send push notifications

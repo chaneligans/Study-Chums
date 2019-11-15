@@ -1,5 +1,5 @@
 // Retrieve Firebase Messaging object.
-const messaging = firebase.messaging();
+const messaging = firebase.messaging(); 
 
 // Add the public key generated from the console here.
 messaging.usePublicVapidKey("BKY1_vZpRo8BqgaIc2rAPTR_xWRvrO9rsojLpjUDV6SbINnmbwTagcwsbbUA0J4upByg3CzjwBHLTV1rz8_77Nk");
@@ -8,6 +8,10 @@ messaging.usePublicVapidKey("BKY1_vZpRo8BqgaIc2rAPTR_xWRvrO9rsojLpjUDV6SbINnmbwT
 //The method messaging.requestPermission() displays a consent dialog to let users grant your app permission to receive notifications in the browser. If permission is denied, FCM registration token requests result in an error.
 messaging.requestPermission().then(() => {
   console.log('Notification permission granted.');
+  messaging.getToken(token => {
+    console.log(token);
+  });
+
   // TODO(developer): Retrieve an Instance ID token for use with FCM.
   // ...
 }).catch(err => {
