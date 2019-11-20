@@ -241,27 +241,24 @@ exports.sendAcceptEmail = functions.database.ref('Applications/{uid}/Sent/{value
 });
 
 //cloud function to send push notifications
-exports.sendMessageNotification = functions.firestore.document('ChatRooms/{chatRoomID}/Messages').onCreate((change, context) => {
+exports.sendMessageNotification = functions.firestore.document('ChatRooms/{chatRoomID}/Messages/{messageID}').onCreate((snap, context) => {
   //send notification to each user
   const roomID = context.params.chatRoomID;
   const payload = {
     notification: {
-      title: `New Message from ${change.after.data().senderName}`,
-      body: change.after.data().message,
+      title: `New Message from ${snap.data().senderName}`,
+      body: snap.data().message,
       //icons:
       //click_action:
     }
   };
 
-  console.info('payload');
-
   return admin.firestore().collection('ChatRooms').doc(roomID).collection('Tokens')
-    .get((snapshots) => {
+    .get().then(snapshots => {
       let tokens = [];
       snapshots.forEach((snapshot) => {
         tokens.push(snapshot.data().token);
       });
-
-      return admin.messaging.sendToDevice(tokens, payload);
+      return admin.messaging().sendToDevice(tokens, payload);
     })
 });

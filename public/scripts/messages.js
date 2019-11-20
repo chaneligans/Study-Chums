@@ -752,10 +752,14 @@ function loadChatHistory() {
             initial_messages.push({
               senderID: doc.data().senderID,
               senderName: doc.data().senderName,
-              // time: doc.data().time.toDate(),
-              time: firebase.firestore.FieldValue.serverTimestamp(),
+              time: doc.data().time.toDate(),
+              // time: firebase.firestore.FieldValue.serverTimestamp(),
               message: doc.data().message,
             });
+          });
+
+          Promise.all(initial_messages).then(results => {
+            displayMessages(results);
           });
         });
 
@@ -779,15 +783,16 @@ function loadChatHistory() {
                 time: timestamp.toDate(),
                 message: change.doc.data().message,
               });
-            } else if (change.type === "added") {
-              // console.log(change.doc.id, " ++ ", change.doc.data());
-              update_messages.push({
-                senderID: change.doc.data().senderID,
-                senderName: change.doc.data().senderName,
-                time: timestamp.toDate(),
-                message: change.doc.data().message,
-              });
-            }
+            } 
+            // else if (change.type === "added") {
+            //   // console.log(change.doc.id, " ++ ", change.doc.data());
+            //   update_messages.push({
+            //     senderID: change.doc.data().senderID,
+            //     senderName: change.doc.data().senderName,
+            //     time: timestamp.toDate(),
+            //     message: change.doc.data().message,
+            //   });
+            // }
           });
 
           Promise.all(update_messages).then(results => {
