@@ -1,5 +1,5 @@
 // Retrieve Firebase Messaging object.
-const messaging = firebase.messaging(); 
+const messaging = firebase.messaging();
 const firestore = firebase.firestore();
 const auth = firebase.auth();
 
@@ -18,7 +18,7 @@ messaging.requestPermission()
 function handleTokenRefresh() {
   return messaging.getToken()
     .then((token) => {
-      console.log(token);
+      // console.log(token);
       firebase.auth().onAuthStateChanged(user => {
         firestore.collection("Users").doc(user.uid).collection("ChatRooms")
         .get().then((chatRooms) => {
@@ -43,7 +43,7 @@ function handleTokenRefresh() {
 //       firestore.collection("Users").doc(auth.currentUser.uid).collection("ChatRooms")
 //       .get.then((chatRooms) => {
 //         chatRooms.forEach(room => {
-          
+
 //         });
 
 //       })

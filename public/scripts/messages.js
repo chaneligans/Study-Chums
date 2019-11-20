@@ -104,6 +104,7 @@ function createChatRoom() {
 
             let chatPopupId = document.getElementById("createChatPopup");
             chatPopupId.style.display = "none";
+            document.getElementById("chatTopicIn").value = "";
           })
           .catch(error => {
             console.error("Error writing document: ", error);
@@ -155,9 +156,9 @@ function deleteChat() {
 
                   //delete user doc from ChatRooms/Users
                   chatroomRef.collection("Users").doc(user.userID)
-                  .delete().then(function() {
+                  .delete().then(() => {
                     console.log("User document successfully deleted from ChatRoom/Users!");
-                  }).catch(function(error) {
+                  }).catch(error => {
                     console.error("Error removing document from ChatRoom/Users! ", error);
                   });
                 })
@@ -166,6 +167,8 @@ function deleteChat() {
                 deleteChatRoomData(roomID);
 
                 clearOut();
+                displayHeader();
+
               });
             });
           });
@@ -309,6 +312,8 @@ function reloadChatRoomSideBar() {
       let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
       .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(change => {
+          // console.log(change.type, "//", change.doc.id, "//" ,change.doc.data());
+
           if (change.type === "added") {
 
             let chatroomDoc = change.doc;
@@ -334,7 +339,51 @@ function reloadChatRoomSideBar() {
             .catch(error => {
               console.log("Error getting documents: ", error);
             });
-          }
+          } // end of if (change.type === 'added')
+
+          if (change.type === "removed") {
+            // remove sidebar item from sidebar
+
+            let id = change.doc.id;
+            let topic = change.doc.data().topic;
+
+            let sidebar_list = $('li').splice(8);
+            let li_index = -1; // the item to be removed
+
+            sidebar_list.forEach((li_item, i) => {
+              let li_topic = li_item.innerText;
+              let li_id = li_item.outerHTML.replace(')','(').split('(')[1].split('\'')[1];
+              if (id === li_id && topic === li_topic) {
+                li_index = i; // set the item that needs to be removed
+              }
+            });
+
+            if (li_index !== -1) {
+              $('#leftSideRooms')[0].children[li_index].remove();
+
+              // then change 'currentChatRoom' to a relevant chatroom or "" if none
+              let adjustedSideBar = $('li').splice(8);
+              let newRoomID;
+              if (adjustedSideBar.length > 0) {
+                let first_item = adjustedSideBar[0];
+                newRoomID = first_item.outerHTML.replace(')','(').split('(')[1].split('\'')[1];
+              } else {
+                newRoomID = " ";
+              }
+
+              db.collection("Users").doc(user.uid).update({
+                currentChatRoom: newRoomID,
+              })
+              .then(() => {
+                console.log('currentChatRoom was redirected.');
+              });
+            }
+
+            // then reload header and chat history (regardless)
+            reloadHeader();
+            reloadChatHistory();
+
+          } // end of if (change.type === 'removed')
         });
 
       });
@@ -352,7 +401,6 @@ function displayChatRoom(userList) {
       userList.forEach(result => {
         let name = result.name;
         let userID = result.userID;
-        let topic = result.topic;
         roomID = result.chatroomID;
 
         if (user.uid != userID) {
@@ -360,17 +408,12 @@ function displayChatRoom(userList) {
         }
       });
 
-      if (names.length > 1) {
-        displayName = userList[0].topic;
-      } else {
-        displayName = names[0];
-      }
+      displayName = (names.length > 1) ? userList[0].topic : names[0];
 
       $(document).ready(() => {
         $("#leftSideRooms").append(
-          '<li onclick="openChatRoom(\'' + roomID
-          + '\')"><h2 class = "leftChatName">'
-          + displayName + '</h2></li>');
+          '<li onclick="openChatRoom(\''+ roomID +'\')">'
+          + '<h2 class = "leftChatName">'+ displayName +'</h2></li>');
       });
       console.log('displayChatRoom() was properly called');
       // console.log('userlist:', userList);
@@ -570,84 +613,86 @@ function displayHeader() {
           chatroomRef.get().then(result => {
             let res_data = result.data();
             if (res_data === undefined) {
-              console.log('No chatrooms found.');
+              noChatroomsFound();
               return;
             }
-            topic = res_data.topic;
+            // else {
+              topic = res_data.topic;
 
-            chatroomRef.collection("Users")
-            .get().then(querySnapshot => {
-              querySnapshot.forEach(doc => {
-                userLists.push({
-                  name: doc.data().name,
-                  userID: doc.id,
+              chatroomRef.collection("Users").get().then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                  userLists.push({
+                    name: doc.data().name,
+                    userID: doc.id,
+                  });
                 });
-              });
-              let names = [];
-              let ids = []
-              let userImg;
-              let displayName;
-              userLists.forEach(result => {
-                const name = result.name;
-                const userid = result.userID;
-                if (user.uid != userid) {
-                  names.push(name);
-                  ids.push(userid);
-                }
-              });
-              if (names.length > 1) {
-                let loadImg = new Promise((resolve, reject) => {
-                  let genericGroupIcon = "../images/group.png";
-                  let icon;
-                  let chatDataRef = db.collection("ChatRooms").doc(roomID).get().then(doc => {
-                    if (!doc.exists) {
-                      console.log('No such document!');
+                let names = [];
+                let ids = []
+                let userImg;
+                let displayName;
+                userLists.forEach(result => {
+                  const name = result.name;
+                  const userid = result.userID;
+                  if (user.uid != userid) {
+                    names.push(name);
+                    ids.push(userid);
+                  }
+                });
+                if (names.length > 1) {
+                  let loadImg = new Promise((resolve, reject) => {
+                    let genericGroupIcon = "../images/group.png";
+                    let icon;
+                    let chatDataRef = db.collection("ChatRooms").doc(roomID).get().then(doc => {
+                      if (!doc.exists) {
+                        console.log('No such document!');
+                        icon = genericGroupIcon;
+                        reject(icon);
+                      } else {
+                        if (doc.data().icon === undefined) {
+                          icon = genericGroupIcon;
+                        } else {
+                          icon = doc.data().icon;
+                        }
+                        resolve(icon);
+                      }
+                    }).catch(err => {
+                      console.log('Error getting document', err);
                       icon = genericGroupIcon;
                       reject(icon);
-                    } else {
-                      if (doc.data().icon === undefined) {
-                        icon = genericGroupIcon;
-                      }
-                      else {
-                        icon = doc.data().icon;
-                      }
-                      resolve(icon);
-                    }
-                  }).catch(err => {
-                    console.log('Error getting document', err);
-                    icon = genericGroupIcon;
-                    reject(icon);
+                    });
                   });
-                });
 
-                loadImg.then(result => {
-                  $("#chatHeader").load("../loaded/message_header.html", () => {
-                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names +'">');
-                    $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
-                    console.log("Load header (multi) was performed.");
-                    dark_fn();
+                  loadImg.then(result => {
+                    $("#chatHeader").load("../loaded/message_header.html", () => {
+                      $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names +'">');
+                      $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
+                      $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
+                      console.log("Load header (multi) was performed.");
+                      dark_fn();
+                    });
                   });
-                });
-              } else {
-                let loadImg = new Promise((resolve, reject) => {
-                  let userDataRef = firebase.database().ref("Users/" + ids[0]);
-                  userDataRef.once("value", snapshot => {
-                    resolve(snapshot.val().p1Url);
+                } else {
+                  let loadImg = new Promise((resolve, reject) => {
+                    let userDataRef = firebase.database().ref("Users/" + ids[0]);
+                    userDataRef.once("value", snapshot => {
+                      resolve(snapshot.val().p1Url);
+                    });
                   });
-                });
-                loadImg.then((result) => {
-                  $("#chatHeader").load("../loaded/message_header.html", () => {
-                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names[0] +'">');
-                    $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
-                    $('#chatTopic').html('<h3 id="chatTopic">Topic:  '+ topic +'</h3>');
-                    console.log("Load header (single) was performed.");
-                    dark_fn();
+                  loadImg.then((result) => {
+                    $("#chatHeader").load("../loaded/message_header.html", () => {
+                      $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names[0] +'">');
+                      $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
+                      $('#chatTopic').html('<h3 id="chatTopic">Topic:  '+ topic +'</h3>');
+                      console.log("Load header (single) was performed.");
+                      dark_fn();
+                    });
                   });
-                });
-              }
-            });
+                }
+              });
+            // }
           });
+        } else {
+          noChatroomsFound();
         }
       });
     }
@@ -839,6 +884,14 @@ function noChumsFound() {
   $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Chums Yet!</h2>");
     console.log("Load was performed (no chums found).");
+  });
+}
+
+function noChatroomsFound() {
+  console.log('No chatrooms found.');
+  $('#chatHeader').load("../loaded/message_header_empty.html", function() {
+    console.log("Load (empty header) was performed.");
+    dark_fn();
   });
 }
 

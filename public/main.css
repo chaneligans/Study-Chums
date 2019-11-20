@@ -5,7 +5,7 @@
   background: #FFBD33;
 }
 
-/* scrollbar width */ 
+/* scrollbar width */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -23,7 +23,7 @@
 /* scrollbar Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-} 
+}
 
 body{
   margin: 0;
@@ -751,7 +751,8 @@ nav li a {
 */
 
     position: absolute;
-    left: 93%;
+    /* left: 93%; */
+    right: -5px;
     top: -50px;
     color: white;
     cursor: pointer;
