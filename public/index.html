@@ -10,21 +10,21 @@
 
     <!-- FIREBASE INITIALIZATION -->
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
-    <script type="text/javascript" src="scripts/firebase-config.js"></script>
+    <script src="scripts/firebase-config.js"></script>
     <script>firebase.initializeApp(config);</script><!-- Initialize Firebase -->
     <!-- END FIREBASE INITIALIZATION -->
 
     <!-- FACEBOOK INITIALIZATION -->
-    <script type="text/javascript" src="scripts/facebook-config.js"></script>
-    <script type="text/javascript" src="scripts/facebook_init.js"></script>
+    <script src="scripts/facebook-config.js"></script>
+    <script src="scripts/facebook_init.js"></script>
     <!-- END FACEBOOK INITIALIZATION-->
 
     <!-- FACEBOOK SIGN IN-->
-    <script type="text/javascript" src="scripts/site_login.js"></script>
+    <script src="scripts/site_login.js"></script>
     <!-- END FACEBOOK SIGN IN -->
 
     <!-- CHECK IF USED IS LOGGED IN -->
-    <script type="text/javascript" src="scripts/check_login.js"></script>
+    <script src="scripts/check_login.js"></script>
     <!-- <script>window.onload = checkIndexLogin;</script> -->
 
     <!-- jQuery IMPORT -->
@@ -33,18 +33,18 @@
     <!-- Font Awesome import -->
     <script src="https://kit.fontawesome.com/48eb95b02a.js" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" src="scripts/dark-mode.js"></script>
+    <script src="scripts/dark-mode.js"></script>
 
   </head>
-  <div class="onoffswitch">
-    <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch">
-    <label class="onoffswitch-label" for="dark-switch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
-  </div>
 
   <body>
+    <div class="onoffswitch">
+      <input type="checkbox" class="onoffswitch-checkbox" id="dark-switch">
+      <label class="onoffswitch-label" for="dark-switch">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+    </div>
     <!-- (UI) LOGIN BOX -->
     <div class="login-box" style="text-align:center;" id="login-box">
       <h1>Welcome To Study Chums</h1>
@@ -56,14 +56,13 @@
       <div id="Or_space">
         <hr class="login-divider">  Or  <hr class="login-divider">
       </div>
-      <!-- <h1>Sign In via Email</h1> -->
       <div class="textbox">
         <i class="fas fa-at"></i>
-        <input id="login-email-input" type="text" placeholder="Please enter your email" name="" value="" required>
+        <input id="login-email-input" type="text" placeholder="Please enter your email" name="email" value="" required>
       </div>
       <div class="textbox">
         <i class="fas fa-lock"></i>
-        <input id="login-password-input" type="password" placeholder="Please enter your password" name="" value="" required>
+        <input id="login-password-input" type="password" placeholder="Please enter your password" name="password" value="" required>
       </div>
 
       <button id="email-login-btn" class="email-button" onclick="emailAndPasswordSignIn()">

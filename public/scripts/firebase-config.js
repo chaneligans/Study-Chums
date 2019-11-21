@@ -6,3 +6,4 @@ const config = {
   storageBucket: "study-chums.appspot.com",
   messagingSenderId: "644812797355"
 };
+firebase.initializeApp(config);
