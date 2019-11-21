@@ -963,7 +963,7 @@ nav li a {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 20%; /* Location of the box */
+  padding-top: 50px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -977,25 +977,31 @@ nav li a {
   border-radius: 10px;
   margin: auto;
   padding: 20px;
-  width: 50%;
-  height: 50%;
-  max-height: 50%;
+  max-width: 60%;
+  height: 60%;
+  max-height: 75%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .chatPopupContent {
   border-radius: 10px;
   margin: auto;
   padding: 20px;
-  width: 30%;
-  height: auto;
-  max-height: 85%;
+  width: auto;
+  /* height: auto;
+  max-height: 85%; */
+  max-width: 60%;
   overflow-y: hidden;
   overflow-x: hidden;
 }
 
 .chatPopupContent:hover {
   overflow: auto;
+}
+
+.chatPopupContent h2 {
+  padding: 10px 10px 5px 10px;
 }
 
 #createChatPopupTitle {
@@ -1039,8 +1045,9 @@ nav li a {
 }
 
 #popupCreateChatResults {
-  width: 82%;
+  width: 85%;
   height: 50%;
+  min-width: 185px;
   max-height: 50%;
   margin: auto;
   overflow: hidden;
@@ -1054,10 +1061,12 @@ nav li a {
 }
 
 #popupAddFriendToChatResults {
-  width: 82%;
-  height: 40%;
+  width: 85%;
+  height: 50%;
+  min-width: 185px;
+  max-height: 50%;
   margin: auto;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
   background-color: #FFF;
   border: 1px solid #888;
@@ -1092,19 +1101,22 @@ nav li a {
 }
 
 #createNewChatButton {
-  width: 200px;
+  width: 85%;
+  min-width: 185px;
   font-size: calc(15px + 0.5vw);
   font-family: 'Sniglet', sans-serif;
-  padding: 15px 0;
+  padding: 15px;
   border: 1px solid #24A9E0;
   background: #24A9E0;
   color: #fff;
   cursor: pointer;
-  margin: 5px;
+  margin: 15px auto auto auto;
+  border-radius: 10px;
 }
 
 .modalButton {
-  width: 200px;
+  width: 85%;
+  min-width: 180px;
   font-size: calc(15px + 0.5vw);
   font-family: 'Sniglet', sans-serif;
   padding: 15px 0;
@@ -1112,14 +1124,14 @@ nav li a {
   background: #24A9E0;
   color: #fff;
   cursor: pointer;
-  margin: 30px;
+  margin: 10px;
+  border-radius: 10px;
 }
 
 #newIconInput {
   all: initial;
-  * {
-    all: unset;
-  }
+  /* all: unset; */
+  margin-left: 5%;
 }
 /*END NEW CHAT POPUP*/
 
