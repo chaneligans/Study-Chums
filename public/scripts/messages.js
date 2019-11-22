@@ -440,12 +440,10 @@ function displayChatRoom(userList) {
 function addUserToChatRoom(friendID, roomID, topic) {
   const db = firebase.firestore();
 
-  // db_find(db, ["Users", friendID])
   db.collection("Users").doc(friendID)
   .get().then(friendResult => {
 
     let friendName = friendResult.data().name;
-    // let chatRoomRef = db_find(db, ["ChatRooms", roomID, "Users"]);
     let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
     chatRoomRef.doc(friendID).set({
       name: friendName
@@ -454,7 +452,6 @@ function addUserToChatRoom(friendID, roomID, topic) {
       console.error("Error writing to chatrooms: ", error);
     });
 
-    // let usersRef = db_find(db, ["Users", friendID, "ChatRooms"]);
     let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
     usersRef.doc(roomID).set({
       topic: topic
@@ -559,7 +556,6 @@ function editGroupIcon() {
 
           let tryToUpdateImage = new Promise((resolve, reject) => {
             updateImage.then(fulfilled => {
-              // db_find(db, ["Users", user.uid])
               db.collection("Users").doc(user.uid)
               .get().then(doc => {
                 console.log('Attempting to upload file ' + fileName);
@@ -585,11 +581,9 @@ function editGroupIcon() {
                   uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                     // console.log('File available at', downloadURL);
                     photoUrl = downloadURL;
-                    // db_find(db, ["Users", user.uid])
                     db.collection("Users").doc(user.uid)
                     .get().then(userDoc => {
                       let chatroomID = userDoc.data().currentChatRoom;
-                      // db_find(db, ["ChatRooms", chatroomID])
                       db.collection("ChatRooms").doc(chatroomID)
                       .get().then(result => {
                         let topic = result.data().topic;
@@ -626,7 +620,6 @@ function displayHeader() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      // db_find(db, ["Users", user.uid])
       db.collection("Users").doc(user.uid)
       .get().then(userResult => {
         let roomID = userResult.data().currentChatRoom;
@@ -635,7 +628,6 @@ function displayHeader() {
           console.log("Valid currentChatRoom Id!");
           let userLists = [];
           let topic;
-          // let chatroomRef = db_find(db, ["ChatRooms", roomID]);
           let chatroomRef = db.collection("ChatRooms").doc(roomID);
           chatroomRef.get().then(result => {
             let res_data = result.data();
@@ -669,7 +661,6 @@ function displayHeader() {
                   let loadImg = new Promise((resolve, reject) => {
                     let genericGroupIcon = "../images/group.png";
                     let icon;
-                    // let chatDataRef = db_find(db, ["ChatRooms", roomID])
                     let chatDataRef = db.collection("ChatRooms").doc(roomID)
                     .get().then(doc => {
                       if (!doc.exists) {
@@ -702,7 +693,6 @@ function displayHeader() {
                   });
                 } else {
                   let loadImg = new Promise((resolve, reject) => {
-                    // let userDataRef = db_find(firebase.database(), ["Users", ids[0]]);
                     let userDataRef = firebase.database().ref("Users/"+ids[0]);
                     userDataRef.once("value", snapshot => {
                       resolve(snapshot.val().p1Url);
@@ -769,7 +759,6 @@ function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
-    // db_find(db, ["Users", user.uid])
     db.collection("Users").doc(user.uid)
     .get().then(result => {
       let roomID = result.data().currentChatRoom;
@@ -778,7 +767,6 @@ function loadChatHistory() {
         let initial_messages = [];
         let update_messages = [];
 
-        // db_find(db, ["ChatRooms", roomID, "Messages"])
         db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
         .get().then(querySnapshot => {
@@ -797,7 +785,6 @@ function loadChatHistory() {
           });
         });
 
-        // db_find(db, ["ChatRooms", roomID, "Messages"])
         db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
         .onSnapshot(querySnapshot => {
