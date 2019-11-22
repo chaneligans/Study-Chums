@@ -24,7 +24,8 @@ function scrollToBottom() {
 }
 
 function showCreateChatPopup() {
-  console.log('Called function showPopUp()');
+  console.log('Called function showCreateChatPopup()');
+  document.getElementById("chatOptionsDropdown").classList.remove("show");
   // Get the modal
   let chatPopupId = document.getElementById("createChatPopup");
   chatPopupId.style.display = "block";
@@ -53,7 +54,8 @@ function openChatRoom(roomID) {
   // console.log('Clicked on chat room: ', roomID);
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      db_find(firebase.firestore(), ["Users", user.uid])
+      // db_find(firebase.firestore(), ["Users", user.uid])
+      firebase.firestore().collection("Users").doc(user.uid)
       .update({
         currentChatRoom: roomID,
       });
@@ -83,7 +85,8 @@ function createChatRoom() {
           members.push(user.uid);
           // console.log('Printing from createChatRoom():\nMembers: ['
           //           + members + ']\nmembers.length(): ' + members.length);
-          db_find(db, ["ChatRooms"])
+          // db_find(db, ["ChatRooms"])
+          db.collection("ChatRooms")
           .add({
             topic: topic
           })
@@ -96,7 +99,9 @@ function createChatRoom() {
               addUserToChatRoom(member, roomID, topic)
             });
 
-            db_find(db, ["Users", user.uid]).update({
+            // db_find(db, ["Users", user.uid])
+            db.collection("Users").doc(user.uid)
+            .update({
               currentChatRoom: roomID,
             }).then(() => {
               openChatRoom(roomID);
@@ -122,17 +127,21 @@ function deleteChat() {
       const db = firebase.firestore();
 
       // get room id to delete from user's currentChatRoom
-      db_find(db, ["Users", user.uid]).get().then(userResult => {
+      // db_find(db, ["Users", user.uid])
+      db.collection("Users").doc(user.uid)
+      .get().then(userResult => {
         const roomID = userResult.data().currentChatRoom;
         // console.log("Delete --- room id: ", roomID);
 
         // get chatroom topic
-        const chatroomRef = db_find(db, ["ChatRooms", roomID]);
+        // const chatroomRef = db_find(db, ["ChatRooms", roomID]);
+        const chatroomRef = db.collection("ChatRooms").doc(roomID);
         chatroomRef.get().then(chatResult => {
           let topic = chatResult.data().topic;
 
           //create Trash document
-          db_find(db, ["Trash"])
+          // db_find(db, ["Trash"])
+          db.collection("Trash")
           .add({
             topic: topic
           })
@@ -142,7 +151,9 @@ function deleteChat() {
 
             //get all users in chatroom
             let users = [];
-            db_find(chatroomRef, ["Users"]).get().then(allUsers => {
+            // db_find(chatroomRef, ["Users"])
+            chatroomRef.collection("Users")
+            .get().then(allUsers => {
               allUsers.forEach(doc => {
                 users.push({
                   name: doc.data().name,
@@ -155,13 +166,20 @@ function deleteChat() {
                   deleteChatRoomFromUser(user.userID, roomID);
 
                   //delete user doc from ChatRooms/Users
-                  db_find(chatroomRef, ["Users", user.userID])
+                  // db_find(chatroomRef, ["Users", user.userID])
+                  chatroomRef.collection("Users").doc(user.userID)
                   .delete().then(() => {
                     console.log("User document successfully deleted from ChatRoom/Users!");
                   }).catch(error => {
                     console.error("Error removing document from ChatRoom/Users! ", error);
                   });
                 })
+
+                // db_find(chatroomRef, ["Tokens"]).delete().then(() => {
+                //   console.log("Tokens collection successfully deleted from ChatRoom!");
+                // }).catch(error => {
+                //   console.error("Error removing ChatRoom/Tokens! ", error);
+                // });
 
                 moveMessageToTrash(roomID, trashID);
                 deleteChatRoomData(roomID);
@@ -182,7 +200,8 @@ function deleteChat() {
 }
 
 function addUserToTrash(userID, name, trashID) {
-  db_find(firebase.firestore(), ["Trash", trashID, "Users", userID])
+  // db_find(firebase.firestore(), ["Trash", trashID, "Users", userID])
+  firebase.firestore().collection("Trash").doc(trashID).collection("Users").doc(userID)
   .set({
     name: name
   });
@@ -190,7 +209,8 @@ function addUserToTrash(userID, name, trashID) {
 
 function deleteChatRoomFromUser(userID, roomID) {
   // if currentChatRoom is roomID, we need to update it to empty
-  let userData = db_find(firebase.firestore(), ["Users", userID]);
+  // let userData = db_find(firebase.firestore(), ["Users", userID]);
+  let userData = firebase.firestore().collection("Users").doc(userID);
   userData.get().then(userResult => {
     const currentChatRoom = userResult.data().currentChatRoom;
 
@@ -201,7 +221,9 @@ function deleteChatRoomFromUser(userID, roomID) {
     }
   });
 
-  db_find(userData, ["ChatRooms", roomID]).delete().then(() => {
+  // db_find(userData, ["ChatRooms", roomID])
+  userData.collection("ChatRooms").doc(roomID)
+  .delete().then(() => {
     console.log("ChatRoom document successfully deleted from Users/ChatRooms!");
   }).catch(error => {
     console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
@@ -209,7 +231,9 @@ function deleteChatRoomFromUser(userID, roomID) {
 }
 
 function deleteChatRoomData(roomID) {
-  db_find(firebase.firestore(), ["ChatRooms", roomID]).delete().then(() => {
+  // db_find(firebase.firestore(), ["ChatRooms", roomID])
+  firebase.firestore().collection("ChatRooms").doc(roomID)
+  .delete().then(() => {
     console.log("ChatRoom document successfully deleted from ChatRooms!");
   }).catch(error => {
     console.error("Error removing ChatRoom document from ChatRooms: ", error);
@@ -218,7 +242,8 @@ function deleteChatRoomData(roomID) {
 
 function moveMessageToTrash(roomID, trashID) {
   let allMessages = [];
-  let messageRef = db_find(firebase.firestore(), ["ChatRooms", roomID, "Messages"]);
+  // let messageRef = db_find(firebase.firestore(), ["ChatRooms", roomID, "Messages"]);
+  let messageRef = firebase.firestore().collection("ChatRooms").doc(roomID).collection("Messages");
   messageRef.get().then(messages => {
     messages.forEach(message => {
       allMessages.push({
@@ -228,7 +253,9 @@ function moveMessageToTrash(roomID, trashID) {
 
     Promise.all(allMessages).then(allMessageList => {
       allMessageList.forEach(message => {
-        db_find(messageRef, [message.messageID]).delete().then(() => {
+        // db_find(messageRef, [message.messageID])
+        messageRef.doc(message.messageID)
+        .delete().then(() => {
           console.log("Message document successfully deleted from ChatRooms/Messages!");
         }).catch(error => {
           console.error("Error removing Message document from ChatRooms/Messages: ", error);
@@ -241,10 +268,11 @@ function moveMessageToTrash(roomID, trashID) {
 function showAddFriendToChatPopup() {
   console.log('Called function showAddFriendToChatPopup()');
 
+  document.getElementById("chatOptionsDropdown").classList.remove("show");
+
   // Get the modal
   let chatPopupId = document.getElementById("addFriendToChatPopup");
   chatPopupId.style.display = "block";
-  console.log('', chatPopupId.style);
 
   // Get the <span> element that closes the modal
   let span = document.getElementById("closeAddFriendToChatPopup");
@@ -305,7 +333,8 @@ function reloadChatRoomSideBar() {
       const db = firebase.firestore();
       let chatRoomData = [];
 
-      let reloadSideBar = db_find(db, ["Users", user.uid,"ChatRooms"])
+      // let reloadSideBar = db_find(db, ["Users", user.uid,"ChatRooms"])
+      let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
       .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(change => {
           // console.log(change.type, "//", change.doc.id, "//" ,change.doc.data());
@@ -317,8 +346,9 @@ function reloadChatRoomSideBar() {
             let topic = change.doc.data().topic;
             let userList = [];
 
-            let roomListener = db_find(db, ["ChatRooms", roomID, "Users"]).get()
-            .then(querySnapshot => {
+            // let roomListener = db_find(db, ["ChatRooms", roomID, "Users"])
+            let roomListener = db.collection("ChatRooms").doc(roomID).collection("Users")
+            .get().then(querySnapshot => {
               querySnapshot.forEach(doc => {
                 userList.push({
                   name: doc.data().name,
@@ -367,7 +397,9 @@ function reloadChatRoomSideBar() {
                 newRoomID = " ";
               }
 
-              db_find(db, ["Users", user.uid]).update({
+              // db_find(db, ["Users", user.uid])
+              db.collection("Users").doc(user.uid)
+              .update({
                 currentChatRoom: newRoomID,
               })
               .then(() => {
@@ -423,10 +455,13 @@ function displayChatRoom(userList) {
 function addUserToChatRoom(friendID, roomID, topic) {
   const db = firebase.firestore();
 
-  db_find(db, ["Users", friendID]).get().then(friendResult => {
+  // db_find(db, ["Users", friendID])
+  db.collection("Users").doc(friendID)
+  .get().then(friendResult => {
 
     let friendName = friendResult.data().name;
-    let chatRoomRef = db_find(db, ["ChatRooms", roomID, "Users"]);
+    // let chatRoomRef = db_find(db, ["ChatRooms", roomID, "Users"]);
+    let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
     chatRoomRef.doc(friendID).set({
       name: friendName
     })
@@ -434,7 +469,8 @@ function addUserToChatRoom(friendID, roomID, topic) {
       console.error("Error writing to chatrooms: ", error);
     });
 
-    let usersRef = db_find(db, ["Users", friendID, "ChatRooms"]);
+    // let usersRef = db_find(db, ["Users", friendID, "ChatRooms"]);
+    let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
     usersRef.doc(roomID).set({
       topic: topic
     })
@@ -449,6 +485,8 @@ function addUserToChatRoom(friendID, roomID, topic) {
 
 function showEditIconPopup() {
   console.log('Called function showEditIconPopup()');
+
+    document.getElementById("chatOptionsDropdown").classList.remove("show");
 
   // Get the modal
   let chatPopupId = document.getElementById("showEditIconPopup");
@@ -536,7 +574,9 @@ function editGroupIcon() {
 
           let tryToUpdateImage = new Promise((resolve, reject) => {
             updateImage.then(fulfilled => {
-              db_find(db, ["Users", user.uid]).get().then(doc => {
+              // db_find(db, ["Users", user.uid])
+              db.collection("Users").doc(user.uid)
+              .get().then(doc => {
                 console.log('Attempting to upload file ' + fileName);
                 let storageRef = firebase.storage().ref('img/groupicons/' + doc.data().currentChatRoom);
                 let uploadTask = storageRef.put(file);
@@ -560,10 +600,13 @@ function editGroupIcon() {
                   uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
                     // console.log('File available at', downloadURL);
                     photoUrl = downloadURL;
-                    db_find(db, ["Users", user.uid]).get().then(userDoc => {
+                    // db_find(db, ["Users", user.uid])
+                    db.collection("Users").doc(user.uid)
+                    .get().then(userDoc => {
                       let chatroomID = userDoc.data().currentChatRoom;
-                      db_find(db, ["ChatRooms", chatroomID]).get()
-                      .then(result => {
+                      // db_find(db, ["ChatRooms", chatroomID])
+                      db.collection("ChatRooms").doc(chatroomID)
+                      .get().then(result => {
                         let topic = result.data().topic;
                         db.collection("ChatRooms").doc(chatroomID).set({
                           icon: photoUrl,
@@ -598,14 +641,17 @@ function displayHeader() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      db_find(db, ["Users", user.uid]).get().then(userResult => {
+      // db_find(db, ["Users", user.uid])
+      db.collection("Users").doc(user.uid)
+      .get().then(userResult => {
         let roomID = userResult.data().currentChatRoom;
 
         if (roomID.length > 2) {
           console.log("Valid currentChatRoom Id!");
           let userLists = [];
           let topic;
-          let chatroomRef = db_find(db, ["ChatRooms", roomID]);
+          // let chatroomRef = db_find(db, ["ChatRooms", roomID]);
+          let chatroomRef = db.collection("ChatRooms").doc(roomID);
           chatroomRef.get().then(result => {
             let res_data = result.data();
             if (res_data === undefined) {
@@ -638,7 +684,9 @@ function displayHeader() {
                   let loadImg = new Promise((resolve, reject) => {
                     let genericGroupIcon = "../images/group.png";
                     let icon;
-                    let chatDataRef = db_find(db, ["ChatRooms", roomID]).get().then(doc => {
+                    // let chatDataRef = db_find(db, ["ChatRooms", roomID])
+                    let chatDataRef = db.collection("ChatRooms").doc(roomID)
+                    .get().then(doc => {
                       if (!doc.exists) {
                         console.log('No such document!');
                         icon = genericGroupIcon;
@@ -669,7 +717,8 @@ function displayHeader() {
                   });
                 } else {
                   let loadImg = new Promise((resolve, reject) => {
-                    let userDataRef = db_find(firebase.database(), ["Users", ids[0]]);
+                    // let userDataRef = db_find(firebase.database(), ["Users", ids[0]]);
+                    let userDataRef = firebase.database().ref("Users/"+ids[0]);
                     userDataRef.once("value", snapshot => {
                       resolve(snapshot.val().p1Url);
                     });
@@ -735,7 +784,8 @@ function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
-    db_find(db, ["Users", user.uid])
+    // db_find(db, ["Users", user.uid])
+    db.collection("Users").doc(user.uid)
     .get().then(result => {
       let roomID = result.data().currentChatRoom;
 
@@ -743,7 +793,8 @@ function loadChatHistory() {
         let initial_messages = [];
         let update_messages = [];
 
-        db_find(db, ["ChatRooms", roomID, "Messages"])
+        // db_find(db, ["ChatRooms", roomID, "Messages"])
+        db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
         .get().then(querySnapshot => {
           querySnapshot.forEach(doc => {
@@ -761,7 +812,8 @@ function loadChatHistory() {
           });
         });
 
-        db_find(db, ["ChatRooms", roomID, "Messages"])
+        // db_find(db, ["ChatRooms", roomID, "Messages"])
+        db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time")
         .onSnapshot(querySnapshot => {
           update_messages = [];
@@ -1015,9 +1067,14 @@ function db_find(source_db, path_arr) {
   let path = path_arr;
   let db_search = source_db;
 
-  let type_db = typeof(db_search);
+  let type_fsDocRef = firebase.firestore.DocumentReference;
+  let type_fsColRef = firebase.firestore.CollectionReference;
+  let type_fs = firebase.firestore.Firestore;
+  let type_rt = firebase.database.Database;
 
-  if (type_db === typeof(firebase.firestore()) || type_db === firebase.DocumentReference) {
+  // console.log(db_search);
+
+  if (db_search instanceof type_fs || db_search instanceof type_fsDocRef) {
 
     path.forEach((path_piece, i) => {
       if (i % 2 === 0) {
@@ -1028,7 +1085,7 @@ function db_find(source_db, path_arr) {
         db_search = db_search.doc(path_piece);
       }
     });
-  } else if (type_db === firebase.CollectionReference) {
+  } else if (db_search instanceof type_fsColRef) {
     path.forEach((path_piece, i) => {
       if (i % 2 === 0) {
         // console.log(i, ': doc', path_piece);
@@ -1038,7 +1095,7 @@ function db_find(source_db, path_arr) {
         db_search = db_search.collection(path_piece);
       }
     });
-  } else { // firebase.database()
+  } else if (db_search instanceof type_rt) { // firebase.database()
     let path = path.join("/");
     db_search = db_search.ref(path);
   }
