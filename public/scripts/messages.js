@@ -102,6 +102,8 @@ function createChatRoom() {
               currentChatRoom: roomID,
             }).then(() => {
               openChatRoom(roomID);
+              handleTokenRefresh();
+              // set up your token for the chatroom
             });
 
             let chatPopupId = document.getElementById("createChatPopup");
@@ -158,20 +160,12 @@ function deleteChat() {
                   addUserToTrash(user.userID, user.name, trashID);
                   deleteChatRoomFromUser(user.userID, roomID);
 
-                  //delete user doc from ChatRooms/Users
-                  chatroomRef.collection("Users").doc(user.userID)
-                  .delete().then(() => {
-                    console.log("User document successfully deleted from ChatRoom/Users!");
-                  }).catch(error => {
-                    console.error("Error removing document from ChatRoom/Users! ", error);
-                  });
-                })
+                  //delete token item
+                  deleteItemFromCollectionFromChatroom(chatroomRef, "Tokens", user.userID);
 
-                // chatroomRef.collection("Tokens").delete().then(() => {
-                //   console.log("Tokens collection successfully deleted from ChatRoom!");
-                // }).catch(error => {
-                //   console.error("Error removing ChatRoom/Tokens! ", error);
-                // });
+                  //delete user doc from ChatRooms/Users
+                  deleteItemFromCollectionFromChatroom(chatroomRef, "Users", user.userID);
+                });
 
                 moveMessageToTrash(roomID, trashID);
                 deleteChatRoomData(roomID);
@@ -192,7 +186,8 @@ function deleteChat() {
 }
 
 function addUserToTrash(userID, name, trashID) {
-  firebase.firestore().collection("Trash").doc(trashID).collection("Users").doc(userID)
+  const db = firebase.firestore();
+  db.collection("Trash").doc(trashID).collection("Users").doc(userID)
   .set({
     name: name
   });
@@ -219,6 +214,15 @@ function deleteChatRoomFromUser(userID, roomID) {
   });
 }
 
+function deleteItemFromCollectionFromChatroom(source_chatroom, collection_, userID) {
+  source_chatroom.collection("Tokens").doc(userID).delete().then(() => {
+    console.log(collection_.slice(0,collection_.length-1),
+      "successfully deleted from ChatRoom/"+collection_+"!");
+  }).catch(error => {
+    console.error("Error removing ChatRoom/"+collection_+"! ", error);
+  });
+}
+
 function deleteChatRoomData(roomID) {
   firebase.firestore().collection("ChatRooms").doc(roomID)
   .delete().then(() => {
@@ -230,7 +234,8 @@ function deleteChatRoomData(roomID) {
 
 function moveMessageToTrash(roomID, trashID) {
   let allMessages = [];
-  let messageRef = firebase.firestore().collection("ChatRooms").doc(roomID).collection("Messages");
+  const db = firebase.firestore();
+  let messageRef = db.collection("ChatRooms").doc(roomID).collection("Messages");
   messageRef.get().then(messages => {
     messages.forEach(message => {
       allMessages.push({
@@ -316,7 +321,6 @@ function addMultipleUsersToChatRoom() {
 function reloadChatRoomSideBar() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-
       const db = firebase.firestore();
       let chatRoomData = [];
 
@@ -326,8 +330,6 @@ function reloadChatRoomSideBar() {
           // console.log(change.type, "//", change.doc.id, "//" ,change.doc.data());
 
           if (change.type === "added") {
-
-            let chatroomDoc = change.doc;
             let roomID = change.doc.id;
             let topic = change.doc.data().topic;
             let userList = [];
@@ -344,6 +346,7 @@ function reloadChatRoomSideBar() {
               });
               Promise.all(userList).then(userResults => {
                 displayChatRoom(userResults);
+                handleTokenRefresh();
               });
 
             })
@@ -353,8 +356,6 @@ function reloadChatRoomSideBar() {
           } // end of if (change.type === 'added')
 
           if (change.type === "removed") {
-            // remove sidebar item from sidebar
-
             let id = change.doc.id;
             let topic = change.doc.data().topic;
 
@@ -370,6 +371,7 @@ function reloadChatRoomSideBar() {
             });
 
             if (li_index !== -1) {
+              // remove sidebar item from sidebar
               $('#leftSideRooms')[0].children[li_index].remove();
 
               // then change 'currentChatRoom' to a relevant chatroom or "" if none
@@ -499,7 +501,7 @@ function editGroupIcon() {
       let max_width = 300;
       let max_height = 300;
       let file = photo.files[0];
-      let fileName = photo.files[0].name;
+      let fileName = file.name;
 
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
@@ -574,8 +576,8 @@ function editGroupIcon() {
                       console.log('Upload is running');
                       break;
                   }
-                }, error => {
-                  console.log('Unsuccessful file upload', error);
+                }, err => {
+                  console.error('Unsuccessful file upload', err);
                 }, () => {
                   // Handle successful uploads on complete
                   uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
@@ -598,9 +600,9 @@ function editGroupIcon() {
                   });
                 });
               });
-            }).catch(error => {
-              console.log(error);
-              reject(error);
+            }).catch(err => {
+              console.error(err);
+              reject(err);
             })
           });
           tryToUpdateImage.then(res => {
@@ -635,81 +637,77 @@ function displayHeader() {
               noChatroomsFound();
               return;
             }
-            // else {
-              topic = res_data.topic;
+            topic = res_data.topic;
 
-              chatroomRef.collection("Users").get().then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                  userLists.push({
-                    name: doc.data().name,
-                    userID: doc.id,
-                  });
+            chatroomRef.collection("Users").get().then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                userLists.push({
+                  name: doc.data().name,
+                  userID: doc.id,
                 });
-                let names = [];
-                let ids = []
-                let userImg;
-                let displayName;
-                userLists.forEach(result => {
-                  const name = result.name;
-                  const userid = result.userID;
-                  if (user.uid != userid) {
-                    names.push(name);
-                    ids.push(userid);
-                  }
-                });
-                if (names.length > 1) {
-                  let loadImg = new Promise((resolve, reject) => {
-                    let genericGroupIcon = "../images/group.png";
-                    let icon;
-                    let chatDataRef = db.collection("ChatRooms").doc(roomID)
-                    .get().then(doc => {
-                      if (!doc.exists) {
-                        console.log('No such document!');
-                        icon = genericGroupIcon;
-                        reject(icon);
-                      } else {
-                        if (doc.data().icon === undefined) {
-                          icon = genericGroupIcon;
-                        } else {
-                          icon = doc.data().icon;
-                        }
-                        resolve(icon);
-                      }
-                    }).catch(err => {
-                      console.log('Error getting document', err);
-                      icon = genericGroupIcon;
-                      reject(icon);
-                    });
-                  });
-
-                  loadImg.then(result => {
-                    $("#chatHeader").load("../loaded/message_header.html", () => {
-                      $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names +'">');
-                      $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
-                      $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
-                      console.log("Load header (multi) was performed.");
-                      dark_fn();
-                    });
-                  });
-                } else {
-                  let loadImg = new Promise((resolve, reject) => {
-                    let userDataRef = firebase.database().ref("Users/"+ids[0]);
-                    userDataRef.once("value", snapshot => {
-                      resolve(snapshot.val().p1Url);
-                    });
-                  });
-                  loadImg.then((result) => {
-                    $("#chatHeader").load("../loaded/message_header.html", () => {
-                      $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names[0] +'">');
-                      $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
-                      $('#chatTopic').html('<h3 id="chatTopic">Topic:  '+ topic +'</h3>');
-                      console.log("Load header (single) was performed.");
-                      dark_fn();
-                    });
-                  });
+              });
+              let names = [];
+              let ids = []
+              let userImg;
+              let displayName;
+              userLists.forEach(result => {
+                const name = result.name;
+                const userid = result.userID;
+                if (user.uid !== userid) {
+                  names.push(name);
+                  ids.push(userid);
                 }
               });
-            // }
+              if (names.length > 1) {
+                let loadImg = new Promise((resolve, reject) => {
+                  let genericGroupIcon = "../images/group.png";
+                  let icon;
+                  let chatDataRef = db.collection("ChatRooms").doc(roomID)
+                  .get().then(doc => {
+                    if (!doc.exists) {
+                      console.log('No such document!');
+                      icon = genericGroupIcon;
+                      reject(icon);
+                    } else {
+                      if (doc.data().icon === undefined) {
+                        icon = genericGroupIcon;
+                      } else {
+                        icon = doc.data().icon;
+                      }
+                      resolve(icon);
+                    }
+                  }).catch(err => {
+                    console.log('Error getting document', err);
+                    icon = genericGroupIcon;
+                    reject(icon);
+                  });
+                });
+
+                loadImg.then(result => {
+                  $("#chatHeader").load("../loaded/message_header.html", () => {
+                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names +'">');
+                    $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
+                    console.log("Load header (multi) was performed.");
+                    dark_fn();
+                  });
+                });
+              } else {
+                let loadImg = new Promise((resolve, reject) => {
+                  firebase.database().ref("Users/"+ids[0] + "/p1Url")
+                  .once("value", val => resolve(val) );
+                });
+                loadImg.then(result => {
+                  $("#chatHeader").load("../loaded/message_header.html", () => {
+                    $('#chatImage').html('<img class="chatImage" src="'+ result +'" alt="'+ names[0] +'">');
+                    $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
+                    $('#chatTopic').html('<h3 id="chatTopic">Topic: '+ topic +'</h3>');
+                    console.log("Load header (single) was performed.");
+                    dark_fn();
+                  });
+                });
+              }
+            });
           });
         } else {
           noChatroomsFound();
@@ -775,7 +773,6 @@ function loadChatHistory() {
               senderID: doc.data().senderID,
               senderName: doc.data().senderName,
               time: doc.data().time.toDate(),
-              // time: firebase.firestore.FieldValue.serverTimestamp(),
               message: doc.data().message,
             });
           });
@@ -790,7 +787,6 @@ function loadChatHistory() {
         .onSnapshot(querySnapshot => {
           update_messages = [];
           querySnapshot.docChanges().forEach(change => {
-            // console.log(change);
 
             let timestamp = change.doc.data().time;
             if (timestamp === null) {
@@ -806,15 +802,7 @@ function loadChatHistory() {
                 message: change.doc.data().message,
               });
             }
-            // else if (change.type === "added") {
-            //   // console.log(change.doc.id, " ++ ", change.doc.data());
-            //   update_messages.push({
-            //     senderID: change.doc.data().senderID,
-            //     senderName: change.doc.data().senderName,
-            //     time: timestamp.toDate(),
-            //     message: change.doc.data().message,
-            //   });
-            // }
+
           });
 
           Promise.all(update_messages).then(results => {
@@ -916,7 +904,7 @@ function noChumsFound() {
 
 function noChatroomsFound() {
   console.log('No chatrooms found.');
-  $('#chatHeader').load("../loaded/message_header_empty.html", function() {
+  $('#chatHeader').load("../loaded/message_header_empty.html", () => {
     console.log("Load (empty header) was performed.");
     dark_fn();
   });
@@ -971,8 +959,9 @@ function displayPopupBoxChums(results, htmlID) {
     row = 'row' + id;
 
     if (img === "undefined ") { // set img to the generic image
-      img = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/o/'
-      + 'img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
+      img = 'https://firebasestorage.googleapis.com/'
+      + 'v0/b/study-chums.appspot.com/'
+      + 'o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
       + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
     }
 

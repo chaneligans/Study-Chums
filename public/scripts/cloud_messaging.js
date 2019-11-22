@@ -18,7 +18,7 @@ messaging.requestPermission()
 function handleTokenRefresh() {
   return messaging.getToken()
     .then((token) => {
-      console.log(token);
+      // console.log(token);
       firebase.auth().onAuthStateChanged(user => {
         firestore.collection("Users").doc(user.uid).collection("ChatRooms")
         .get().then((chatRooms) => {

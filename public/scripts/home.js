@@ -1,19 +1,17 @@
 // Get total user value from the database
 function getTotalUsers() {
-  let databaseRef = firebase.database().ref("TotalUsers");
-  return databaseRef.once("value", function(data) {
-  });
+  return firebase.database().ref("TotalUsers").once("value").catch(err => {return err;});
 }
 
 // Load the profile for the homepage
 function loadProfile(startIndex) {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      firebase.database().ref("Users/" + user.uid).once("value", function(snapshot) {
+      firebase.database().ref("Users/" + user.uid).once("value", snapshot => {
         // let userIndex = snapshot.val().index;
 
         let total;
-        getTotalUsers().then((result)=> {
+        getTotalUsers().then(result => {
           total = result.val().total;
           console.log("Loading Profile of index: " + startIndex);
 
@@ -31,7 +29,9 @@ function loadProfile(startIndex) {
 
 // Load the next profile (right arrow button)
 function nextProfile(update) {
-  console.log("To the right");
+  if (update === undefined) {
+    console.log("To the right");
+  }
   getProfileToThe_("Right", update);
 }
 
@@ -48,56 +48,67 @@ function getProfileToThe_(direction, update) {
       let db = firebase.database();
       let ref = db.ref("Users/" + user.uid);
 
-      let result = await getProfileList(db, user.uid, direction);
-      let userIndex = result[0];
-      let nextIndex = result[1];
-      let chums = result[2];
-
-      if (direction === "Right" && update === undefined) {
-        nextIndex++;
+      let totalUsers = 0;
+      try {
+        let totalUsersResult = await getTotalUsers();
+        totalUsers = totalUsersResult.val().total;
+      } catch (err) {
+        console.error("Couldn\'t get total Users: "+ err);
       }
 
-      let totalUsersResult = await getTotalUsers();
-      let totalUsers = totalUsersResult.val().total;
+      try {
+        let result = await getProfileList(db, user.uid, direction);
+        let userIndex = result[0];
+        let nextIndex = result[1];
+        let chums = result[2];
 
-      let bound = (direction === 'Right') ? (totalUsers-1) : 0;
-      let check_Chums = checkChums(nextIndex, chums);
-      let bound_arg = boundArgument(direction, nextIndex, totalUsers);
+        if (direction === "Right" && update === undefined) {
+          nextIndex++;
+        }
 
-      while(check_Chums || nextIndex === userIndex || bound_arg) {
-        console.log('While loop in getProfileToThe_('+ direction +')');
-        if (bound_arg) {
-          nextIndex = (direction === 'Right') ? 0 : (totalUsers-1);
+        let bound = (direction === 'Right') ? (totalUsers-1) : 0;
+        let check_Chums = checkChums(nextIndex, chums);
+        let bound_arg = boundArgument(direction, nextIndex, totalUsers);
+
+        while(check_Chums || nextIndex === userIndex || bound_arg) {
+          console.log('While loop in getProfileToThe_('+ direction +')');
+          if (bound_arg) {
+            nextIndex = (direction === 'Right') ? 0 : (totalUsers-1);
+            check_Chums = checkChums(nextIndex, chums);
+          }
+          if (check_Chums || nextIndex === userIndex) {
+            (direction === 'Right') ? (nextIndex++) : (nextIndex--);
+          }
           check_Chums = checkChums(nextIndex, chums);
+          bound_arg = boundArgument(direction, nextIndex, totalUsers);
         }
-        if (check_Chums || nextIndex === userIndex) {
-          (direction === 'Right') ? (nextIndex++) : (nextIndex--);
-        }
-        check_Chums = checkChums(nextIndex, chums);
-        bound_arg = boundArgument(direction, nextIndex, totalUsers);
-      }
 
-      ref.update({
-        currentIndex : nextIndex,
-        "currentIndex":nextIndex
-      }, error => {
-        if (error) {
-          console.error("Update failed - currentIndex to "+ nextIndex);
-        } else {
-          console.log("Update successful - currentIndex to " + nextIndex);
-        }
-      });
-      console.log("Loading next profile at index "+ nextIndex);
-      loadProfile(nextIndex);
+        ref.update({
+          currentIndex : nextIndex,
+          "currentIndex" : nextIndex
+        }, error => {
+          if (error) {
+            console.error("Update failed - currentIndex to "+ nextIndex);
+          } else {
+            console.log("Update successful - currentIndex to " + nextIndex);
+          }
+        });
+        console.log("Loading next profile at index "+ nextIndex);
+        loadProfile(nextIndex);
+
+      } catch (err) {
+        console.error("Couldn\'t get profile list: "+ err);
+      }
     } else {
       console.error("No user was found.");
     }
   });
 }
 
-// Get a list of data from the database using the user's uid and the direction of the pointer button.
+// Get a list of data from the database using the user's uid
+// and the direction of the pointer button.
 function getProfileList(db, uid, direction) {
-  let userIndex = 0, nextIndex = 0, chums = [];
+  let userIndex = 0, nextIndex = 0;
   return new Promise((resolve, reject) => {
     db.ref("Users/"+uid).once("value").then(snapshot => {
       userIndex = snapshot.val().index;
@@ -110,11 +121,13 @@ function getProfileList(db, uid, direction) {
       nextIndex = values.nextIndex;
       let userSnapshot = values.snapshot;
 
-      chums = [];
+      let chums = [];
       db.ref("Chums/"+uid).once("value").then(chum_ref_snapshot => {
+        let chumRef;
         chum_ref_snapshot.forEach(chum => {
+          chumRef = db.ref("Users/"+chum.key);
           chums.push(
-            db.ref("Users/"+chum.key).once("value").then(chum_snapshot => {
+            chumRef.once("value").then(chum_snapshot => {
               return new Promise((resolve, reject) => {
                 setTimeout(() => resolve(chum_snapshot.val().index), 100);
               }).catch(error => {
@@ -145,29 +158,28 @@ function boundArgument(direction, nextIndex, total) {
 
 // checks if a chum index is nextIndex and returns true if so, and false otherwise.
 function checkChums(nextIndex, chums) {
-  let bool = false;
   chums.forEach(chum => {
-    if (nextIndex === chum) {bool = true;}
+    if (nextIndex === chum) {return true;}
   });
-  return bool;
+  return false;
 }
 
 // Pulls the user's profile picture from the database and displays it
 function loadImage(startIndex) {
-  let image_val;
   let userDataRef = firebase.database().ref("Users");
-  userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
-    let key;
-    snapshot.forEach(function (childSnapshot){
+  userDataRef.orderByChild("index").equalTo(startIndex)
+  .once("value", snapshot => {
+    let key, image_val;
+    snapshot.forEach(childSnapshot => {
       key = childSnapshot.key;
-      let childData = childSnapshot.val();
       image_val = childSnapshot.val().p1Url;
 
       // If image_val is undefined, the user does not have a profile picture.
       // Therefore, we replace it with a generic avatar:
       if (image_val === undefined) {
         console.log('Undefined image');
-        image_val = 'https://firebasestorage.googleapis.com/v0/b/study-chums.appspot.com/'
+        image_val = 'https://firebasestorage.googleapis.com/'
+                  + 'v0/b/study-chums.appspot.com/'
                   + 'o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
                   + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
       }
@@ -179,13 +191,12 @@ function loadImage(startIndex) {
 
 // Load the user's name
 function loadName(startIndex) {
-  let name_val;
   userDataRef = firebase.database().ref("Users");
-  userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-    let key;
-    snapshot.forEach(function (childSnapshot){
+  userDataRef.orderByChild("index").equalTo(startIndex)
+  .once("value", snapshot => {
+    let key, name_val;
+    snapshot.forEach(childSnapshot => {
       key = childSnapshot.key;
-      let childData = childSnapshot.val();
       name_val = childSnapshot.val().name;
       $("#name").append(name_val);
       document.getElementById("Name").innerHTML = name_val;
@@ -195,13 +206,12 @@ function loadName(startIndex) {
 
 // Load the user's major
 function loadMajor(startIndex) {
-  let Major_val;
   userDataRef = firebase.database().ref("Users");
-  userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot){
-    let key;
-    snapshot.forEach(function(childSnapshot){
+  userDataRef.orderByChild("index").equalTo(startIndex)
+  .once("value", snapshot => {
+    let key, Major_val;
+    snapshot.forEach(childSnapshot => {
       key = childSnapshot.key;
-      let childData = childSnapshot.val();
       Major_val = childSnapshot.val().Major;
       $("#Major").append(Major_val);
       document.getElementById("Major").innerHTML = Major_val;
@@ -210,14 +220,13 @@ function loadMajor(startIndex) {
 }
 
 // Load the user's biography
-function loadBio(startIndex){
-  let bio_val;
+function loadBio(startIndex) {
   userDataRef = firebase.database().ref("Users");
-  userDataRef.orderByChild("index").equalTo(startIndex).once("value", function(snapshot) {
-      let key;
-      snapshot.forEach(function(childSnapshot){
+  userDataRef.orderByChild("index").equalTo(startIndex)
+  .once("value", snapshot => {
+      let key, bio_val;
+      snapshot.forEach(childSnapshot => {
           key = childSnapshot.key;
-          let childData = childSnapshot.val();
           bio_val = childSnapshot.val().bio;
           $("#bio").append(bio_val);
           document.getElementById("bio").innerHTML = bio_val;
@@ -227,18 +236,17 @@ function loadBio(startIndex){
 
 // Saves the userID to seesion storage
 function saveUserID() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let db = firebase.database();
       userDataRef = db.ref("Users/" + user.uid);
-      let currentIndex;
-      userDataRef.once("value", function(snapshot) {
-        currentIndex = snapshot.val().currentIndex;
-        let userId;
+      userDataRef.once("value", snapshot => {
+        let currentIndex = snapshot.val().currentIndex;
 
         db.ref("Users").orderByChild("index").equalTo(currentIndex)
-        .once("value", function(data){
-          data.forEach(function(childData){
+        .once("value", data => {
+          let userId;
+          data.forEach(childData => {
             userId = childData.key;
             sessionStorage.clear();
             sessionStorage.setItem('userID', userId);
