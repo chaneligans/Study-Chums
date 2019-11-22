@@ -23,8 +23,8 @@ function handleTokenRefresh() {
         firestore.collection("Users").doc(user.uid).collection("ChatRooms")
         .get().then((chatRooms) => {
           chatRooms.forEach(room => {
-            firestore.collection("ChatRooms").doc(room.id).collection("Tokens")
-            .add({
+            firestore.collection("ChatRooms").doc(room.id).collection("Tokens").doc(user.uid)
+            .set({
               token: token,
             })
           });

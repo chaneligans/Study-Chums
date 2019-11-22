@@ -185,7 +185,7 @@ function request(id) {
         db.ref('Applications/' + id + '/Received/' + myid).set({
           status: status
         });
-        document.getElementsByClassName("match-btn").value = "Requested";
+        document.getElementById("status").innerHTML = status;
       }
     } else {
       console.log('Something went wrong!');

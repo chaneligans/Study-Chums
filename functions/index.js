@@ -248,8 +248,8 @@ exports.sendMessageNotification = functions.firestore.document('ChatRooms/{chatR
     notification: {
       title: `New Message from ${snap.data().senderName}`,
       body: snap.data().message,
-      //icons:
-      //click_action:
+      //icons: 
+      click_action: `https://study-chums.firebaseapp.com/messages`,
     }
   };
 
