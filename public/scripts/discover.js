@@ -43,7 +43,7 @@ function Search() {
           // general option; shouldn't happen normally
         }
       } else {
-        alert('Invalid!');
+        // alert('Invalid!');
       }
 
       // console.log("Search sent to database.");
@@ -59,7 +59,7 @@ function Search_(searchType, input) {
   // check each name type (as-is, lowercase, uppercase)
   let db_Users_by_searchType = firebase.database().ref('Users/');
   if (searchType !== undefined) {
-    db_Users_by_searchType.orderByChild(searchType);
+    db_Users_by_searchType = db_Users_by_searchType.orderByChild(searchType);
   }
 
   nameTypes.forEach(name_ => {
@@ -72,11 +72,11 @@ function Search_(searchType, input) {
           userData = getUserData(childData, key);
 
           if (isDuplicateOf_In_(userData[4], results) === false) {
-            results.push(data);
+            results.push(userData);
           }
         });
         Promise.all(results).then(result => {
-          // console.log('Results found: ' + result.length);
+          console.log('Results found: ' + result.length);
           if (results.length > 0) {
             showSearchResults(results);
           } else {
@@ -109,11 +109,11 @@ function getUserData(childSnapshotValue, childKey) {
 }
 
 function isDuplicateOf_In_(source, given_list) {
-  let bool = false;
+  // let bool = false;
   given_list.forEach(given_item => {
-    if (given_item === source) { bool = true; }
+    if (given_item === source) { return true; }
   })
-  return bool;
+  return false;
 }
 
 function showSearchResults(results) {
