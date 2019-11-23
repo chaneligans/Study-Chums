@@ -9,11 +9,31 @@ messaging.onTokenRefresh(handleTokenRefresh);
 
 //Request permission to receive notifications
 //The method messaging.requestPermission() displays a consent dialog to let users grant your app permission to receive notifications in the browser. If permission is denied, FCM registration token requests result in an error.
-messaging.requestPermission()
-.then(() => handleTokenRefresh())
-.catch(err => {
-  console.log('User did not give permission.', err);
-});
+let permission_;
+if (!("Notification" in window)) {
+  console.log("This browser does not support desktop notifications.");
+} else {
+  permission_ = Notification.permission;
+}
+
+if (permission_ === 'granted') {
+  console.log('Notification permission was granted already.');
+  handleTokenRefresh();
+} else if (permission_ !== 'denied' || permission_ === 'default') {
+  Notification.requestPermission()
+  .then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission now granted.');
+      handleTokenRefresh();
+    } else {
+      console.log('Notification permission denied.');
+    }
+  })
+  .catch(err => {
+    console.log('User did not give permission to allow notifications.', err);
+  });
+}
+
 
 function handleTokenRefresh() {
   return messaging.getToken()
