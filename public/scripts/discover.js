@@ -65,12 +65,16 @@ function Search_(searchType, input) {
 
   const search_ = async () => {
     await asyncForEach(nameTypes, async name_ => {
-      let subset = await getSearchSubset(db_Users_by_searchType, name_);
-      subset.forEach(sub_res => {
-        if (isDuplicateOf_In_(sub_res[4], results) === false) {
-          results.push(sub_res);
-        }
-      });
+      try {
+        let subset = await getSearchSubset(db_Users_by_searchType, name_);
+        subset.forEach(sub_res => {
+          if (isDuplicateOf_In_(sub_res[4], results) === false) {
+            results.push(sub_res);
+          }
+        });
+      } catch (err) {
+        console.err(err);
+      }
     });
 
     results = [...new Set(results)]; // just in case (unique elements only)
@@ -93,6 +97,9 @@ async function asyncForEach(arr, callback) {
   }
 }
 
+// given a firebase realtime-database Reference and a name_type of a search query,
+// return a promise that resolves with a list of search results,
+// and rejects if no result exists.
 function getSearchSubset(source, name_) {
   return new Promise((resolve, reject) => {
     let subset = [];
@@ -138,6 +145,8 @@ function getUserData(childSnapshotValue, childKey) {
   return data;
 }
 
+// given an object to look for and a given_list to look in for the object,
+// return true if the object is in the given_list, and false otherwise 
 function isDuplicateOf_In_(source, given_list) {
   let bool = false;
   given_list.forEach(given_item => {
@@ -190,7 +199,7 @@ function showSearchResults(results) {
       }
     });
 
-    $("#searchResults").load("../loaded/search_results.html", function() {
+    $("#searchResults").load("../loaded/search_results.html", () => {
       $('#results').html(html);
       console.log("Load (search results) was performed.");
       dark_fn();
@@ -207,7 +216,7 @@ function saveUserID(userID) {
 }
 
 function noResultsFound() {
-  $("#searchResults").load("../loaded/no_requests.html", function() {
+  $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Results Found</h2>");
     console.log("Load (search results) was performed.");
     dark_fn();

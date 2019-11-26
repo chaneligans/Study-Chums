@@ -234,7 +234,7 @@ function loadBio(startIndex) {
   });
 }
 
-// Saves the userID to seesion storage
+// Saves the userID to session storage
 function saveUserID() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {

@@ -91,8 +91,8 @@ function refresh_h() {
 
 // This function is meant for applications.js.
 // Updates var resultrow_td to include tags of class 'resultsRow td'
+// and var fas to include tags of class 'fas'
 // added from data results.
-// Updates var fas to include tags of class 'fas'
 function refresh_td_fas() {
 	// console.log('refresh td css');
 	resultrow_td = $('.resultRow td');
