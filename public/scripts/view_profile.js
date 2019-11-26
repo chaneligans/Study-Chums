@@ -176,7 +176,7 @@ function request(id) {
         }
       });
 
-      if (chumStatus != "Chums") {
+      if (chumStatus !== "Chums") {
         let status = "Requested";
         db.ref('Applications/' + myid + '/Sent/' + id).set({
           status: status

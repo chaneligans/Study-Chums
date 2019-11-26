@@ -8,7 +8,7 @@ messaging.usePublicVapidKey("BKY1_vZpRo8BqgaIc2rAPTR_xWRvrO9rsojLpjUDV6SbINnmbwT
 messaging.onTokenRefresh(handleTokenRefresh);
 
 //Request permission to receive notifications
-//The method messaging.requestPermission() displays a consent dialog to let users grant your app permission to receive notifications in the browser. If permission is denied, FCM registration token requests result in an error.
+//The method Notification.requestPermission() displays a consent dialog to let users grant your app permission to receive notifications in the browser. If permission is denied, FCM registration token requests result in an error.
 let permission_;
 if (!("Notification" in window)) {
   console.log("This browser does not support desktop notifications.");

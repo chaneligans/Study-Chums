@@ -2,10 +2,9 @@
 // Redirects the user to the index if user is not signed in
 function checkLogin() {
   firebase.auth().onAuthStateChanged(user => {
-    if(user) {
+    if (user) {
       console.log('Signed in');
-    }
-    else {
+    } else {
       console.log('Not signed in: ' + user);
 
       setTimeout(() => {

@@ -187,7 +187,7 @@ function acceptRequest(acceptID) {
         });
 
       let chums = "Chums";
-      firebase.database().ref('Chums/' + userID + '/' + acceptID).set({
+      db.ref('Chums/' + userID + '/' + acceptID).set({
         status: chums
       }, error => {
         if (error) {
@@ -197,7 +197,7 @@ function acceptRequest(acceptID) {
         }
       });
 
-      firebase.database().ref('Chums/' + acceptID + '/' + userID).set({
+      db.ref('Chums/' + acceptID + '/' + userID).set({
         status: chums
       }, error => {
         if (error) {

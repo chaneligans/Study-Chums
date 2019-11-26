@@ -1,12 +1,11 @@
 function passwordResetEmail(){
-    var auth = firebase.auth();
-    
-    var emailAddress = document.getElementById("recovey-email-input").value;
-  
-    auth.sendPasswordResetEmail(emailAddress).then(function() {
+    const auth = firebase.auth();
+    let emailAddress = document.getElementById("recovey-email-input").value;
+
+    auth.sendPasswordResetEmail(emailAddress).then(() => {
       console.log("email sent");
       alert('An reset password link has been sent to the given email!');
-    }).catch(function(error) {
+    }).catch(error => {
       console.log(error);
     // An error happened.
     });

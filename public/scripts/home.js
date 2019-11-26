@@ -111,15 +111,15 @@ function getProfileList(db, uid, direction) {
   let userIndex = 0, nextIndex = 0;
   return new Promise((resolve, reject) => {
     db.ref("Users/"+uid).once("value").then(snapshot => {
-      userIndex = snapshot.val().index;
-      nextIndex = snapshot.val().currentIndex - ((direction === "Left") ? 1:0);
 
-      return {userIndex, nextIndex, snapshot};
+      return {
+        userIndex : snapshot.val().index
+        ,nextIndex : snapshot.val().currentIndex - ((direction==="Left") ? 1:0)
+      };
 
     }).then(values => {
       userIndex = values.userIndex;
       nextIndex = values.nextIndex;
-      let userSnapshot = values.snapshot;
 
       let chums = [];
       db.ref("Chums/"+uid).once("value").then(chum_ref_snapshot => {
@@ -138,7 +138,7 @@ function getProfileList(db, uid, direction) {
         });
         return Promise.all(chums);
 
-      }).then((results) => {
+      }).then(results => {
         resolve([userIndex, nextIndex, results]);
       });
     });
@@ -250,7 +250,7 @@ function saveUserID() {
             userId = childData.key;
             sessionStorage.clear();
             sessionStorage.setItem('userID', userId);
-            let storageData = sessionStorage.getItem('userID');
+            // let storageData = sessionStorage.getItem('userID');
 
             window.location.pathname = 'view_profile.html';
           });

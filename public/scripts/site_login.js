@@ -1,5 +1,5 @@
 function facebookSignIn() {
-  console.log("clicked 'facebook sign in'");
+  console.log("Attempting to sign in via Facebook...");
 
   const provider = new firebase.auth.FacebookAuthProvider();
   firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -10,21 +10,19 @@ function facebookSignIn() {
 
     // The signed-in user info.
     let user = result.user;
-    console.log("Successfully signed in " + user.displayName);
+    console.log("Successfully signed in via Facebook. Welcome, " + user.displayName);
 
     // Redirect after signing in
     if(result.additionalUserInfo.isNewUser) {
       initializeUserData(user);
-
       setTimeout(() => {
         location.href = "create_profile.html";
       }, 1000);
-    }
-    else {
+    } else {
       window.location.href = "home.html";
     }
 
-  }).catch(function(error) {
+  }).catch(error => {
     // Handle Errors here.
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -38,7 +36,7 @@ function facebookSignIn() {
 function initializeUserData(user) {
   let totalUsers;
   const totalRef = firebase.database().ref("TotalUsers");
-  totalRef.once("value", function(data) {
+  totalRef.once("value", data => {
     totalUsers = data.val().total;
     totalUsers = totalUsers + 1;
 
@@ -93,26 +91,26 @@ function createUserWithEmailAndPassword() {
     .then(() => {
       console.log("Email verification link successfully sent.");
     })
-    .catch(function(error) {
+    .catch(error => {
       console.log("Error sending verification email -- ", error.message);
     });
 
     alert('An verification link has been sent to the given email. Please verify to continue!');
   })
-  .catch(function(error) {
+  .catch(error => {
     const errorCode = error.code;
     const errorMessage = error.message;
 
     if(errorCode == 'auth/invalid-email') {
       alert('Email is not vaild.');
-    }
-    else if(errorCode == "auth/email-already-in-use") {
+
+    } else if(errorCode == "auth/email-already-in-use") {
       alert("Email is already in use. Please sign in.");
-    }
-    else if(errorCode == 'auth/weak-password') {
+
+    } else if(errorCode == 'auth/weak-password') {
       alert('Password is too weak. It should be at least 6 characters.');
-    }
-    else if(errorCode == 'auth/operation-not-allowed') {
+
+    } else if(errorCode == 'auth/operation-not-allowed') {
       console.log("Uh oh. Auth via email and password is not enabled.");
     }
 
@@ -122,6 +120,8 @@ function createUserWithEmailAndPassword() {
 }
 
 function emailAndPasswordSignIn() {
+  console.log("Attempting to sign in via email/password...");
+
   const email_in = document.getElementById("login-email-input").value;
   const password_in = document.getElementById("login-password-input").value;
 
@@ -130,11 +130,12 @@ function emailAndPasswordSignIn() {
     result.user.reload;
 
     if(result.user.emailVerified) {
+      console.log("Successfully signed in via email/password. Welcome!");
       setTimeout(() => {
         location.href = "home.html";
       }, 1000);
-    }
-    else {
+
+    } else {
       const actionCodeSettings = {
         url: 'https://study-chums.firebaseapp.com/verify_account.html',
         handleCodeInApp: true,
@@ -144,25 +145,25 @@ function emailAndPasswordSignIn() {
         console.log("Email verification link successfully sent.");
         alert('A verification email has been sent. You must verify account before signing in.');
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log("Error sending verification email -- ", error.message);
       });
     }
   })
-  .catch(function(error) {
+  .catch(error => {
     const errorCode = error.code;
     const errorMessage = error.message;
 
     if(errorCode == 'auth/invalid-email') {
       alert('Email is not vaild.');
-    }
-    else if(errorCode == "auth/user-disabled") {
+
+    } else if(errorCode == "auth/user-disabled") {
       alert("User has been disabled.");
-    }
-    else if(errorCode == 'auth/user-not-found') {
+
+    } else if(errorCode == 'auth/user-not-found') {
       alert('Email and password combination not found.');
-    }
-    else if(errorCode == 'auth/wrong-password') {
+      
+    } else if(errorCode == 'auth/wrong-password') {
       alert("Invalid password.");
     }
 

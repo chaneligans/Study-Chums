@@ -2,7 +2,7 @@ function verifyEmail() {
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
         let email_in = document.getElementById("verify-account-email-input").value;
-        if(!email_in) {
+        if (!email_in) {
             alert('Please enter email!');
         }
 
@@ -15,7 +15,7 @@ function verifyEmail() {
               location.href = "create_profile.html";
             }, 3000);
         })
-        .catch(function(error) {
+        .catch(error => {
             console.log("Error verifying email -- ", error.message);
         });
     }

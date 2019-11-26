@@ -23,7 +23,7 @@ $(document).ready(() => {
 	let localStorage = window.localStorage;
 
 	localStorage.setItem('mode',
-				(localStorage.getItem('mode')|| 'dark') === 'dark' ? 'dark':'light');
+				((localStorage.getItem('mode')|| 'dark') === 'dark') ? 'dark':'light');
 	// Set local storage item 'mode' to 'dark' or 'light' depending on if the
 	// current value of 'mode' in local storage ('dark' by default) === 'dark'
 
@@ -90,14 +90,17 @@ function refresh_h() {
 }
 
 // This function is meant for applications.js.
-// Updates var resultrow_td to include tags of class 'rsultsRow td'
+// Updates var resultrow_td to include tags of class 'resultsRow td'
 // added from data results.
-function refresh_td() {
+// Updates var fas to include tags of class 'fas'
+function refresh_td_fas() {
 	// console.log('refresh td css');
 	resultrow_td = $('.resultRow td');
+	fas = $('.fas');
 
 	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
 	resultrow_td.css('color', color_);
+	fas.css('color', color_);
 }
 
 // main function.

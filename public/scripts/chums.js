@@ -1,6 +1,6 @@
 function setUserData(childSnapshotValue, childKey) {
-  var photo = childSnapshotValue.p1Url + " ";
-  var data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  let photo = childSnapshotValue.p1Url + " ";
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
   return data;
 }
 
@@ -9,20 +9,20 @@ var dark_fn;
 function retrieveChums(fn) {
   dark_fn = fn;
   console.log('Called function retrieveChums()');
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [];
       let applicationsRef = firebase.database().ref('Chums/' + user.uid);
-      applicationsRef.once("value", function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
+      applicationsRef.once("value", snapshot => {
+        snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let userDataRef = firebase.database().ref('Users/' + key);
 
-          let data = userDataRef.once("value").then(function(childSnapshotData) {
+          let data = userDataRef.once("value").then(childSnapshotData => {
             let childData = childSnapshotData.val();
             return setUserData(childData, key);
           });
-          results.push(Promise.resolve(data).then(function() {return data;}))
+          results.push(Promise.resolve(data).then(() => {return data;}))
         });
         Promise.all(results).then(result => {
           console.log('Results found: ' + result.length);
@@ -35,11 +35,11 @@ function retrieveChums(fn) {
 }
 
 function displayChums(results) {
-  var html = '<table class="requests">';
-  var index, img, name, major, count = 1;
-  var id = 0;
+  let html = '<table class="requests">';
+  let index, img, name, major, count = 1;
+  let id = 0;
 
-  results.forEach(function(result) {
+  results.forEach(result => {
     index = result[0];
     img = result[1];
     name = result[2];
@@ -47,10 +47,11 @@ function displayChums(results) {
     id = result[4];
 
     html += '<tr class="resultRow">';
-    html += '<td class="resultUserImage"><img src="' + img + '"></td>';
-    html += '<td class="resultUserName"><a href="view_profile.html" onclick="return saveUserID(\''
-    html += id + '\');"><h2 id="resultUserName' + count + '">' + name + '</h2></a></td>';
-    html += '<td class="resultUserMajor"><h3 id="resultUserMajor">' + major + '</h3></td>';
+    html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
+    html += '<td class="resultUserName">';
+    html += '<a href="view_profile.html" onclick="return saveUserID(\''+ id +'\');">'
+    html += '<h2 id="resultUserName'+ count +'">'+ name +'</h2></a></td>';
+    html += '<td class="resultUserMajor"><h3 id="resultUserMajor">'+ major +'</h3></td>';
     html += '</tr>'
 
     count++;
@@ -59,7 +60,7 @@ function displayChums(results) {
   html += '</table>';
 
   document.getElementById("searchResults").innerHTML = html;
-  $("#searchResults").load(html, function() {
+  $("#searchResults").load(html, () => {
     console.log("Load was performed.");
     dark_fn();
   });
@@ -69,14 +70,14 @@ function displayChums(results) {
 function saveUserID(userID) {
   sessionStorage.clear();
   sessionStorage.setItem('userID', userID);
-  var storageData = sessionStorage.getItem('userID');
-  console.log("saved user id ..." + storageData);
+  let storageData = sessionStorage.getItem('userID');
+  // console.log("saved user id ..." + storageData);
   return true;
 }
 
 
 function noChumsFound() {
-  $("#searchResults").load("../loaded/no_requests.html", function() {
+  $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Chums Yet!</h2>");
     console.log("Load was performed.");
     dark_fn();

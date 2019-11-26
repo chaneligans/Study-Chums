@@ -11,7 +11,7 @@ function Enter() {
     switch (event.keyCode) {
       case 13: Search(); break;            // enter key
       case 27: Enterkey.value = ""; break; // escape key
-      default: Search(); // warning: VERY resource-heavy
+      default: Search();
     }
   });
 
@@ -44,6 +44,7 @@ function Search() {
         }
       } else {
         // alert('Invalid!');
+        noResultsFound();
       }
 
       // console.log("Search sent to database.");
@@ -62,30 +63,59 @@ function Search_(searchType, input) {
     db_Users_by_searchType = db_Users_by_searchType.orderByChild(searchType);
   }
 
-  nameTypes.forEach(name_ => {
-    db_Users_by_searchType.startAt(name_).endAt(name_+"\uf8ff")
-    .once('value', snapshot => {
-        let key, childData, userData;
+  const search_ = async () => {
+    await asyncForEach(nameTypes, async name_ => {
+      let subset = await getSearchSubset(db_Users_by_searchType, name_);
+      subset.forEach(sub_res => {
+        if (isDuplicateOf_In_(sub_res[4], results) === false) {
+          results.push(sub_res);
+        }
+      });
+    });
+
+    results = [...new Set(results)]; // just in case (unique elements only)
+
+    console.log('Results found: ' + results.length);
+    if (results.length > 0) {
+      showSearchResults(results);
+    } else {
+      noResultsFound();
+    }
+  }
+  search_();
+
+}
+
+// an asynchronous forEach. Bc arr.forEach(callback) is not Promise-aware.
+async function asyncForEach(arr, callback) {
+  for (let index = 0; index < arr.length; index++) {
+    await callback(arr[index], index, arr);
+  }
+}
+
+function getSearchSubset(source, name_) {
+  return new Promise((resolve, reject) => {
+    let subset = [];
+
+    source.startAt(name_).endAt(name_+"\uf8ff").once('value').then(snapshot => {
+      if (snapshot.exists) {
+        let key, userData;
         snapshot.forEach(childSnapshot => {
           key = childSnapshot.key;
-          childData = childSnapshot.val();
-          userData = getUserData(childData, key);
+          userData = getUserData(childSnapshot.val(), key);
 
-          if (isDuplicateOf_In_(userData[4], results) === false) {
-            results.push(userData);
+          if (isDuplicateOf_In_(userData[4], subset) === false) {
+            // console.log("Adding data to sub-set...")
+            subset.push(userData);
+            // console.log(subset)
           }
         });
-        Promise.all(results).then(result => {
-          console.log('Results found: ' + result.length);
-          if (results.length > 0) {
-            showSearchResults(results);
-          } else {
-            noResultsFound();
-          }
-        });
-      }).catch(function(error) {
-        console.log("Error getting results: ", error);
-      });
+        resolve(subset);
+
+      } else {
+        reject("There were no results for this type of the query -- " + name_);
+      }
+    });
   });
 }
 
@@ -109,11 +139,12 @@ function getUserData(childSnapshotValue, childKey) {
 }
 
 function isDuplicateOf_In_(source, given_list) {
-  // let bool = false;
+  let bool = false;
   given_list.forEach(given_item => {
-    if (given_item === source) { return true; }
+    // console.log(given_item[4], "//", source)
+    if (given_item[4] === source) { bool = true; }
   })
-  return false;
+  return bool;
 }
 
 function showSearchResults(results) {
