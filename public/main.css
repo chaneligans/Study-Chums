@@ -581,6 +581,7 @@ nav li a {
     clear: both;
 }
 
+/* show results */
 #results {
   width: 100%;
   border-collapse: collapse;
@@ -604,13 +605,25 @@ nav li a {
 }
 
 .resultUserImage:first-child {
-  width: 20%;
+  width: 5%;
 }
 
 .resultUserImage img {
+    
+    /*
   object-fit: cover;
   max-width: 25vmin;
   max-height: 25vmin;
+    
+    */
+    
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+  padding: 20px;
+  float: left;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 /* CHAT CONTAINER */
