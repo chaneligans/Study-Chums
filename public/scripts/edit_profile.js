@@ -2,12 +2,12 @@ function updateProfile() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let photo_in = document.getElementById("file");
-      let name_in = document.getElementById("name").value;
-      // let email_in = document.getElementById("email").value;
-      let major_in = document.getElementById("major").value;
-      let bio_in = document.getElementById("bio").value;
-      let FBprofileLink_in = document.getElementById("FBprofileLink").value;
+      let photo_in = document.getElementById("file"),
+       name_in = document.getElementById("name").value,
+       // email_in = document.getElementById("email").value,
+       major_in = document.getElementById("major").value,
+       bio_in = document.getElementById("bio").value,
+       FBprofileLink_in = document.getElementById("FBprofileLink").value;
 
       // execute only if something is there
       if (photo_in.value !== "") {updatePhotoURL(user.uid, photo_in);}
@@ -38,18 +38,17 @@ function updatePhotoURL(uid, photo) {
       let ref = firebase.database().ref("Users/" + uid);
       let photoUrl = 'Something went wrong!!!';
 
-      let max_width = 800;
-      let max_height = 800;
+      let max_width = 800, max_height = 800;
 
-      let file = photo.files[0];
-      let fileName = photo.files[0].name;
+      let file = photo.files[0],
+       fileName = file.name;
 
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
       fileReader.onload = function(event) {
 
-        let blob = new Blob([event.target.result]);
-        let blobURL = window.URL.createObjectURL(blob);
+        let blob = new Blob([event.target.result]),
+         blobURL = window.URL.createObjectURL(blob);
 
         let newImage = new Image();
         newImage.src = blobURL;
@@ -58,8 +57,7 @@ function updatePhotoURL(uid, photo) {
           let updateImage = new Promise((resolve, reject) => {
             if (newImage) {
               let canvas = document.createElement('canvas');
-              let width = newImage.width;
-              let height = newImage.height;
+              let width = newImage.width, height = newImage.height;
               // console.log("Old values: " + width + ", " + height);
 
               if (width > height) {
@@ -74,8 +72,7 @@ function updatePhotoURL(uid, photo) {
                 }
               }
 
-              canvas.width = width;
-              canvas.height = height;
+              canvas.width = width; canvas.height = height;
               // console.log("New values: " + canvas.width + ", " + canvas.height);
 
               let context = canvas.getContext("2d");
@@ -154,7 +151,6 @@ function updateName(uid, name_in) {
     // update name for this 'user' with name_in
 
     if (uid === user.uid) {
-
       //update name in realtime database
       let db_ref = firebase.database().ref("Users/" + user.uid);
       db_ref.update({
@@ -190,7 +186,6 @@ function updateEmail(uid, email_in) {
     // console.log("Updating email for user id ", user.uid);
     // update email for this 'user' with email_in
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -212,7 +207,6 @@ function updateMajor(uid, major_in) {
     // console.log("Updating major for user id ", user.uid);
     // update major for this 'user' with major_in
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -234,7 +228,6 @@ function updateBio(uid, bio_in) {
     // console.log("Updating bio for user id ", user.uid);
     // update bio for this 'user' with bio_in
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -255,7 +248,6 @@ function updateFBProfileLink(uid, FBprofileLink_in) {
   firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating FB profile for user id ", user.uid);
     if (uid == user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({

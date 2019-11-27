@@ -5,7 +5,8 @@ function setDarkFn(fn) {
 
 function setUserData(childSnapshotValue, childKey) {
   let photo = childSnapshotValue.p1Url + " ";
-  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name,
+              childSnapshotValue.Major, childKey];
   return data;
 }
 
@@ -20,28 +21,22 @@ function retrieveSentRequests() {
 function retreiveRequests_(request_type) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let results = [];
-      let db = firebase.database();
-      let applicationsRef = db.ref('Applications/' + user.uid + '/'+ request_type +'/');
+      let results = [],
+       db = firebase.database(),
+       applicationsRef = db.ref('Applications/'+ user.uid +'/'+ request_type);
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
-          let key = childSnapshot.key;
-          let userDataRef = db.ref('Users/' + key);
+          let key = childSnapshot.key,
+           userDataRef = db.ref('Users/' + key);
           let data = userDataRef.once("value").then(childSnapshotData => {
-            let name = childSnapshotData.val().name;
             childData = childSnapshotData.val();
             return setUserData(childData, key);
           });
-          results.push(Promise.resolve(data).then(() => {
-            return data;
-          }))
+          results.push(Promise.resolve(data).then(() => {return data;}));
         });
         Promise.all(results).then(result => {
-          if (result.length > 0) {
-            displayRequests_(request_type, result);
-          } else {
-            noRequests_(request_type);
-          }
+          if (result.length > 0) {displayRequests_(request_type, result);}
+          else {noRequests_(request_type);}
         })
       });
     }
@@ -74,9 +69,9 @@ function displayRequests_(request_type, results) {
     id = result[4];
 
     res_html += '<tr class="resultRow">';
-    res_html += '<td class="resultUserImage"><img src="'+img+'"></td>';
+    res_html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
     res_html += '<td class="resultUserName"><a href="view_profile.html" ';
-    res_html += 'onclick="return saveUserID(\''+id+'\');">';
+    res_html += 'onclick="return saveUserID(\''+ id +'\');">';
     res_html += '<h2 id="resultUserName'+count+'">'+ name +'<br /></h2>';
     res_html += '<h4>'+ major +'</h4></a></td>';
 
@@ -90,9 +85,9 @@ function displayRequests_(request_type, results) {
   request_type = request_type.toLowerCase();
 
   document.getElementById(request_type+"Requests").innerHTML = res_html;
-  $("#"+request_type+"Requests").load("../loaded/request_results", () => {
-    $('#'+request_type+'Requests .requests').html(res_html);
-    console.log("Load was performed ("+request_type+" requests).");
+  $("#"+ request_type +"Requests").load("../loaded/request_results", () => {
+    $('#'+ request_type +'Requests .requests').html(res_html);
+    console.log("Load was performed ("+ request_type +" requests).");
     dark_fn();
   });
 }
@@ -107,10 +102,10 @@ function saveUserID(userID) {
 
 function noRequests_(Request_type) {
   let request_type = Request_type.toLowerCase();
-  let j_query = "#" + request_type + "Requests";
+  let j_query = "#"+ request_type +"Requests";
   $(j_query).load("../loaded/no_requests.html", () => {
     $('.resultUserName').html('<h2>No '+Request_type+' Requests Yet!</h2>');
-    console.log("Load was performed (no " + request_type + " requests).");
+    console.log("Load was performed (no "+ request_type +" requests).");
     dark_fn();
   });
 }

@@ -21,7 +21,7 @@ if (permission_ === 'granted') {
   handleTokenRefresh();
 } else if (permission_ !== 'denied' || permission_ === 'default') {
   Notification.requestPermission()
-  .then((permission) => {
+  .then(permission => {
     if (permission === 'granted') {
       console.log('Notification permission now granted.');
       handleTokenRefresh();
@@ -39,9 +39,9 @@ function handleTokenRefresh() {
   return messaging.getToken()
     .then((token) => {
       // console.log(token);
-      firebase.auth().onAuthStateChanged(user => {
-        firestore.collection("Users").doc(user.uid).collection("ChatRooms")
-        .get().then((chatRooms) => {
+      auth.onAuthStateChanged(user => {
+        firestore.collection("Users").doc(user.uid).collection("ChatRooms").get()
+        .then(chatRooms => {
           chatRooms.forEach(room => {
             firestore.collection("ChatRooms").doc(room.id).collection("Tokens").doc(user.uid)
             .set({

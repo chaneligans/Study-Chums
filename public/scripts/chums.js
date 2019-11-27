@@ -1,6 +1,7 @@
 function setUserData(childSnapshotValue, childKey) {
   let photo = childSnapshotValue.p1Url + " ";
-  let data = [childSnapshotValue.index, photo, childSnapshotValue.name, childSnapshotValue.Major, childKey];
+  let data = [childSnapshotValue.index, photo, childSnapshotValue.name,
+              childSnapshotValue.Major, childKey];
   return data;
 }
 
@@ -35,7 +36,7 @@ function retrieveChums(fn) {
 }
 
 function displayChums(results) {
-  let html = '<table class="requests">';
+  let res_html = '';
   let index, img, name, major, count = 1;
   let id = 0;
 
@@ -46,26 +47,24 @@ function displayChums(results) {
     major = result[3];
     id = result[4];
 
-    html += '<tr class="resultRow">';
-    html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
-    html += '<td class="resultUserName">';
-    html += '<a href="view_profile.html" onclick="return saveUserID(\''+ id +'\');">'
-    html += '<h2 id="resultUserName'+ count +'">'+ name +'</h2></a></td>';
-    html += '<td class="resultUserMajor"><h3 id="resultUserMajor">'+ major +'</h3></td>';
-    html += '</tr>'
+    res_html += '<tr class="resultRow">';
+    res_html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
+    res_html += '<td class="resultUserName">';
+    res_html += '<a href="view_profile.html" onclick="return saveUserID(\''+ id +'\');">'
+    res_html += '<h2 id="resultUserName'+ count +'">'+ name +'</h2></a></td>';
+    res_html += '<td class="resultUserMajor"><h3 id="resultUserMajor">'+ major +'</h3></td>';
+    res_html += '</tr>'
 
     count++;
   });
 
-  html += '</table>';
-
-  document.getElementById("searchResults").innerHTML = html;
-  $("#searchResults").load(html, () => {
-    console.log("Load was performed.");
+  document.getElementById("searchResults").innerHTML = res_html;
+  $("#searchResults").load("../loaded/request_results.html", () => {
+    $('#searchResults .requests').html(res_html);
+    console.log("Load (chums) was performed.");
     dark_fn();
   });
 }
-
 
 function saveUserID(userID) {
   sessionStorage.clear();
@@ -75,13 +74,11 @@ function saveUserID(userID) {
   return true;
 }
 
-
 function noChumsFound() {
   $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Chums Yet!</h2>");
     console.log("Load was performed.");
     dark_fn();
   });
-
 }
 

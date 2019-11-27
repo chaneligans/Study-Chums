@@ -1,25 +1,23 @@
 // Get total user value from the database
 function getTotalUsers() {
-  return firebase.database().ref("TotalUsers").once("value").catch(err => {return err;});
+  return firebase.database().ref("TotalUsers").once("value")
+  .catch(err => {return err;});
 }
 
 // Load the profile for the homepage
 function loadProfile(startIndex) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      firebase.database().ref("Users/" + user.uid).once("value", snapshot => {
+      firebase.database().ref("Users/" + user.uid)
+      .once("value", snapshot => {
         // let userIndex = snapshot.val().index;
+        console.log("Loading Profile of index: " + startIndex);
 
-        let total;
-        getTotalUsers().then(result => {
-          total = result.val().total;
-          console.log("Loading Profile of index: " + startIndex);
+        loadImage(startIndex);
+        loadName(startIndex);
+        loadMajor(startIndex);
+        loadBio(startIndex);
 
-          loadImage(startIndex);
-          loadName(startIndex);
-          loadMajor(startIndex);
-          loadBio(startIndex);
-        });
       });
     } else {
       console.log("No user found.");
@@ -169,15 +167,14 @@ function loadImage(startIndex) {
   let userDataRef = firebase.database().ref("Users");
   userDataRef.orderByChild("index").equalTo(startIndex)
   .once("value", snapshot => {
-    let key, image_val;
+    let image_val;
     snapshot.forEach(childSnapshot => {
-      key = childSnapshot.key;
       image_val = childSnapshot.val().p1Url;
 
       // If image_val is undefined, the user does not have a profile picture.
       // Therefore, we replace it with a generic avatar:
       if (image_val === undefined) {
-        console.log('Undefined image');
+        // console.log('Undefined image');
         image_val = 'https://firebasestorage.googleapis.com/'
                   + 'v0/b/study-chums.appspot.com/'
                   + 'o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
@@ -194,9 +191,8 @@ function loadName(startIndex) {
   userDataRef = firebase.database().ref("Users");
   userDataRef.orderByChild("index").equalTo(startIndex)
   .once("value", snapshot => {
-    let key, name_val;
+    let name_val;
     snapshot.forEach(childSnapshot => {
-      key = childSnapshot.key;
       name_val = childSnapshot.val().name;
       $("#name").append(name_val);
       document.getElementById("Name").innerHTML = name_val;
@@ -209,9 +205,8 @@ function loadMajor(startIndex) {
   userDataRef = firebase.database().ref("Users");
   userDataRef.orderByChild("index").equalTo(startIndex)
   .once("value", snapshot => {
-    let key, Major_val;
+    let Major_val;
     snapshot.forEach(childSnapshot => {
-      key = childSnapshot.key;
       Major_val = childSnapshot.val().Major;
       $("#Major").append(Major_val);
       document.getElementById("Major").innerHTML = Major_val;
@@ -224,9 +219,8 @@ function loadBio(startIndex) {
   userDataRef = firebase.database().ref("Users");
   userDataRef.orderByChild("index").equalTo(startIndex)
   .once("value", snapshot => {
-      let key, bio_val;
+      let bio_val;
       snapshot.forEach(childSnapshot => {
-          key = childSnapshot.key;
           bio_val = childSnapshot.val().bio;
           $("#bio").append(bio_val);
           document.getElementById("bio").innerHTML = bio_val;
@@ -238,8 +232,8 @@ function loadBio(startIndex) {
 function saveUserID() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let db = firebase.database();
-      userDataRef = db.ref("Users/" + user.uid);
+      let db = firebase.database(),
+       userDataRef = db.ref("Users/" + user.uid);
       userDataRef.once("value", snapshot => {
         let currentIndex = snapshot.val().currentIndex;
 

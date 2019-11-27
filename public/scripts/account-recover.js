@@ -3,7 +3,7 @@ function passwordResetEmail(){
     let emailAddress = document.getElementById("recovey-email-input").value;
 
     auth.sendPasswordResetEmail(emailAddress).then(() => {
-      console.log("email sent");
+      console.log("reset email sent");
       alert('An reset password link has been sent to the given email!');
     }).catch(error => {
       console.log(error);

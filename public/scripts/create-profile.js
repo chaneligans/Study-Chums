@@ -2,20 +2,17 @@ function updateProfile() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let photo_in = document.getElementById("file");
-      let name_in = document.getElementById("name").value;
-      //let email_in = document.getElementById("email").value;
-      let major_in = document.getElementById("major").value;
-      let FBprofileLink_in = document.getElementById("FBprofileLink").value;
-      let bio_in = document.getElementById("bio").value;
+      let photo_in = document.getElementById("file"),
+       name_in = document.getElementById("name").value,
+       // email_in = document.getElementById("email").value,
+       major_in = document.getElementById("major").value,
+       FBprofileLink_in = document.getElementById("FBprofileLink").value,
+       bio_in = document.getElementById("bio").value;
 
       // execute only if something is there
       if (photo_in.value !== "") {updatePhotoURL(user.uid, photo_in);}
 
-      if (name_in !== "") {
-        updateName(user.uid, name_in);
-        addUserToFirestore(name_in);
-      }
+      if (name_in !== "") {updateName(user.uid, name_in); addUserToFirestore(name_in);}
 
       updateEmail(user.uid);
       updateSubscription(user.uid);
@@ -28,8 +25,7 @@ function updateProfile() {
 
       if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "") {
         alert("Please fill in all required fields.");
-      }
-      else {
+      } else {
         alert("Your profile info has been updated!");
         setTimeout(function() {location.href = "home.html";}, 1000);
       }
@@ -50,18 +46,17 @@ function updatePhotoURL(uid, photo) {
       let ref = firebase.database().ref("Users/" + user.uid);
       let photoUrl = 'Something went wrong!!!';
 
-      let max_width = 800;
-      let max_height = 800;
+      let max_width = 800, max_height = 800;
 
-      let file = photo.files[0];
-      let fileName = photo.files[0].name;
+      let file = photo.files[0],
+       fileName = file.name;
 
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
       fileReader.onload = function(event) {
 
-        let blob = new Blob([event.target.result]);
-        let blobURL = window.URL.createObjectURL(blob);
+        let blob = new Blob([event.target.result]),
+         blobURL = window.URL.createObjectURL(blob);
 
         let newImage = new Image();
         newImage.src = blobURL;
@@ -70,8 +65,7 @@ function updatePhotoURL(uid, photo) {
           let updateImage = new Promise((resolve, reject) => {
             if (newImage) {
               let canvas = document.createElement('canvas');
-              let width = newImage.width;
-              let height = newImage.height;
+              let width = newImage.width, height = newImage.height;
               // console.log("Old values: " + width + ", " + height);
 
               if (width > height) {
@@ -86,8 +80,7 @@ function updatePhotoURL(uid, photo) {
                 }
               }
 
-              canvas.width = width;
-              canvas.height = height;
+              canvas.width = width; canvas.height = height;
               // console.log("New values: " + canvas.width + ", " + canvas.height);
 
               let context = canvas.getContext("2d");
@@ -114,7 +107,7 @@ function updatePhotoURL(uid, photo) {
           let tryToUpdateImage = function() {
             updateImage.then(fulfilled => {
               // console.log('Attempting to upload file ' + fileName);
-              let storageRef = firebase.storage().ref('img/' + user.uid + '/' + user.uid);
+              let storageRef = firebase.storage().ref('img/'+ user.uid +'/'+ user.uid);
               let uploadTask = storageRef.put(file);
 
               uploadTask.on('state_changed', snapshot => {
@@ -141,9 +134,9 @@ function updatePhotoURL(uid, photo) {
                     "p1Url": photoUrl
                   }, error => {
                     if (error) {
-                      console.log("Update failed - p1Url to " + photo + ": " + error);
+                      console.console.error("Update failed - p1Url to "+ photo +": "+ error);
                     } else {
-                      console.log("Update succeeded - p1Url to " + photo);
+                      console.log("Update succeeded - p1Url to "+ photo);
                       location.href = "home.html";
                     }
                   });
@@ -164,7 +157,6 @@ function updateName(uid, name_in) {
     // console.log("Updating name for user id ", user.uid);
     // update name for this 'user' with name_in
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -208,7 +200,6 @@ function updateMajor(uid, major_in) {
     // console.log("Updating major for user id ", user.uid);
     // update major for this 'user' with major_in
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -250,7 +241,6 @@ function updateFBProfileLink(uid, FBprofileLink_in) {
   firebase.auth().onAuthStateChanged(user => {
     // console.log("Updating FB profile for user id ", user.uid);
     if (uid === user.uid) {
-
       //realtime database
       let ref = firebase.database().ref("Users/" + user.uid);
       ref.update({
@@ -298,7 +288,11 @@ function addUserToFirestore(name) {
       "currentChatRoom": " "
     })
     .catch(error => {
-      console.log('Error adding User data to Firestore --', error);
+      if (error) {
+        console.error('Error adding User data to Firestore --', error);
+      } else {
+        console.log('Successfully added User data to Firestore');
+      }
     });
   });
 }

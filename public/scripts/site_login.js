@@ -2,7 +2,7 @@ function facebookSignIn() {
   console.log("Attempting to sign in via Facebook...");
 
   const provider = new firebase.auth.FacebookAuthProvider();
-  firebase.auth().signInWithPopup(provider).then(function(result) {
+  firebase.auth().signInWithPopup(provider).then(result => {
     // console.log("Result: ", result);
 
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -162,7 +162,7 @@ function emailAndPasswordSignIn() {
 
     } else if(errorCode == 'auth/user-not-found') {
       alert('Email and password combination not found.');
-      
+
     } else if(errorCode == 'auth/wrong-password') {
       alert("Invalid password.");
     }

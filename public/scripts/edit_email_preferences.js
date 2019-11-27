@@ -2,16 +2,13 @@ function updateEmailPreferences() {
   $('html').addClass('waiting');
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let email_in = document.getElementById("new_email").value;
-      let subscribe = document.getElementById("subscribe").checked;
-      let unsubscribe = document.getElementById("unsubscribe").checked;
-
-      let userId = user.uid;
+      let email_in = document.getElementById("new_email").value,
+       subscribe = document.getElementById("subscribe").checked,
+       unsubscribe = document.getElementById("unsubscribe").checked,
+       userId = user.uid;
 
       // execute only if something is there
-      if (email_in !== undefined) {
-        updateEmail(user, email_in);
-      }
+      if (email_in !== undefined) {updateEmail(user, email_in);}
       if (subscribe) {
         console.log(email_in + ' has subscribed to emails');
         updateSubscription(userId, true);
