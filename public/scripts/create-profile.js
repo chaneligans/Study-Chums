@@ -148,8 +148,8 @@ function updatePhotoURL(uid, photo) {
           tryToUpdateImage();
         }
       }
-    });
-  }
+    }
+  });
 }
 
 function updateName(uid, name_in) {

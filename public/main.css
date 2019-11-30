@@ -25,12 +25,19 @@
   background: #555;
 }
 
-body{
+input {
+  transition: color 0.5s, background-color 0.5s;
+}
+.far, .fas, footer, select, div, p{
+  transition: color 0.5s;
+}
+
+body {
   margin: 0;
   padding: 0;
   font-family: 'Nunito', sans-serif;
   background: url(images/bluebg.png);
-  /* background: url(images/blackbg.png); */
+  transition: background 0.5s, color 0.5s;
 }
 
 /* Sign In */
@@ -41,8 +48,8 @@ body{
   left: 50%;
   transform: translate(-50%,-50%);
   background-color: white;
-  /* background-color: #222222; */
   border-radius: 10px;
+  transition: background-color 0.5s;
 }
 
 .login-box h1{
@@ -69,6 +76,7 @@ body{
   transform: translate(-50%,-50%);
   background-color: white;
   border-radius: 10px;
+  transition: background-color 0.5s;
 }
 
 .fb-button {
@@ -95,7 +103,7 @@ body{
   font-family: 'Nunito', sans-serif;
 }
 
-.email-button:hover{
+.email-button:hover {
   cursor: pointer;
 }
 
@@ -110,6 +118,7 @@ body{
   padding: 0 5px;
   margin-top: 8px;
   margin-bottom: 4px;
+  transition: border-color 0.5s;
 }
 
 .login-p {
@@ -136,6 +145,7 @@ body{
   background-color: white;
   padding: 10px;
   border-radius: 5px;
+  transition: background-color 0.5s;
 }
 .create-profile-box h1{
   font-size: 40px;
@@ -150,6 +160,7 @@ body{
   padding: 8px 0;
   margin: 8px 0;
   border-bottom: 1px solid #FFBD33;
+  transition: color 0.5s, background-color 0.5s;
 }
 .textbox i{
   width: 26px;
@@ -165,6 +176,7 @@ body{
   width: 70%;
   float: left;
   margin: 0 10px;
+  transition: color 0.5s, background-color 0.5s;
 }
 .textbox textarea {
   font-family: 'Nunito', sans-serif;
@@ -196,6 +208,7 @@ label.upload-photo{
   font-size: 14px;
   cursor: pointer;
   margin: 12px 0;
+  transition: color 0.5s;
 }
 
 input[type="file"]{
@@ -245,6 +258,7 @@ h4 {
 h1, h2, h3, h4, h5 {
   font-family: 'Sniglet', sans-serif;
   font-weight: bold;
+  transition: color 0.5s;
 }
 
 #wrapper {
@@ -255,6 +269,7 @@ h1, h2, h3, h4, h5 {
   text-align: center;
   max-width: 800px;
   padding-top: 10px;
+  transition: background-color 0.5s;
 }
 
 #menubutton {
@@ -305,6 +320,7 @@ footer {
 textarea {
   border: 0px;
   width: 87%;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 /*
@@ -324,6 +340,7 @@ textarea {
   text-align: center;
   font-family: 'Nunito', sans-serif;
   padding-top: 15px;
+  transition: color 0.5s, background-color 0.5s;
 }
 
 .card #imageBox, .profilecard #img {
@@ -335,6 +352,7 @@ textarea {
   word-wrap: break-word;
   font-family: 'Sniglet', sans-serif;
   margin: 10px 10px 0px 10px;
+  cursor: pointer;
 }
 
 .card h3, .profilecard h3 {
@@ -350,6 +368,11 @@ textarea {
   padding-right: 10px;
   margin: 15px 0px 15px 0px;
   word-wrap: break-word;
+  transition: color 0.5s;
+}
+
+.profilecard form {
+  transition: color 0.5s;
 }
 
 .title {
@@ -430,7 +453,7 @@ textarea {
   background-color: white;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  transition: max-height 0.2s ease-out, background-color 0.5s;
 }
 
 nav {
@@ -545,6 +568,7 @@ nav li a {
   font-family: 'Nunito', sans-serif;
   font-size: calc(12px + .5vw);
   direction: rtl;
+  transition: background-color 0.5s;
 }
 
 .searchTerm:focus, .searchOptions:focus {
@@ -602,6 +626,7 @@ nav li a {
   padding: 10px;
   font-size: calc(12px + .5vw);
   color: black;
+  transition: color 0.5s;
 }
 
 .resultUserImage:first-child {
@@ -609,14 +634,14 @@ nav li a {
 }
 
 .resultUserImage img {
-    
+
     /*
   object-fit: cover;
   max-width: 25vmin;
   max-height: 25vmin;
-    
+
     */
-    
+
   object-fit: cover;
   width: 100px;
   height: 100px;
@@ -1172,14 +1197,13 @@ nav li a {
     display: block;
     width: 200%;
     margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
+    transition: margin 0.5s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
     display: block;
     float: left;
     width: 50%;
     height: 30px;
-    padding: 0;
     line-height: 30px;
     font-size: 14px;
     color: white;
@@ -1211,7 +1235,7 @@ nav li a {
     right: 46px;
     border: 2px solid #444444;
     border-radius: 20px;
-    transition: all 0.3s ease-in 0s;
+    transition: all 0.5s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;

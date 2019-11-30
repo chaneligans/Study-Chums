@@ -1,7 +1,7 @@
-var checkbox, background,
+let checkbox, background,
 	loginbox, login_h1, loginbottom,
-	or_space,
-	fas, fas_fa_at, fas_fa_lock,
+	or_space, login_divider,
+	fas, fas_fa_at, fas_fa_lock, fas_fa_plane,
 	wrapper,create_profile_box,
 	create_profile_btn,
 	h1, h2, h3, h4, h5,
@@ -10,22 +10,25 @@ var checkbox, background,
 	card, profilecard,
 	nav_ul, nav_li,
 	footer,
-	form, input, tb_ta,
-	search, select,
+	form,
+	input, pref_input,
+	tb_ta,
+	search, searchTerm, select,
 	panel, chatPopupContent,
 	resultrow_td,
 	editIconPopupContent,
 	card_p, profilecard_p;
 
+let localStorage = window.localStorage;
+
+localStorage.setItem('mode',
+((localStorage.getItem('mode')||'dark') === 'dark') ? 'dark':'light');
+// Set local storage item 'mode' to 'dark' or 'light' depending on if the
+// current value of 'mode' in local storage ('dark' by default) === 'dark'
+
 // Executes on page-ready.
 // Checks if the user wanted dark mode on or not (defaults to light mode).
 $(document).ready(() => {
-	let localStorage = window.localStorage;
-
-	localStorage.setItem('mode',
-				((localStorage.getItem('mode')|| 'dark') === 'dark') ? 'dark':'light');
-	// Set local storage item 'mode' to 'dark' or 'light' depending on if the
-	// current value of 'mode' in local storage ('dark' by default) === 'dark'
 
 	// ---------------------------------------------------------------------------
 	// The list of vars at the top are assigned here.
@@ -37,9 +40,11 @@ $(document).ready(() => {
 	loginbottom = $('.login-bottom');
 
 	or_space = $('#Or_space');
+	login_divider = $('.login-divider');
 
-	fas = $('.fas'); fas_fa_at = $('i.fas.fa-at');
+	fas = $('i.fas').slice(1); fas_fa_at = $('i.fas.fa-at');
 	fas_fa_lock = $('i.fas.fa-lock');
+	fas_fa_plane = $('i.login-icon.fas.fa-paper-plane');
 
 	wrapper = $('#wrapper');
 
@@ -57,8 +62,10 @@ $(document).ready(() => {
 
 	footer = $('footer');
 
-	form = $('form'); input = $('input'); tb_ta = $('.textbox textarea');
-	search = $('.search'); select = $('select');
+	form = $('form');
+	input = $('input'); pref_input = $('input#new_email');
+	tb_ta = $('.textbox textarea');
+	search = $('.search'); searchTerm = $('.searchTerm'); select = $('select');
 
 	panel = $('.panel'); chatPopupContent = $('.chatPopupContent');
 
@@ -69,9 +76,11 @@ $(document).ready(() => {
 	card_p = $('.card p'); profilecard_p = $('.profilecard p');
 	// ---------------------------------------------------------------------------
 
-	let checkbox = $('#dark-switch');
+	checkbox = $('#dark-switch');
+
 	// set dark-switch 'on'/'off' depending on the 'mode' item in local storage
 	checkbox[0].checked = (localStorage.getItem('mode') === 'dark') ? true:false;
+
 	toggleDarkMode(false); // update current view based on the state of 'dark-switch'
 
 	// set event listener for 'dark-switch'
@@ -96,7 +105,7 @@ function refresh_h() {
 function refresh_td_fas() {
 	// console.log('refresh td css');
 	resultrow_td = $('.resultRow td');
-	fas = $('.fas');
+	fas = $('i.fas').slice(1);
 
 	let color_ = ($('#dark-switch')[0].checked) ? 'white':'black';
 	resultrow_td.css('color', color_);
@@ -135,6 +144,7 @@ function enableDarkModeSettings() {
 	loginbottom.css('background-color','#222222');
 
 	or_space.css('color', 'white');
+	login_divider.css('border-color', 'white');
 
 	fas.css('color', 'white');
 	fas_fa_at.css('color', 'white');
@@ -167,10 +177,12 @@ function enableDarkModeSettings() {
 
 	form.css('color', 'white');
 	input.css({'color':'white', 'background-color':'#222222'});
+	pref_input.css('background-color', 'rgba(30, 30, 30, 0)')
 	tb_ta.css({'color':'white', 'background-color':'#222222'});
 
 	search.css('color', 'black');
-	select.css('background-color','#222222');
+	searchTerm.css({'background-color':'#222222', 'color':'#9DD2EE'});
+	select.css({'background-color':'#222222', 'color':'#9DD2EE'});
 
 	panel.css({'color':'white', 'background-color':'rgba(45, 45, 45, 0.8)'});
 	chatPopupContent.css('background-color', '#222222');
@@ -188,7 +200,7 @@ function enableDarkModeSettings() {
 // 'alert_' is false only during jquery.ready() (at the top of this js file)
 function enableLightModeSettings(alert_) {
 	if (alert_) {
-		alert("Night-watchers: Prepare your eyes!");
+		// alert("Night-watchers: Prepare your eyes!");
 	} // only appears when toggling, not when naviagting to different pages
 	console.log("Dark mode is OFF!");
 
@@ -200,10 +212,12 @@ function enableLightModeSettings(alert_) {
 	loginbottom.css('background-color','white');
 
 	or_space.css('color','black');
+	login_divider.css('border-color','black');
 
-	fas.css('color', 'black');
+	fas.css('color', 'initial');
 	fas_fa_at.css('color', 'black');
 	fas_fa_lock.css('color','black');
+	fas_fa_plane.css('color', 'white');
 
 	wrapper.css('background-color','rgba(255,255,255,0.9)');
 
@@ -232,10 +246,12 @@ function enableLightModeSettings(alert_) {
 
 	form.css('color','black');
 	input.css({'color':'black','background-color':'white'});
+	pref_input.css('background-color', 'rgba(180, 215, 240, 0)');
 	tb_ta.css({'color':'black','background-color':'white'});
 
 	search.css('color', 'white');
-	select.css('background-color', 'white');
+	searchTerm.css({'background-color':'white', 'color':'black'});
+	select.css({'background-color':'white', 'color':'black'});
 
 	panel.css({'color':'black', 'background-color':'rgba(255, 255, 255, 0.8)'});
 	chatPopupContent.css('background-color', '#eff3f7');
