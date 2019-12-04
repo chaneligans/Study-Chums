@@ -138,10 +138,10 @@ function enableDarkModeSettings() {
 
 	background.css('background', 'url(images/greybg.png)');
 
-	loginbox.css('background-color','#222222');
+	loginbox.css('background-color','var(--clr-darker_ashen)');
 	login_h1.css('color', 'white');
 
-	loginbottom.css('background-color','#222222');
+	loginbottom.css('background-color','var(--clr-darker_ashen)');
 
 	or_space.css('color', 'white');
 	login_divider.css('border-color', 'white');
@@ -150,9 +150,9 @@ function enableDarkModeSettings() {
 	fas_fa_at.css('color', 'white');
 	fas_fa_lock.css('color','white');
 
-	wrapper.css('background-color','rgba(34, 34, 34, 0.9)');
+	wrapper.css('background-color','rgba(34, 34, 34, 0.8)');
 
-	create_profile_box.css('background-color', '#222222');
+	create_profile_box.css('background-color', 'var(--clr-darker_ashen)');
 	create_profile_btn.css('color','white');
 
 	h1.css('color','white');
@@ -171,28 +171,28 @@ function enableDarkModeSettings() {
 	profilecard.css('background-color','rgba(30, 30, 30, 0.8)');
 
 	nav_ul.css('background-color','black');
-	nav_li.css('background-color', 'rgba(0,0,0,0)');
+	nav_li.css('background-color', 'var(--clr-transparent_two_black)');
 
 	footer.css('color','white');
 
 	form.css('color', 'white');
-	input.css({'color':'white', 'background-color':'#222222'});
-	pref_input.css('background-color', 'rgba(30, 30, 30, 0)')
-	tb_ta.css({'color':'white', 'background-color':'#222222'});
+	input.css({'color':'white', 'background-color':'var(--clr-darker_ashen)'});
+	pref_input.css('background-color', 'var(--clr-ghost_black)')
+	tb_ta.css({'color':'white', 'background-color':'var(--clr-darker_ashen)'});
 
 	search.css('color', 'black');
-	searchTerm.css({'background-color':'#222222', 'color':'#9DD2EE'});
-	select.css({'background-color':'#222222', 'color':'#9DD2EE'});
+	searchTerm.css({'background-color':'var(--clr-darker_ashen)', 'color':'var(--clr-primary_light)'});
+	select.css({'background-color':'var(--clr-darker_ashen)', 'color':'var(--clr-primary_light)'});
 
-	panel.css({'color':'white', 'background-color':'rgba(45, 45, 45, 0.8)'});
-	chatPopupContent.css('background-color', '#222222');
+	panel.css({'color':'white', 'background-color':'var(--clr-ghost_black)'});
+	chatPopupContent.css('background-color', 'var(--clr-darker_ashen)');
 
 	resultrow_td.css('color', 'white');
 
-	editIconPopupContent.css('background-color', "#222222");
+	editIconPopupContent.css('background-color', "var(--clr-darker_ashen)");
 
-	card_p.css('background-color','rgba(30, 30, 30, 0)');
-	profilecard_p.css('background-color','rgba(30, 30, 30, 0)');
+	card_p.css('background-color','var(--clr-ghost_black)');
+	profilecard_p.css('background-color','var(--clr-ghost_black)');
 }
 
 // Changes CSS to lighter hues.
@@ -236,8 +236,8 @@ function enableLightModeSettings(alert_) {
 	i_right.css('color','black');
 	li.css('color','black');
 
-	card.css('background-color','rgba(180, 215, 240, 0.8)');
-	profilecard.css('background-color','rgba(180, 215, 240, 0.8)');
+	card.css('background-color','var(--clr-primary_light)');
+	profilecard.css('background-color','var(--clr-primary_light)');
 
 	nav_ul.css('background-color','white');
 	nav_li.css('background-color','rgba(255,255,255,0.5)');
@@ -246,20 +246,20 @@ function enableLightModeSettings(alert_) {
 
 	form.css('color','black');
 	input.css({'color':'black','background-color':'white'});
-	pref_input.css('background-color', 'rgba(180, 215, 240, 0)');
+	pref_input.css('background-color', 'var(--clr-ghost_black)');
 	tb_ta.css({'color':'black','background-color':'white'});
 
 	search.css('color', 'white');
 	searchTerm.css({'background-color':'white', 'color':'black'});
 	select.css({'background-color':'white', 'color':'black'});
 
-	panel.css({'color':'black', 'background-color':'rgba(255, 255, 255, 0.8)'});
-	chatPopupContent.css('background-color', '#eff3f7');
+	panel.css({'color':'black', 'background-color':'var(--clr-lightfade_white)'});
+	chatPopupContent.css('background-color', 'var(--clr-cream_ish)');
 
 	resultrow_td.css('color','black');
 
 	editIconPopupContent.css('background-color', 'white');
 
-	card_p.css('background-color','rgba(180, 215, 240, 0)');
-	profilecard_p.css('background-color','rgba(180, 215, 240, 0)');
+	card_p.css('background-color','var(--clr-ghost_black)');
+	profilecard_p.css('background-color','var(--clr-ghost_black)');
 }

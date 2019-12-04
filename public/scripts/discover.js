@@ -146,10 +146,11 @@ function getUserData(childSnapshotValue, childKey) {
 // given an object to look for and a given_list to look in for the object,
 // return true if the object is in the given_list, and false otherwise
 function isDuplicateOf_In_(source, given_list) {
+  let bool = false;
   given_list.forEach(given_item => {
-    if (given_item[4] === source) { return true; }
+    if (given_item[4] === source) { bool = true; }
   });
-  return false;
+  return bool;
 }
 
 function showSearchResults(results) {

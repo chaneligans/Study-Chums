@@ -44,7 +44,7 @@ function retreiveRequests_(request_type) {
 }
 
 function displayRequests_(request_type, results) {
-  let img, name, major, count, id = 0;
+  let img, name, major, count = 1, id = 0;
   let res_html = '';
 
   const sent_ = () => {
