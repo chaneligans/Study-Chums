@@ -125,16 +125,19 @@ function getStatus(id) {
 
               Promise.resolve(fbProfileLink).then(value => {
                 // console.log(value);
-                status = '<a href="'+ value +'" target="_blank" style="color:#3b5998">'
-                + '<i class="fab fa-facebook-square fa-lg"></i></a>';
 
-                $('.match-btn').css({'backgroundColor':'white', 'padding':'8px'});
-
-                document.getElementById("status").innerHTML = status;
-                $("#status").load("../loaded/blank.html", () => {
-                  $('#status').html(status);
-                  console.log("Load (profile of chum) was performed.");
-                });
+                if(value.length() > 2) {
+                  status = '<a href="'+ value +'" target="_blank" style="color:#3b5998">'
+                  + '<i class="fab fa-facebook-square fa-lg"></i></a>';
+  
+                  $('.match-btn').css({'backgroundColor':'white', 'padding':'8px'});
+  
+                  document.getElementById("status").innerHTML = status;
+                  $("#status").load("../loaded/blank.html", () => {
+                    $('#status').html(status);
+                    console.log("Load (profile of chum) was performed.");
+                  });
+                }
               })
             } else {
               console.log("currently not chums");
