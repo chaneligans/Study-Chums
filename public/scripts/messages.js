@@ -673,7 +673,7 @@ function displayHeader() {
                         reject(icon);
                       } else {
                         icon = ((doc.data().icon === undefined)
-                              ? genericGroupIcon:doc.data().icon);
+                              ? genericGroupIcon : doc.data().icon);
                         resolve(icon);
                       }
                     })
@@ -696,13 +696,13 @@ function displayHeader() {
                   });
                 } else {
                   let loadImg = new Promise((resolve, reject) => {
-                    firebase.database().ref("Users/"+ids[0] + "/p1Url")
+                    firebase.database().ref("Users/" + ids[0] + "/p1Url")
                     .once("value", val => resolve(val) );
                   });
                   loadImg.then(result => {
                     $("#chatHeader").load("../loaded/message_header.html", () => {
                       $('#chatImage').html('<img class="chatImage" src="'
-                                            + result +'" alt="'+ names[0] +'">');
+                                            + result.node_.value_ +'" alt="'+ names[0] +'">');
                       $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
                       $('#chatTopic').html('<h3 id="chatTopic">Topic: '+ topic +'</h3>');
                       console.log("Load header (single) was performed.");
