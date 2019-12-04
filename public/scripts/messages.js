@@ -768,25 +768,7 @@ function loadChatHistory() {
       let roomID = result.data().currentChatRoom;
 
       if (roomID.length > 1) {
-        let initial_messages = [];
         let update_messages = [];
-
-        db.collection("ChatRooms").doc(roomID).collection("Messages")
-        .orderBy("time").get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            initial_messages.push({
-              senderID: doc.data().senderID,
-              senderName: doc.data().senderName,
-              time: doc.data().time.toDate(),
-              message: doc.data().message,
-            });
-          });
-
-          Promise.all(initial_messages).then(results => {
-            displayMessages(results);
-          });
-        });
 
         db.collection("ChatRooms").doc(roomID).collection("Messages")
         .orderBy("time").onSnapshot(querySnapshot => {
@@ -799,6 +781,15 @@ function loadChatHistory() {
             }
 
             if (change.type === "modified") {
+              // console.log(change.doc.id, " => ", change.doc.data());
+              update_messages.push({
+                senderID: change.doc.data().senderID,
+                senderName: change.doc.data().senderName,
+                time: timestamp.toDate(),
+                message: change.doc.data().message,
+              });
+            }
+            else if (change.type === "added") {
               // console.log(change.doc.id, " => ", change.doc.data());
               update_messages.push({
                 senderID: change.doc.data().senderID,
