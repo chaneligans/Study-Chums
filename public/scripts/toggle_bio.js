@@ -1,16 +1,14 @@
-// show and hide biography
-// i'm not sure why but this only works when it's below the button
-let i, acc = document.getElementsByClassName("accordion");
+// show and hide class:accordion elements
+let acc = document.getElementsByClassName("accordion");
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    let panel = this.nextElementSibling;
+Array.from(acc).forEach(acc_ => {
+  acc_.addEventListener("click", () => {
+    acc_.classList.toggle("active");
+    let panel = acc_.nextElementSibling;
     if (panel.style.maxHeight){
       panel.style.maxHeight = null;
     } else {
-      // panel.style.maxHeight = panel.scrollHeight + "px";
-      panel.style.maxHeight = "300px";
+      panel.style.maxHeight = (acc_.id === 'biobutton') ? panel.scrollHeight+"px" : "300px";
     }
   });
-}
+});

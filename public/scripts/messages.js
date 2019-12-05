@@ -21,6 +21,7 @@ function clearTextBox() {
 
 function scrollToBottom() {
   $('#chat').scrollTop($('#chat')[0].scrollHeight - $('#chat')[0].clientHeight);
+  dark_fn();
 }
 
 function showCreateChatPopup() {
@@ -791,12 +792,16 @@ function loadChatHistory() {
             }
             else if (change.type === "added") {
               // console.log(change.doc.id, " => ", change.doc.data());
-              update_messages.push({
-                senderID: change.doc.data().senderID,
-                senderName: change.doc.data().senderName,
-                time: timestamp.toDate(),
-                message: change.doc.data().message,
-              });
+              try {
+                update_messages.push({
+                  senderID: change.doc.data().senderID,
+                  senderName: change.doc.data().senderName,
+                  time: timestamp.toDate(),
+                  message: change.doc.data().message,
+                });
+              } catch (err) {
+                // intentional error: 'timestamp.toDate' is not a function
+              }
             }
 
           });
@@ -823,8 +828,8 @@ function displayMessages(messages) {
           $(document).ready(() => {
             $("#chat").append(
               '<li class="me"><div class="entete">'
-              + '<h3 class="timestamp">'+ time +'</h3>'
-              + '<h2 class="sender">You</h2></div>'
+              + '<h3 class="timestamp" style="">'+ time +'</h3>'
+              + '<h2 class="sender" style="">You</h2></div>'
               + '<div class="message">'+ message +'</div></li>'
             );
             scrollToBottom();
@@ -833,8 +838,8 @@ function displayMessages(messages) {
           $(document).ready(() => {
             $("#chat").append(
               '<li class="you"><div class="entete">'
-              + '<h3 class="timestamp">'+ time +'</h3>'
-              + '<h2 class="sender">'+ senderName +'</h2></div>'
+              + '<h3 class="timestamp" style="">'+ time +'</h3>'
+              + '<h2 class="sender" style="">'+ senderName +'</h2></div>'
               + '<div class="message">'+ message +'</div></li>'
             );
             scrollToBottom();
@@ -853,43 +858,45 @@ function sendMessage() {
   const message = document.getElementById("message").value;
   const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      const db = firebase.firestore();
+  if (message !== '') { // only sends stuff if message has context
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        const db = firebase.firestore();
 
-      db.collection("Users").doc(user.uid).get()
-      .then(result => {
-        let roomID = result.data().currentChatRoom;
-        let ref = db.collection("ChatRooms").doc(roomID);
+        db.collection("Users").doc(user.uid).get()
+        .then(result => {
+          let roomID = result.data().currentChatRoom;
+          let ref = db.collection("ChatRooms").doc(roomID);
 
-        let userRef = ref.collection("Users").doc(user.uid).get()
-        .then(doc => {
-          if (doc.exists) {
-            let senderName = doc.data().name;
-            let roomRef = ref.collection("Messages").add({
-              senderID: user.uid,
-              senderName: senderName,
-              message: message,
-              time: timestamp,
-            })
-            .then(docRef => {
-              // console.log("Document written with ID: ", docRef.id);
-              document.getElementById("message").value = "";
-            })
-            .catch(error => {
-              console.error("Error adding document: ", error);
-            });
-          } else {
-            console.log("User is not stored in chat!");
-          }
-        }).catch(error => {
-          console.log("Error getting document:", error);
+          let userRef = ref.collection("Users").doc(user.uid).get()
+          .then(doc => {
+            if (doc.exists) {
+              let senderName = doc.data().name;
+              let roomRef = ref.collection("Messages").add({
+                senderID: user.uid,
+                senderName: senderName,
+                message: message,
+                time: timestamp,
+              })
+              .then(docRef => {
+                // console.log("Document written with ID: ", docRef.id);
+                document.getElementById("message").value = "";
+              })
+              .catch(error => {
+                console.error("Error adding document: ", error);
+              });
+            } else {
+              console.log("User is not stored in chat!");
+            }
+          }).catch(error => {
+            console.log("Error getting document:", error);
+          });
         });
-      });
-    } else {
-      console.log('User is not signed in!');
-    }
-  });
+      } else {
+        console.log('User is not signed in!');
+      }
+    });
+  }
 }
 
 function setUserData(childSnapshotValue, childKey) {
