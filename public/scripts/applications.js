@@ -4,7 +4,7 @@ function setDarkFn(fn) {
 }
 
 function setUserData(childSnapshotValue, childKey) {
-  let photo = childSnapshotValue.p1Url + " ";
+  let photo = `${childSnapshotValue.p1Url} `;
   let data = [childSnapshotValue.index, photo, childSnapshotValue.name,
               childSnapshotValue.Major, childKey];
   return data;
@@ -23,11 +23,11 @@ function retreiveRequests_(request_type) {
     if (user) {
       let results = [],
        db = firebase.database(),
-       applicationsRef = db.ref('Applications/'+ user.uid +'/'+ request_type);
+       applicationsRef = db.ref(`Applications/${user.uid}/${request_type}`);
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key,
-           userDataRef = db.ref('Users/' + key);
+           userDataRef = db.ref(`Users/${key}`);
           let data = userDataRef.once("value").then(childSnapshotData => {
             childData = childSnapshotData.val();
             return setUserData(childData, key);
@@ -53,31 +53,27 @@ function displayRequests_(request_type, results) {
   }
 
   const received_ = id => {
-    return'<td class= "resultIcons"><p id="acceptIcon'+id+'">'
-    + '<a onclick="acceptRequest(\''+id+'\');" style="color:black">'
+    return `<td class= "resultIcons"><p id="acceptIcon${id}">`
+    + `<a onclick="acceptRequest('${id}');" style="color:black">`
     + '<i class="fas fa-user-check fa-lg"></i></a></p></td>'
-    + '<td class= "resultIcons"><p id="rejectIcon'+id+'">'
-    + '<a onclick="rejectRequest(\''+id+'\');" style="color:black">'
+    + `<td class= "resultIcons"><p id="rejectIcon${id}">`
+    + `<a onclick="rejectRequest('${id}');" style="color:black">`
     + '<i class="fas fa-trash-alt fa-lg"></i></a></p></td>';
   }
 
   results.forEach(result => {
-    index = result[0];
-    img = result[1];
-    name = result[2];
-    major = result[3];
-    id = result[4];
+    [index, img, name, major, id] = result;
 
     res_html += '<tr class="resultRow">';
-    res_html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
-    res_html += '<td class="resultUserName"><a href="view_profile.html" ';
-    res_html += 'onclick="return saveUserID(\''+ id +'\');">';
-    res_html += '<h2 id="resultUserName'+count+'">'+ name +'<br /></h2>';
-    res_html += '<h4>'+ major +'</h4></a></td>';
+    res_html += `<td class="resultUserImage"><img src="${img}"></td>`;
+    res_html += '<td class="resultUserName">';
+    res_html += `<a href="view_profile.html" onclick="return saveUserID('${id}');">`;
+    res_html += `<h2 id="resultUserName${count}">${name}<br/></h2>`;
+    res_html += `<h4>${major}</h4></a></td>`;
 
     res_html += ((request_type === "Sent") ? sent_():received_(id));
 
-    res_html += '</tr>'
+    res_html += '</tr>';
 
     count++;
   });
@@ -85,9 +81,9 @@ function displayRequests_(request_type, results) {
   request_type = request_type.toLowerCase();
 
   document.getElementById(request_type+"Requests").innerHTML = res_html;
-  $("#"+ request_type +"Requests").load("../loaded/request_results", () => {
-    $('#'+ request_type +'Requests .requests').html(res_html);
-    console.log("Load was performed ("+ request_type +" requests).");
+  $(`#${request_type}Requests`).load("../loaded/request_results", () => {
+    $(`#${request_type}Requests .requests`).html(res_html);
+    console.log(`Load was performed (${request_type} requests).`);
     dark_fn();
   });
 }
@@ -102,10 +98,10 @@ function saveUserID(userID) {
 
 function noRequests_(Request_type) {
   let request_type = Request_type.toLowerCase();
-  let j_query = "#"+ request_type +"Requests";
+  let j_query = `#${request_type}Requests`;
   $(j_query).load("../loaded/no_requests.html", () => {
-    $('.resultUserName').html('<h2>No '+Request_type+' Requests Yet!</h2>');
-    console.log("Load was performed (no "+ request_type +" requests).");
+    $('.resultUserName').html(`<h2>No ${Request_type} Requests Yet!</h2>`);
+    console.log(`Load was performed (no ${request_type} requests).`);
     dark_fn();
   });
 }
@@ -127,40 +123,40 @@ function requestWas_(Response_type, requesterID) {
       let response_type = Response_type.toLowerCase();
       const db = firebase.database();
 
-      let userRef = db.ref('Applications/'+ userID +'/Received/');
+      let userRef = db.ref(`Applications/${userID}/Received/`);
       userRef.child(requesterID).remove().then(() => {
-          console.log("Remove succeeded ("+response_type+"_request:user).")
+          console.log(`Remove succeeded (${response_type}_request:user).`)
         })
         .catch(error => {
-          console.error("Remove failed ("+response_type+"_request:user): " + error.message)
+          console.error(`Remove failed (${response_type}_request:user): ${error.message}`)
         });
 
-      let senderRef = db.ref('Applications/'+ requesterID +'/Sent/');
+      let senderRef = db.ref(`Applications/${requesterID}/Sent/`);
       senderRef.child(userID).remove().then(() => {
-          console.log("Remove succeeded ("+response_type+"_request:sender).")
+          console.log(`Remove succeeded (${response_type}_request:sender).`)
         })
         .catch(error => {
-          console.error("Remove failed ("+response_type+"_request:sender): " + error.message)
+          console.error(`Remove failed (${response_type}_request:sender): ${error.message}`)
         });
 
       let accept_html = "", reject_html = "";
       if (Response_type === "Accepted") {
         let chums = "Chums";
-        db.ref('Chums/'+ userID +'/'+ requesterID).set({
+        db.ref(`Chums/${userID}/${requesterID}`).set({
           status: chums
         }, error => {
           if (error) {
-            console.errpr("Update to Chum List failed (sender->user): " + error.message);
+            console.error(`Update to Chum List failed (sender->user): ${error.message}`);
           } else {
             console.log("Update to Chum List succeeded (sender->user)");
           }
         });
 
-        db.ref('Chums/'+ requesterID +'/'+ userID).set({
+        db.ref(`Chums/${requesterID}/${userID}`).set({
           status: chums
         }, error => {
           if (error) {
-            console.error("Update to Chum List failed (user->sender): " + error.message);
+            console.error(`Update to Chum List failed (user->sender): ${error.message}`);
           } else {
             console.log("Update to Chum List succeeded (user->sender)");
           }
@@ -171,8 +167,8 @@ function requestWas_(Response_type, requesterID) {
         reject_html = "Rejected!";
       }
 
-      document.getElementById('acceptIcon' + requesterID).innerHTML = accept_html;
-      document.getElementById('rejectIcon' + requesterID).innerHTML = reject_html;
+      document.getElementById(`acceptIcon${requesterID}`).innerHTML = accept_html;
+      document.getElementById(`rejectIcon${requesterID}`).innerHTML = reject_html;
 
     } else {
       console.error('Something went wrong!');

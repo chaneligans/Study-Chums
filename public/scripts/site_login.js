@@ -10,7 +10,7 @@ function facebookSignIn() {
 
     // The signed-in user info.
     let user = result.user;
-    console.log("Successfully signed in via Facebook. Welcome, " + user.displayName);
+    console.log(`Successfully signed in via Facebook. Welcome, ${user.displayName}`);
 
     // Redirect after signing in
     if(result.additionalUserInfo.isNewUser) {
@@ -45,10 +45,10 @@ function initializeUserData(user) {
       "total": totalUsers
     }, error => {
       if (error) {
-        console.log("Update failed - total to " + totalUsers);
-        alert("Something went wrong! Please try again.\nError: " + error);
+        console.log(`Update failed - total to ${totalUsers}`);
+        alert(`Something went wrong! Please try again.\nError: ${error}`);
       } else {
-        console.log("Update suceeded - total to " + totalUsers);
+        console.log(`Update suceeded - total to ${totalUsers}`);
       }
     });
 
@@ -60,7 +60,7 @@ function initializeUserData(user) {
 }
 
 function setIndex(user, index) {
-  const userRef = firebase.database().ref("Users/" + user.uid);
+  const userRef = firebase.database().ref(`Users/${user.uid}`);
   userRef.update({
     index: index,
     "index": index,
@@ -68,9 +68,9 @@ function setIndex(user, index) {
     currentIndex: 0
   }, error => {
     if (error) {
-      console.log("Update failed - index to " + index);
+      console.log(`Update failed - index to ${index}`);
     } else {
-      console.log("Update suceeded - index to " + index);
+      console.log(`Update succeeded - index to ${index}`);
     }
   });
 }
@@ -92,7 +92,7 @@ function createUserWithEmailAndPassword() {
       console.log("Email verification link successfully sent.");
     })
     .catch(error => {
-      console.log("Error sending verification email -- ", error.message);
+      console.log(`Error sending verification email -- ${error.message}`);
     });
 
     alert('An verification link has been sent to the given email. Please verify to continue!');
@@ -114,8 +114,8 @@ function createUserWithEmailAndPassword() {
       console.log("Uh oh. Auth via email and password is not enabled.");
     }
 
-    console.log("Error creating new user with email and password --", errorMessage);
-    console.log("Error creating new user with email and password --", errorCode);
+    console.log(`Error creating new user with email and password -- ${errorMessage}`);
+    console.log(`Error creating new user with email and password -- ${errorCode}`);
   });
 }
 
@@ -146,7 +146,7 @@ function emailAndPasswordSignIn() {
         alert('A verification email has been sent. You must verify account before signing in.');
       })
       .catch(error => {
-        console.log("Error sending verification email -- ", error.message);
+        console.log(`Error sending verification email -- ${error.message}`);
       });
     }
   })
@@ -167,7 +167,7 @@ function emailAndPasswordSignIn() {
       alert("Invalid password.");
     }
 
-    console.log("Error signing in user with email and password --", errorMessage);
-    console.log("Error signing in user with email and password --", errorCode);
+    console.log(`Error signing in with email and password -- ${errorMessage}`);
+    console.log(`Error signing in with email and password -- ${errorCode}`);
   });
 }

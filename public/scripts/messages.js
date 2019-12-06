@@ -263,17 +263,17 @@ function deleteChatRoomFromUser(userID, roomID) {
   .then(() => {
     console.log("ChatRoom document successfully deleted from Users/ChatRooms!");
   }).catch(error => {
-    console.error("Error removing ChatRoom document from Users/ChatRooms: ", error);
+    console.error(`Error removing ChatRoom document from Users/ChatRooms: ${error}`);
   });
 }
 
 function deleteItemFromCollectionFromChatroom(source_chatroom, collection_, userID) {
   source_chatroom.collection("Tokens").doc(userID).delete()
   .then(() => {
-    console.log(collection_.slice(0,collection_.length-1),
-    "successfully deleted from ChatRoom/"+collection_+"!");
+    console.log(`${collection_.slice(0,collection_.length-1)} successfully deleted`
+                + ` from ChatRoom/${collection_}!"`);
   }).catch(error => {
-    console.error("Error removing ChatRoom/"+collection_+"! ", error);
+    console.error(`Error removing ChatRoom/${collection_}: ${error}`);
   });
 }
 
@@ -282,7 +282,7 @@ function deleteChatRoomData(roomID) {
   .then(() => {
     console.log("ChatRoom document successfully deleted from ChatRooms!");
   }).catch(error => {
-    console.error("Error removing ChatRoom document from ChatRooms: ", error);
+    console.error(`Error removing ChatRoom document from ChatRooms: ${error}`);
   });
 }
 
@@ -303,7 +303,7 @@ function moveMessageToTrash(roomID, trashID) {
         .then(() => {
           console.log("Message document successfully deleted from ChatRooms/Messages!");
         }).catch(error => {
-          console.error("Error removing Message document from ChatRooms/Messages:", error);
+          console.error(`Error removing Message document from ChatRooms/Messages: ${error}`);
         });
       });
     });
@@ -361,7 +361,7 @@ function addUserToChatRoom(friendID, roomID, topic) {
       name: friendResult.data().name
     })
     .catch(error => {
-      console.error("Error writing to chatrooms: ", error);
+      console.error(`Error writing to chatrooms: ${error}`);
     });
 
     let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
@@ -369,11 +369,11 @@ function addUserToChatRoom(friendID, roomID, topic) {
       topic: topic
     })
     .catch(error => {
-      console.error("Error writing to users: ", error);
+      console.error(`Error writing to users: ${error}`);
     });
   })
   .catch(error => {
-    console.error("Error retrieving document: ", error);
+    console.error(`Error retrieving document: ${error}`);
   });
 }
 
@@ -411,7 +411,7 @@ function reloadChatRoomSideBar() {
               handleTokenRefresh();
             })
             .catch(error => {
-              console.log("Error getting documents: ", error);
+              console.log(`Error getting documents: ${error}`);
             });
           } // end of if (change.type === 'added')
 
@@ -482,8 +482,8 @@ function displayChatRoom(userList) {
 
       $(document).ready(() => {
         $("#leftSideRooms").append(
-          '<li onclick="openChatRoom(\''+ roomID +'\')">'
-          + '<h2 class = "leftChatName">'+ displayName +'</h2></li>'
+          `<li onclick="openChatRoom('${roomID}')">`
+          + `<h2 class = "leftChatName">${displayName}</h2></li>`
         );
       });
       console.log('displayChatRoom() was properly called');
@@ -560,14 +560,14 @@ function editGroupIcon() {
             updateImage.then(fulfilled => {
               db.collection("Users").doc(user.uid).get()
               .then(doc => {
-                console.log('Attempting to upload file ' + fileName);
+                console.log(`Attempting to upload file ${fileName}`);
                 let chat_ID = doc.data().currentChatRoom;
-                let storageRef = firebase.storage().ref('img/groupicons/'+ chat_ID);
+                let storageRef = firebase.storage().ref(`img/groupicons/${chat_ID}`);
                 let uploadTask = storageRef.put(file);
 
                 uploadTask.on('state_changed', snapshot => {
                   let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  console.log('Upload is ' + progress + '% done');
+                  console.log(`Upload is ${progress}% done`);
                   document.getElementById("editIconProgress").innerHTML = progress;
                   switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED: // or 'paused'
@@ -578,7 +578,7 @@ function editGroupIcon() {
                     break;
                   }
                 }, err => {
-                  console.error('Unsuccessful file upload', err);
+                  console.error(`Unsuccessful file upload: ${err}`);
                 }, () => {
                   // Handle successful uploads on complete
                   uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
@@ -589,7 +589,8 @@ function editGroupIcon() {
                       return userDoc.data().currentChatRoom;
                     })
                     .then(chatroomID => {
-                      return [chatroomID, db.collection("ChatRooms").doc(chatroomID).get()];
+                      return [chatroomID,
+                        db.collection("ChatRooms").doc(chatroomID).get()];
                     })
                     .then(async results => {
                       let chatroomID = results[0];
@@ -611,7 +612,7 @@ function editGroupIcon() {
             })
           });
           tryToUpdateImage.then(res => {
-            console.log('res: '+res);
+            console.log(`res: ${res}`);
             let chatPopupId = document.getElementById("showEditIconPopup");
             chatPopupId.style.display = "none";
             displayHeader();
@@ -687,25 +688,25 @@ function displayHeader() {
 
                   loadImg.then(result => {
                     $("#chatHeader").load("../loaded/message_header.html", () => {
-                      $('#chatImage').html('<img class="chatImage" src="'
-                                            + result +'" alt="'+ names +'">');
-                      $('#chatTitle').html('<h2 id="chatTitle">'+ topic +'</h2>');
-                      $('#chatTopic').html('<h3 id="chatTopic">Chums:  '+ names +'</h3>');
+                      $('#chatImage').html(
+                        `<img class="chatImage" src="${result}" alt="${names}">`);
+                      $('#chatTitle').html(`<h2 id="chatTitle">${topic}</h2>`);
+                      $('#chatTopic').html(`<h3 id="chatTopic">Chums: ${names}</h3>`);
                       console.log("Load header (multi) was performed.");
                       dark_fn();
                     });
                   });
                 } else {
                   let loadImg = new Promise((resolve, reject) => {
-                    firebase.database().ref("Users/" + ids[0] + "/p1Url")
+                    firebase.database().ref(`Users/${ids[0]}/p1Url`)
                     .once("value", val => resolve(val) );
                   });
                   loadImg.then(result => {
                     $("#chatHeader").load("../loaded/message_header.html", () => {
-                      $('#chatImage').html('<img class="chatImage" src="'
-                                            + result.node_.value_ +'" alt="'+ names[0] +'">');
-                      $('#chatTitle').html('<h2 id="chatTitle">'+ names[0] +'</h2>');
-                      $('#chatTopic').html('<h3 id="chatTopic">Topic: '+ topic +'</h3>');
+                      $('#chatImage').html(
+                        `<img class="chatImage" src="${result.node_.value_}" alt="${names[0]}">`);
+                      $('#chatTitle').html(`<h2 id="chatTitle">${names[0]}</h2>`);
+                      $('#chatTopic').html(`<h3 id="chatTopic">Topic: ${topic}</h3>`);
                       console.log("Load header (single) was performed.");
                       dark_fn();
                     });
@@ -744,9 +745,9 @@ function clearOut() {
 
 // clears html for header or chat history
 function clear_(clear_type) {
-  let j_query = (clear_type === 'Header') ? "#chat"+clear_type : "#chat";
+  let j_query = (clear_type === 'Header') ? `#chat${clear_type}` : "#chat";
   $(j_query).load("../loaded/empty.html", () => {
-    console.log("Load for clear_("+clear_type+") was performed.");
+    console.log(`Load for clear_(${clear_type}) was performed.`);
   });
 }
 
@@ -828,9 +829,9 @@ function displayMessages(messages) {
           $(document).ready(() => {
             $("#chat").append(
               '<li class="me"><div class="entete">'
-              + '<h3 class="timestamp" style="">'+ time +'</h3>'
+              + `<h3 class="timestamp" style="">${time}</h3>`
               + '<h2 class="sender" style="">You</h2></div>'
-              + '<div class="message">'+ message +'</div></li>'
+              + `<div class="message">${message}</div></li>`
             );
             scrollToBottom();
           });
@@ -838,9 +839,9 @@ function displayMessages(messages) {
           $(document).ready(() => {
             $("#chat").append(
               '<li class="you"><div class="entete">'
-              + '<h3 class="timestamp" style="">'+ time +'</h3>'
-              + '<h2 class="sender" style="">'+ senderName +'</h2></div>'
-              + '<div class="message">'+ message +'</div></li>'
+              + `<h3 class="timestamp" style="">${time}</h3>`
+              + `<h2 class="sender" style="">${senderName}</h2></div>`
+              + `<div class="message">${message}</div></li>`
             );
             scrollToBottom();
           });
@@ -883,13 +884,13 @@ function sendMessage() {
                 document.getElementById("message").value = "";
               })
               .catch(error => {
-                console.error("Error adding document: ", error);
+                console.error(`Error adding document: ${error}`);
               });
             } else {
               console.log("User is not stored in chat!");
             }
           }).catch(error => {
-            console.log("Error getting document:", error);
+            console.log(`Error getting document: ${error}`);
           });
         });
       } else {
@@ -900,7 +901,7 @@ function sendMessage() {
 }
 
 function setUserData(childSnapshotValue, childKey) {
-  let photo = childSnapshotValue.p1Url + " ";
+  let photo = `${childSnapshotValue.p1Url} `;
   let data = [childSnapshotValue.index, photo, childSnapshotValue.name,
     childSnapshotValue.Major, childKey];
   return data;
@@ -928,11 +929,11 @@ function retrievePopupBoxChums(htmlID) {
     if (user) {
       let results = [];
       let db = firebase.database();
-      let applicationsRef = db.ref('Chums/' + user.uid);
+      let applicationsRef = db.ref(`Chums/${user.uid}`);
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
-          let userDataRef = db.ref('Users/' + key);
+          let userDataRef = db.ref(`Users/${key}`);
 
           let data = userDataRef.once("value")
           .then(childSnapshotData => {
@@ -959,16 +960,12 @@ function retrievePopupBoxChums(htmlID) {
 function displayPopupBoxChums(results, htmlID) {
   console.log('Called function displayPopupBoxChums()');
   sessionStorage.clear(); // using to save chat members
-  let index, img, name, major, count, row, id = 0, chums = [];
+  let index, img, name, major, row, id, count = 1, chums = [];
   let html = '<table id="popupChums">';
 
   results.forEach(result => {
-    index = result[0];
-    img = result[1];
-    name = result[2];
-    major = result[3];
-    id = result[4];
-    row = 'row' + id;
+    [index, img, name, major, id] = result;
+    row = `row${id}`;
 
     if (img === "undefined ") { // set img to the generic image
       img = 'https://firebasestorage.googleapis.com/'
@@ -979,13 +976,12 @@ function displayPopupBoxChums(results, htmlID) {
 
     chums.push(row);
 
-    html += '<tr id="'+ row +'" class="popupRow" ';
-    html += 'onclick="selectChum(this,\''+ id +'\')">';
-    html += '<td class="popupUserImage"><img src="'+ img +'"></td>';
+    html += `<tr id="${row}" class="popupRow" onclick="selectChum(this, '${id}')">`;
+    html += `<td class="popupUserImage"><img src="${img}"></td>`;
     html += '<td class="popupUserName">';
-    html += '<p id="popupUserName'+ count +'">'+ name +'</p></td>';
+    html += `<p id="popupUserName${count}">${name}</p></td>`;
     html += '<td class="popupUserMajor">';
-    html += '<p id="popupUserMajor'+ count +'">'+ major +'</p></td>';
+    html += `<p id="popupUserMajor${count}">${major}</p></td>`;
     html += '</tr>'
 
     count++;
@@ -1008,22 +1004,22 @@ function selectChum(row, id) {
   try {
     let index = members.indexOf(id);
     if (index > -1) {
-      row.style.backgroundColor = '#FFF';
+      row.style.backgroundColor = 'var(--clr-white)';
       members.splice(index, 1);
     } else {
       members.push(id);
-      row.style.backgroundColor = '#E1E3E8';
+      row.style.backgroundColor = 'var(--clr-popup_select)';
     }
   } catch (TypeError) {
     members = members.split(',');
 
     let index = members.indexOf(id);
     if (index > -1) {
-      row.style.backgroundColor = '#FFF';
+      row.style.backgroundColor = 'var(--clr-white)';
       members.splice(index, 1);
     } else {
       members.push(id);
-      row.style.backgroundColor = '#E1E3E8';
+      row.style.backgroundColor = 'var(--clr-popup_select)';
     }
   }
 

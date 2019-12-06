@@ -52,7 +52,7 @@ function handleTokenRefresh() {
      });
     })
     .catch(err => {
-      console.log('Unable to get permission or token to notify.', err);
+      console.log(`Unable to get permission or token to notify. ${err}`);
     });
 }
 

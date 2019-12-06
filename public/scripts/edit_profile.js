@@ -35,7 +35,7 @@ function updatePhotoURL(uid, photo) {
     // update photo for this 'user' with file_in
     if (uid === user.uid) {
 
-      let ref = firebase.database().ref("Users/" + uid);
+      let ref = firebase.database().ref(`Users/${uid}`);
       let photoUrl = 'Something went wrong!!!';
 
       let max_width = 800, max_height = 800;
@@ -99,12 +99,12 @@ function updatePhotoURL(uid, photo) {
           let tryToUpdateImage = function() {
             updateImage.then(fulfilled => {
               // console.log('Attempting to upload file ' + fileName);
-              let storageRef = firebase.storage().ref('img/' + user.uid + '/' + user.uid);
+              let storageRef = firebase.storage().ref(`img/${user.uid}/${user.uid}`);
               let uploadTask = storageRef.put(file);
 
               uploadTask.on('state_changed', snapshot => {
                 let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
+                console.log(`Upload is ${progress}% done`);
                 switch (snapshot.state) {
                   case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
@@ -114,7 +114,7 @@ function updatePhotoURL(uid, photo) {
                     break;
                 }
               }, error => {
-                console.error('Unsuccessful file upload: ' + error);
+                console.error(`Unsuccessful file upload: ${error}`);
               }, () => {
                 // Handle successful uploads on complete
                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
@@ -127,9 +127,9 @@ function updatePhotoURL(uid, photo) {
                     "p1Url": photoUrl
                   }, error => {
                     if (error) {
-                      console.error("Update failed - p1Url updated to " + photo + ": " + error);
+                      console.error(`Update failed - p1Url updated to ${photo}: ${error}`);
                     } else {
-                      console.log("Update succeeded - p1Url updated to " + photo);
+                      console.log(`Update succeeded - p1Url updated to ${photo}`);
                       location.href = "home.html";
                     }
                   });
@@ -152,15 +152,15 @@ function updateName(uid, name_in) {
 
     if (uid === user.uid) {
       //update name in realtime database
-      let db_ref = firebase.database().ref("Users/" + user.uid);
+      let db_ref = firebase.database().ref(`Users/${user.uid}`);
       db_ref.update({
         name: name_in,
         "name": name_in
       }, error => {
         if (error) {
-          console.error("Update failed - name updated to " + name_in + ": " + error);
+          console.error(`Update failed - name updated in rt to ${name_in}: ${error}`);
         } else {
-          console.log("Update succeeded - name updated to " + name_in);
+          console.log(`Update succeeded - name updated in rt to ${name_in}`);
         }
       });
 
@@ -171,9 +171,9 @@ function updateName(uid, name_in) {
         "name": name_in
       }, error => {
         if (error) {
-          console.error("Update failed - name updated to " + name_in + ": " + error);
+          console.error(`Update failed - name updated in fs to ${name_in}: ${error}`);
         } else {
-          console.log("Update succeeded - name updated to " + name_in);
+          console.log(`Update succeeded - name updated in fs to ${name_in}`);
         }
       });
     }
@@ -187,15 +187,15 @@ function updateEmail(uid, email_in) {
     // update email for this 'user' with email_in
     if (uid === user.uid) {
       //realtime database
-      let ref = firebase.database().ref("Users/" + user.uid);
+      let ref = firebase.database().ref(`Users/${user.uid}`);
       ref.update({
         email: email_in,
         "email": email_in
       }, error => {
         if (error) {
-          console.error("Update failed - email updated to " + email_in + ": " + error);
+          console.error(`Update failed - email updated to ${email_in}: ${error}`);
         } else {
-          console.log("Update suceeded - email updated to " + email_in);
+          console.log(`Update succeeded - email updated to ${email_in}`);
         }
       });
     }
@@ -208,15 +208,15 @@ function updateMajor(uid, major_in) {
     // update major for this 'user' with major_in
     if (uid === user.uid) {
       //realtime database
-      let ref = firebase.database().ref("Users/" + user.uid);
+      let ref = firebase.database().ref(`Users/${user.uid}`);
       ref.update({
         Major: major_in,
         "Major": major_in
       }, error => {
         if (error) {
-          console.error("Update failed - major updated to " + major_in + ": " + error);
+          console.error(`Update failed - major updated to ${major_in}: ${error}`);
         } else {
-          console.log("Update succeeded - major updated to " + major_in);
+          console.log(`Update succeeded - major updated to ${major_in}`);
         }
       });
     }
@@ -229,15 +229,15 @@ function updateBio(uid, bio_in) {
     // update bio for this 'user' with bio_in
     if (uid === user.uid) {
       //realtime database
-      let ref = firebase.database().ref("Users/" + user.uid);
+      let ref = firebase.database().ref(`Users/${user.uid}`);
       ref.update({
         bio: bio_in,
         "bio": bio_in
       }, error => {
         if (error) {
-          console.error("Update failed - bio updated to " + bio_in + ": " + error);
+          console.error(`Update failed - bio updated to ${bio_in}: ${error}`);
         } else {
-          console.log("Update succeeded - bio updated to " + bio_in);
+          console.log(`Update succeeded - bio updated to ${bio_in}`);
         }
       });
     }
@@ -249,15 +249,15 @@ function updateFBProfileLink(uid, FBprofileLink_in) {
     // console.log("Updating FB profile for user id ", user.uid);
     if (uid == user.uid) {
       //realtime database
-      let ref = firebase.database().ref("Users/" + user.uid);
+      let ref = firebase.database().ref(`Users/${user.uid}`);
       ref.update({
         fbProfile: FBprofileLink_in,
         "fbProfile": FBprofileLink_in
       }, error => {
         if (error) {
-          console.log("Update failed - fbProfile updated to " + FBprofileLink_in + ": " + error);
+          console.log(`Update failed - fbProfile updated to ${FBprofileLink_in}: ${error}`);
         } else {
-          console.log("Update succeeded - fbProfile updated to " + FBprofileLink_in);
+          console.log(`Update succeeded - fbProfile updated to ${FBprofileLink_in}`);
         }
       });
     }

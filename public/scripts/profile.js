@@ -3,7 +3,7 @@ function getUserMajor() {
     if (user) {
       let Major_val;
       let userDataRef = firebase.database().ref(),
-       MajorRef = userDataRef.child("Users/" + user.uid);
+       MajorRef = userDataRef.child(`Users/${user.uid}`);
       MajorRef.once("value").then(snapshot => {
         Major_val = snapshot.val().Major;
         $("#Major").append(Major_val);
@@ -20,7 +20,7 @@ function getUserBio() {
     if (user) {
       let bio_val;
       let userDataRef = firebase.database().ref(),
-       bioRef = userDataRef.child("Users/" + user.uid);
+       bioRef = userDataRef.child(`Users/${user.uid}`);
       bioRef.once("value").then(snapshot => {
         bio_val = snapshot.val().bio;
         $("#bio").append(bio_val);
@@ -37,7 +37,7 @@ function getUserEmail() {
     if (user) {
       let email_val;
       let userDataRef = firebase.database().ref(),
-       emailRef = userDataRef.child("Users/" + user.uid);
+       emailRef = userDataRef.child(`Users/${user.uid}`);
       emailRef.once("value").then(snapshot => {
         email_val = snapshot.val().email;
         $("#email").append(email_val);
@@ -54,7 +54,7 @@ function getUserName() {
     if (user) {
       let name_val;
       let userDataRef = firebase.database().ref(),
-       nameRef = userDataRef.child("Users/" + user.uid);
+       nameRef = userDataRef.child(`Users/${user.uid}`);
       nameRef.once("value").then(snapshot => {
         name_val = snapshot.val().name;
         document.getElementById("name").innerHTML = name_val;
@@ -71,7 +71,7 @@ function getUserP1Url(showGeneric) {
     if (user) {
       let image_val;
       let userDataRef = firebase.database().ref(),
-       imageRef = userDataRef.child("Users/"+ user.uid);
+       imageRef = userDataRef.child(`Users/${user.uid}`);
       imageRef.once("value").then(snapshot => {
         image_val = snapshot.val().p1Url;
         if (showGeneric) {

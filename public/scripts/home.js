@@ -8,10 +8,10 @@ function getTotalUsers() {
 function loadProfile(startIndex) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      firebase.database().ref("Users/" + user.uid)
+      firebase.database().ref(`Users/${user.uid}`)
       .once("value", snapshot => {
         // let userIndex = snapshot.val().index;
-        console.log("Loading Profile of index: " + startIndex);
+        console.log(`Loading Profile of index: ${startIndex}`);
 
         loadImage(startIndex);
         loadName(startIndex);
@@ -44,14 +44,14 @@ function getProfileToThe_(direction, update) {
   firebase.auth().onAuthStateChanged(async user => {
     if (user) {
       let db = firebase.database();
-      let ref = db.ref("Users/" + user.uid);
+      let ref = db.ref(`Users/${user.uid}`);
 
       let totalUsers = 0;
       try {
         let totalUsersResult = await getTotalUsers();
         totalUsers = totalUsersResult.val().total;
       } catch (err) {
-        console.error("Couldn\'t get total Users: "+ err);
+        console.error(`Couldn\'t get total Users: ${err}`);
       }
 
       try {
@@ -69,7 +69,7 @@ function getProfileToThe_(direction, update) {
         let bound_arg = boundArgument(direction, nextIndex, totalUsers);
 
         while(check_Chums || nextIndex === userIndex || bound_arg) {
-          console.log('While loop in getProfileToThe_('+ direction +')');
+          console.log(`While loop in getProfileToThe_( ${direction} )`);
           if (bound_arg) {
             nextIndex = (direction === 'Right') ? 0 : (totalUsers-1);
             check_Chums = checkChums(nextIndex, chums);
@@ -86,16 +86,16 @@ function getProfileToThe_(direction, update) {
           "currentIndex" : nextIndex
         }, error => {
           if (error) {
-            console.error("Update failed - currentIndex to "+ nextIndex);
+            console.error(`Update failed - currentIndex to ${nextIndex}`);
           } else {
-            console.log("Update successful - currentIndex to " + nextIndex);
+            console.log(`Update successful - currentIndex to ${nextIndex}`);
           }
         });
-        console.log("Loading next profile at index "+ nextIndex);
+        console.log(`Loading next profile at index ${nextIndex}`);
         loadProfile(nextIndex);
 
       } catch (err) {
-        console.error("Couldn\'t get profile list: "+ err);
+        console.error(`Couldn\'t get profile list: ${err}`);
       }
     } else {
       console.error("No user was found.");
@@ -108,7 +108,7 @@ function getProfileToThe_(direction, update) {
 function getProfileList(db, uid, direction) {
   let userIndex = 0, nextIndex = 0;
   return new Promise((resolve, reject) => {
-    db.ref("Users/"+uid).once("value").then(snapshot => {
+    db.ref(`Users/${uid}`).once("value").then(snapshot => {
 
       return {
         userIndex : snapshot.val().index
@@ -120,16 +120,16 @@ function getProfileList(db, uid, direction) {
       nextIndex = values.nextIndex;
 
       let chums = [];
-      db.ref("Chums/"+uid).once("value").then(chum_ref_snapshot => {
+      db.ref(`Chums/${uid}`).once("value").then(chum_ref_snapshot => {
         let chumRef;
         chum_ref_snapshot.forEach(chum => {
-          chumRef = db.ref("Users/"+chum.key);
+          chumRef = db.ref(`Users/${chum.key}`);
           chums.push(
             chumRef.once("value").then(chum_snapshot => {
               return new Promise((resolve, reject) => {
                 setTimeout(() => resolve(chum_snapshot.val().index), 100);
               }).catch(error => {
-                console.error("Could not resolve: "+ error);
+                console.error(`Could not resolve: ${error}`);
               });
             })
           );
@@ -141,7 +141,7 @@ function getProfileList(db, uid, direction) {
       });
     });
   }).catch(err => {
-    console.error('Couldn\'t complete the list: '+ err);
+    console.error(`Couldn\'t complete the list: ${err}`);
   });
 }
 
@@ -233,7 +233,7 @@ function saveUserID() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let db = firebase.database(),
-       userDataRef = db.ref("Users/" + user.uid);
+       userDataRef = db.ref(`Users/${user.uid}`);
       userDataRef.once("value", snapshot => {
         let currentIndex = snapshot.val().currentIndex;
 

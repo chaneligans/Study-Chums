@@ -81,7 +81,7 @@ function Search_(searchType, input) {
     results = [...new Set(results)];
     // manipulates the results s.t. it's unique elements only
 
-    console.log('Results found: ' + results.length);
+    console.log(`Results found: ${results.length}`);
     if (results.length > 0) {showSearchResults(results);}
     else {noResultsFound();}
 
@@ -117,7 +117,7 @@ function getSearchSubset(source, name_) {
         resolve(subset);
 
       } else {
-        reject("There were no results for this type of the query -- " + name_);
+        reject(`There were no results for this type of the query -- ${name_}`);
       }
     });
   });
@@ -155,16 +155,12 @@ function isDuplicateOf_In_(source, given_list) {
 
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(user => {
-    let index, img, name, major, count = 1, id = 0, length = results.length;
+    let index, img, name, major, id, count = 1,length = results.length;
     let res_html = "";
 
     // iterate through and add a table row for each user (result)
     results.forEach(result => {
-      index = result[0];
-      img = result[1];
-      name = result[2];
-      major = result[3];
-      id = result[4];
+      [index, img, name, major, id] = result;
 
       if (img === "undefined ") { // set img to the generic image
         img = 'https://firebasestorage.googleapis.com/'
@@ -175,12 +171,12 @@ function showSearchResults(results) {
 
       if (id !== user.uid) {
         res_html += '<tr class="resultRow">';
-        res_html += '<td class="resultUserImage"><img src="'+ img +'"></td>';
+        res_html += `<td class="resultUserImage"><img src="${img}"></td>`;
         res_html += '<td class="resultUserName"><a href="view_profile.html"';
-        res_html += 'onclick="return saveUserID(\''+ id +'\');">';
-        res_html += '<h2 id="resultUserName'+ count +'">'+ name +'</h2></a></td>';
+        res_html += `onclick="return saveUserID(${id});">`;
+        res_html += `<h2 id="resultUserName${count}">${name}</h2></a></td>`;
         res_html += '<td class="resultUserMajor">';
-        res_html += '<h3 id="resultUserMajor">'+ major +'</h3></td>';
+        res_html += `<h3 id="resultUserMajor">${major}</h3></td>`;
         res_html += '</tr>';
 
         count++;
@@ -189,7 +185,7 @@ function showSearchResults(results) {
         if (length === 1) {
           res_html += '<tr class="resultRow">';
           res_html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
-          res_html += '"</tr>"';
+          res_html += '</tr>';
         }
       }
     });

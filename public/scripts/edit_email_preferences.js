@@ -10,10 +10,10 @@ function updateEmailPreferences() {
       // execute only if something is there
       if (email_in !== undefined) {updateEmail(user, email_in);}
       if (subscribe) {
-        console.log(email_in + ' has subscribed to emails');
+        console.log(`${email_in} has subscribed to emails`);
         updateSubscription(userId, true);
       } else {
-        console.log(email_in + ' has unsubscribed to emails');
+        console.log(`${email_in} has unsubscribed to emails`);
         updateSubscription(userId, false);
       }
       console.log("Updates sent to database.");
@@ -28,7 +28,7 @@ function updateEmailPreferences() {
 }
 
 function updateEmail(userId, email_in) {
-  let ref = firebase.database().ref("Users/" + userId);
+  let ref = firebase.database().ref(`Users/${userId}`);
 
   //realtime database
   ref.update({
@@ -36,15 +36,15 @@ function updateEmail(userId, email_in) {
     "email": email_in
   }, error => {
     if (error) {
-      console.error("Update failed - email to " + email_in + ": " + error);
+      console.error(`Update failed - email to ${email_in}: ${error}`);
     } else {
-      console.log("Update suceeded - email to " + email_in);
+      console.log(`Update succeeded - email to ${email_in}`);
     }
   });
 }
 
 function updateSubscription(userId, preference) {
-  let ref = firebase.database().ref("Subscriptions/" + userId);
+  let ref = firebase.database().ref(`Subscriptions/${userId}`);
   //realtime database
   if (preference === false) {
     ref.update({
@@ -52,7 +52,7 @@ function updateSubscription(userId, preference) {
       "subscribed": false
     }, error => {
       if (error) {
-        console.error("Update failed - email pref to false: " + error);
+        console.error(`Update failed - email pref to false: ${error}`);
       } else {
         console.log("Update succeeded - email pref to false");
       }
@@ -63,7 +63,7 @@ function updateSubscription(userId, preference) {
       "subscribed": true
     }, error => {
       if (error) {
-        console.error("Update failed - email pref to true: " + error);
+        console.error(`Update failed - email pref to false: ${error}`);
       } else {
         console.log("Update succeeded - email pref to true");
       }

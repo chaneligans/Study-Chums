@@ -8,7 +8,7 @@ Array.from(acc).forEach(acc_ => {
     if (panel.style.maxHeight){
       panel.style.maxHeight = null;
     } else {
-      panel.style.maxHeight = (acc_.id === 'biobutton') ? panel.scrollHeight+"px" : "300px";
+      panel.style.maxHeight = (acc_.id === 'biobutton') ? `${panel.scrollHeight}px` : "300px";
     }
   });
 });

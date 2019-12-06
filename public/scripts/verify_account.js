@@ -16,7 +16,7 @@ function verifyEmail() {
             }, 3000);
         })
         .catch(error => {
-            console.log("Error verifying email -- ", error.message);
+            console.log(`Error verifying email -- ${error.message}`);
         });
     }
 }

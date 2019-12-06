@@ -5,7 +5,7 @@ function checkLogin() {
     if (user) {
       console.log('Signed in');
     } else {
-      console.log('Not signed in: ' + user);
+      console.log(`Not signed in: ${user}`);
 
       setTimeout(() => {
         alert('You are not signed in. Please log in to continue.');

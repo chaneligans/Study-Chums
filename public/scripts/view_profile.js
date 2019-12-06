@@ -3,7 +3,7 @@ function getUserMajor(id) {
     if (user) {
       let Major_val;
       let userDataRef = firebase.database().ref(),
-       MajorRef = userDataRef.child("Users/"+ id);
+       MajorRef = userDataRef.child(`Users/${id}`);
       MajorRef.once("value").then(snapshot => {
         Major_val = snapshot.val().Major;
         $("#Major").append(Major_val);
@@ -20,7 +20,7 @@ function getUserBio(id) {
     if (user) {
       let bio_val;
       let userDataRef = firebase.database().ref(),
-       bioRef = userDataRef.child("Users/"+ id);
+       bioRef = userDataRef.child(`Users/${id}`);
       bioRef.once("value").then(snapshot => {
         bio_val = snapshot.val().bio;
         $("#bio").append(bio_val);
@@ -37,7 +37,7 @@ function getUserEmail(id) {
     if (user) {
       let email_val;
       let userDataRef = firebase.database().ref(),
-       emailRef = userDataRef.child("Users/"+ id);
+       emailRef = userDataRef.child(`Users/${id}`);
       emailRef.once("value").then(snapshot => {
         email_val = snapshot.val().email;
         // console.log(email_val);
@@ -55,7 +55,7 @@ function getUserName(id) {
     if (user) {
       let name_val;
       let userDataRef = firebase.database().ref(),
-       nameRef = userDataRef.child("Users/"+ id);
+       nameRef = userDataRef.child(`Users/${id}`);
       nameRef.once("value").then(snapshot => {
         name_val = snapshot.val().name;
         document.getElementById("name").innerHTML = name_val;
@@ -71,7 +71,7 @@ function getUserP1Url(showGeneric, id) {
     if (user) {
       let image_val;
       let userDataRef = firebase.database().ref(),
-       imageRef = userDataRef.child("Users/"+ id)
+       imageRef = userDataRef.child(`Users/${id}`)
       imageRef.once("value").then(snapshot => {
         image_val = snapshot.val().p1Url;
 
@@ -102,7 +102,7 @@ function getStatus(id) {
       let myid = user.uid,
        db = firebase.database(),
        userDataRef = db.ref(),
-       statusRef = userDataRef.child("Applications/"+ myid +"/Sent/"+ id);
+       statusRef = userDataRef.child(`Applications/${myid}/Sent/${id}`);
 
       statusRef.on("value", snapshot => {
         if (snapshot.val()) {
@@ -115,7 +115,7 @@ function getStatus(id) {
           });
 
         } else {
-          let ChumsStatusRef = userDataRef.child("Chums/"+ myid +"/"+ id);
+          let ChumsStatusRef = userDataRef.child(`Chums/${myid}/${id}`);
           ChumsStatusRef.on("value", snapshot => {
             if (snapshot.val()) {
               let fbProfileLink = db.ref('Users/'+ id).once("value")
@@ -126,12 +126,12 @@ function getStatus(id) {
               Promise.resolve(fbProfileLink).then(value => {
                 // console.log(value);
 
-                if(value.length() > 2) {
-                  status = '<a href="'+ value +'" target="_blank" style="color:#3b5998">'
+                if(value.length > 2) {
+                  status = `<a href="${value}" target="_blank" style="color:#3b5998">`
                   + '<i class="fab fa-facebook-square fa-lg"></i></a>';
-  
+
                   $('.match-btn').css({'backgroundColor':'white', 'padding':'8px'});
-  
+
                   document.getElementById("status").innerHTML = status;
                   $("#status").load("../loaded/blank.html", () => {
                     $('#status').html(status);
@@ -141,7 +141,7 @@ function getStatus(id) {
               })
             } else {
               console.log("currently not chums");
-              status = '<a onclick="makeChumRequest(\'' + id + '\');" '
+              status = `<a onclick="makeChumRequest('${id}');" `
               + 'style="color:white">Request To Match</a>';
 
               document.getElementById("status").innerHTML = status;
@@ -164,7 +164,7 @@ function makeChumRequest(id) {
       let myid = user.uid,
        db = firebase.database(),
        userDataRef = db.ref(),
-       ChumsStatusRef = userDataRef.child("Chums/"+ myid +"/"+ id);
+       ChumsStatusRef = userDataRef.child(`Chums/${myid}/${id}`);
 
       ChumsStatusRef.on("value", snapshot => {
         if (snapshot.val()) {
@@ -177,11 +177,11 @@ function makeChumRequest(id) {
 
       if (chumStatus !== "Chums") {
         let status = "Requested";
-        db.ref('Applications/'+ myid +'/Sent/'+ id).set({
+        db.ref(`Applications/${myid}/Sent/${id}`).set({
           status: status
         });
 
-        db.ref('Applications/'+ id +'/Received/'+ myid).set({
+        db.ref(`Applications/${id}/Received/${myid}`).set({
           status: status
         });
         document.getElementById("status").innerHTML = status;
