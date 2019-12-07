@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Sniglet|Nunito');
-@import @material/card/mdc-card;
+/* @import "@material/card/mdc-card"; */
 
 :root {
   --clr-primary_dark:           #005271;
