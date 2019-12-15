@@ -5,8 +5,10 @@ function setDarkFn(fn) {
 
 function setUserData(childSnapshotValue, childKey) {
   let photo = `${childSnapshotValue.p1Url} `;
-  let data = [childSnapshotValue.index, photo, childSnapshotValue.name,
-              childSnapshotValue.Major, childKey];
+  let data = [
+    childSnapshotValue.index, photo, childSnapshotValue.name,
+    childSnapshotValue.Major, childKey
+  ];
   return data;
 }
 
@@ -22,17 +24,16 @@ function retreiveRequests_(request_type) {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let results = [],
-       db = firebase.database(),
-       applicationsRef = db.ref(`Applications/${user.uid}/${request_type}`);
+      db = firebase.database(),
+      applicationsRef = db.ref(`Applications/${user.uid}/${request_type}`);
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key,
-           userDataRef = db.ref(`Users/${key}`);
+          userDataRef = db.ref(`Users/${key}`);
           let data = userDataRef.once("value").then(childSnapshotData => {
-            childData = childSnapshotData.val();
-            return setUserData(childData, key);
+            return setUserData(childSnapshotData.val(), key);
           });
-          results.push(Promise.resolve(data).then(() => {return data;}));
+          results.push(Promise.resolve(data));
         });
         Promise.all(results).then(result => {
           if (result.length > 0) {displayRequests_(request_type, result);}
@@ -48,7 +49,8 @@ function displayRequests_(request_type, results) {
   let res_html = '';
 
   const sent_ = () => {
-    return '<td class= "resultIcons"><i class="fas fa-spinner fa-sm"></i>'
+    return '<td class= "resultIcons">'
+    + '<i class="fas fa-spinner fa-sm"></i>'
     + '<p>Request Pending</p></td>';
   }
 
@@ -64,16 +66,14 @@ function displayRequests_(request_type, results) {
   results.forEach(result => {
     [index, img, name, major, id] = result;
 
-    res_html += '<tr class="resultRow">';
-    res_html += `<td class="resultUserImage"><img src="${img}"></td>`;
-    res_html += '<td class="resultUserName">';
-    res_html += `<a href="view_profile.html" onclick="return saveUserID('${id}');">`;
-    res_html += `<h2 id="resultUserName${count}">${name}<br/></h2>`;
-    res_html += `<h4>${major}</h4></a></td>`;
-
-    res_html += ((request_type === "Sent") ? sent_():received_(id));
-
-    res_html += '</tr>';
+    res_html += '<tr class="resultRow">'
+    + `<td class="resultUserImage"><img src="${img}"></td>`
+    + '<td class="resultUserName">'
+    + `<a href="view_profile.html" onclick="return saveUserID('${id}');">`
+    + `<h2 id="resultUserName${count}">${name}<br/></h2>`
+    + `<h4>${major}</h4></a></td>`
+    + ((request_type === "Sent") ? sent_():received_(id))
+    + '</tr>';
 
     count++;
   });
@@ -125,19 +125,19 @@ function requestWas_(Response_type, requesterID) {
 
       let userRef = db.ref(`Applications/${userID}/Received/`);
       userRef.child(requesterID).remove().then(() => {
-          console.log(`Remove succeeded (${response_type}_request:user).`)
-        })
-        .catch(error => {
-          console.error(`Remove failed (${response_type}_request:user): ${error.message}`)
-        });
+        console.log(`Remove succeeded (${response_type}_request:user).`)
+      })
+      .catch(error => {
+        console.error(`Remove failed (${response_type}_request:user): ${error.message}`)
+      });
 
       let senderRef = db.ref(`Applications/${requesterID}/Sent/`);
       senderRef.child(userID).remove().then(() => {
-          console.log(`Remove succeeded (${response_type}_request:sender).`)
-        })
-        .catch(error => {
-          console.error(`Remove failed (${response_type}_request:sender): ${error.message}`)
-        });
+        console.log(`Remove succeeded (${response_type}_request:sender).`)
+      })
+      .catch(error => {
+        console.error(`Remove failed (${response_type}_request:sender): ${error.message}`)
+      });
 
       let accept_html = "", reject_html = "";
       if (Response_type === "Accepted") {

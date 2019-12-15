@@ -12,18 +12,17 @@ function retrieveChums(fn) {
   console.log('Called function retrieveChums()');
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let results = [];
-      let applicationsRef = firebase.database().ref(`Chums/${user.uid}`);
+      let results = [],
+       applicationsRef = firebase.database().ref(`Chums/${user.uid}`);
       applicationsRef.once("value", snapshot => {
         snapshot.forEach(childSnapshot => {
-          let key = childSnapshot.key;
-          let userDataRef = firebase.database().ref(`Users/${key}`);
+          let key = childSnapshot.key,
+           userDataRef = firebase.database().ref(`Users/${key}`);
 
           let data = userDataRef.once("value").then(childSnapshotData => {
-            let childData = childSnapshotData.val();
-            return setUserData(childData, key);
+            return setUserData(childSnapshotData.val(), key);
           });
-          results.push(Promise.resolve(data))
+          results.push(Promise.resolve(data));
         });
         Promise.all(results).then(result => {
           console.log(`Results found: ${result.length}`);
@@ -42,14 +41,14 @@ function displayChums(results) {
   results.forEach(result => {
     [index, img, name, major, id] = result;
 
-    res_html += '<tr class="resultRow"><td class="resultUserImage">';
-    res_html += `<img src="${img}"></td>`;
-    res_html += '<td class="resultUserName">';
-    res_html += `<a href="view_profile.html" onclick="return saveUserID('${id}');">`
-    res_html += `<h2 id="resultUserName${count}">${name}</h2></a></td>`;
-    res_html += '<td class="resultUserMajor">';
-    res_html += `<h3 id="resultUserMajor">${major}</h3></td>`;
-    res_html += '</tr>';
+    res_html += '<tr class="resultRow"><td class="resultUserImage">'
+    + `<img src="${img}"></td>`
+    + '<td class="resultUserName">'
+    + `<a href="view_profile.html" onclick="return saveUserID('${id}');">`
+    + `<h2 id="resultUserName${count}">${name}</h2></a></td>`
+    + '<td class="resultUserMajor">'
+    + `<h3 id="resultUserMajor">${major}</h3></td>`
+    + '</tr>';
 
     count++;
   });
@@ -77,4 +76,3 @@ function noChumsFound() {
     dark_fn();
   });
 }
-

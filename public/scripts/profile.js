@@ -1,11 +1,10 @@
 function getUserMajor() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let Major_val;
       let userDataRef = firebase.database().ref(),
        MajorRef = userDataRef.child(`Users/${user.uid}`);
       MajorRef.once("value").then(snapshot => {
-        Major_val = snapshot.val().Major;
+        let Major_val = snapshot.val().Major;
         $("#Major").append(Major_val);
         document.getElementById("major").innerHTML = Major_val;
       });
@@ -18,11 +17,10 @@ function getUserMajor() {
 function getUserBio() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let bio_val;
       let userDataRef = firebase.database().ref(),
        bioRef = userDataRef.child(`Users/${user.uid}`);
       bioRef.once("value").then(snapshot => {
-        bio_val = snapshot.val().bio;
+        let bio_val = snapshot.val().bio;
         $("#bio").append(bio_val);
         document.getElementById("bio").innerHTML = bio_val;
       });
@@ -35,11 +33,10 @@ function getUserBio() {
 function getUserEmail() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let email_val;
       let userDataRef = firebase.database().ref(),
        emailRef = userDataRef.child(`Users/${user.uid}`);
       emailRef.once("value").then(snapshot => {
-        email_val = snapshot.val().email;
+        let email_val = snapshot.val().email;
         $("#email").append(email_val);
         document.getElementById("email").innerHTML = email_val;
       });
@@ -52,11 +49,10 @@ function getUserEmail() {
 function getUserName() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      let name_val;
       let userDataRef = firebase.database().ref(),
        nameRef = userDataRef.child(`Users/${user.uid}`);
       nameRef.once("value").then(snapshot => {
-        name_val = snapshot.val().name;
+        let name_val = snapshot.val().name;
         document.getElementById("name").innerHTML = name_val;
       });
     } else {
@@ -67,13 +63,11 @@ function getUserName() {
 
 function getUserP1Url(showGeneric) {
   firebase.auth().onAuthStateChanged(user => {
-    // console.log(user.uid);
     if (user) {
-      let image_val;
       let userDataRef = firebase.database().ref(),
-       imageRef = userDataRef.child(`Users/${user.uid}`);
+      imageRef = userDataRef.child(`Users/${user.uid}`);
       imageRef.once("value").then(snapshot => {
-        image_val = snapshot.val().p1Url;
+        let image_val = snapshot.val().p1Url;
         if (showGeneric) {
           image_val = 'https://firebasestorage.googleapis.com/'
           + 'v0/b/study-chums.appspot.com/'

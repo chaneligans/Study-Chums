@@ -30,6 +30,7 @@ function facebookSignIn() {
     const email = error.email;
     // The firebase.auth.AuthCredential type that was used.
     const credential = error.credential;
+    console.log(`login type: ${credential}\nemail: ${email}\nThe error: ${errorCode}\n${errorMessage}`);
   });
 }
 
@@ -37,8 +38,7 @@ function initializeUserData(user) {
   let totalUsers;
   const totalRef = firebase.database().ref("TotalUsers");
   totalRef.once("value", data => {
-    totalUsers = data.val().total;
-    totalUsers = totalUsers + 1;
+    totalUsers = data.val().total + 1;
 
     totalRef.update({
       total: totalUsers,
@@ -101,16 +101,16 @@ function createUserWithEmailAndPassword() {
     const errorCode = error.code;
     const errorMessage = error.message;
 
-    if(errorCode == 'auth/invalid-email') {
-      alert('Email is not vaild.');
+    if (errorCode === 'auth/invalid-email') {
+      alert('Email is not valid.');
 
-    } else if(errorCode == "auth/email-already-in-use") {
+    } else if (errorCode === "auth/email-already-in-use") {
       alert("Email is already in use. Please sign in.");
 
-    } else if(errorCode == 'auth/weak-password') {
+    } else if (errorCode === 'auth/weak-password') {
       alert('Password is too weak. It should be at least 6 characters.');
 
-    } else if(errorCode == 'auth/operation-not-allowed') {
+    } else if (errorCode === 'auth/operation-not-allowed') {
       console.log("Uh oh. Auth via email and password is not enabled.");
     }
 
@@ -143,7 +143,7 @@ function emailAndPasswordSignIn() {
       firebase.auth().sendSignInLinkToEmail(email_in, actionCodeSettings)
       .then(() => {
         console.log("Email verification link successfully sent.");
-        alert('A verification email has been sent. You must verify account before signing in.');
+        alert('A verification email has been sent. You must verify this account before signing in.');
       })
       .catch(error => {
         console.log(`Error sending verification email -- ${error.message}`);
@@ -154,16 +154,16 @@ function emailAndPasswordSignIn() {
     const errorCode = error.code;
     const errorMessage = error.message;
 
-    if(errorCode == 'auth/invalid-email') {
-      alert('Email is not vaild.');
+    if (errorCode === 'auth/invalid-email') {
+      alert('Email is not valid.');
 
-    } else if(errorCode == "auth/user-disabled") {
+    } else if (errorCode === "auth/user-disabled") {
       alert("User has been disabled.");
 
-    } else if(errorCode == 'auth/user-not-found') {
+    } else if (errorCode === 'auth/user-not-found') {
       alert('Email and password combination not found.');
 
-    } else if(errorCode == 'auth/wrong-password') {
+    } else if (errorCode === 'auth/wrong-password') {
       alert("Invalid password.");
     }
 

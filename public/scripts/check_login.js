@@ -19,7 +19,7 @@ function checkLogin() {
 // Redirects the user to the home page if they are signed in (For index.html only)
 function checkIndexLogin() {
   firebase.auth().onAuthStateChanged(user => {
-    if(user) {
+    if (user) {
       console.log('Signed in');
       window.location.href = 'home.html';
     }

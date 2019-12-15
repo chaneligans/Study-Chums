@@ -1,6 +1,6 @@
 function passwordResetEmail(){
     const auth = firebase.auth();
-    let emailAddress = document.getElementById("recovey-email-input").value;
+    let emailAddress = document.getElementById("recovery-email-input").value;
 
     auth.sendPasswordResetEmail(emailAddress).then(() => {
       console.log("reset email sent");

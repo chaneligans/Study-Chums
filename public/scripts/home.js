@@ -56,17 +56,15 @@ function getProfileToThe_(direction, update) {
 
       try {
         let result = await getProfileList(db, user.uid, direction);
-        let userIndex = result[0];
-        let nextIndex = result[1];
-        let chums = result[2];
+        let [userIndex, nextIndex, chums] = result;
 
         if (direction === "Right" && update === undefined) {
           nextIndex++;
         }
 
         let bound = (direction === 'Right') ? (totalUsers-1) : 0;
-        let check_Chums = checkChums(nextIndex, chums);
-        let bound_arg = boundArgument(direction, nextIndex, totalUsers);
+        let check_Chums = checkChums(nextIndex, chums),
+        bound_arg = boundArgument(direction, nextIndex, totalUsers);
 
         while(check_Chums || nextIndex === userIndex || bound_arg) {
           console.log(`While loop in getProfileToThe_( ${direction} )`);
@@ -110,27 +108,23 @@ function getProfileList(db, uid, direction) {
   return new Promise((resolve, reject) => {
     db.ref(`Users/${uid}`).once("value").then(snapshot => {
 
-      return {
-        userIndex : snapshot.val().index
-        ,nextIndex : snapshot.val().currentIndex - ((direction==="Left") ? 1:0)
-      };
+      return [
+        snapshot.val().index,
+        snapshot.val().currentIndex - ((direction==="Left") ? 1:0)
+      ];
 
     }).then(values => {
-      userIndex = values.userIndex;
-      nextIndex = values.nextIndex;
+      [userIndex, nextIndex] = values;
 
       let chums = [];
       db.ref(`Chums/${uid}`).once("value").then(chum_ref_snapshot => {
-        let chumRef;
-        chum_ref_snapshot.forEach(chum => {
-          chumRef = db.ref(`Users/${chum.key}`);
+        asyncForEach(chum_ref_snapshot, async chum => {
+          let chum_ = await db.ref(`Users/${chum.key}`).once("value");
           chums.push(
-            chumRef.once("value").then(chum_snapshot => {
-              return new Promise((resolve, reject) => {
-                setTimeout(() => resolve(chum_snapshot.val().index), 100);
-              }).catch(error => {
-                console.error(`Could not resolve: ${error}`);
-              });
+            new Promise((resolve, reject) => {
+              setTimeout(() => resolve(chum_.val().index), 100);
+            }).catch(error => {
+              console.error(`Could not resolve: ${error}`);
             })
           );
         });
@@ -141,8 +135,15 @@ function getProfileList(db, uid, direction) {
       });
     });
   }).catch(err => {
-    console.error(`Couldn\'t complete the list: ${err}`);
+    console.error(`Couldn't complete the list: ${err}`);
   });
+}
+
+// an asynchronous forEach. Bc arr.forEach(callback) is not Promise-aware.
+async function asyncForEach(arr, callback) {
+  for (let index = 0; index < arr.length; index++) {
+    await callback(arr[index], index, arr);
+  }
 }
 
 // Determine the upper/lower bound boolean based on the direction of the pointer button.
@@ -176,9 +177,9 @@ function loadImage(startIndex) {
       if (image_val === undefined) {
         // console.log('Undefined image');
         image_val = 'https://firebasestorage.googleapis.com/'
-                  + 'v0/b/study-chums.appspot.com/'
-                  + 'o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
-                  + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
+        + 'v0/b/study-chums.appspot.com/'
+        + 'o/img%2Fa98d336578c49bd121eeb9dc9e51174d.png?'
+        + 'alt=media&token=5c470791-f247-4c38-9609-80a4c77128c1';
       }
       $("#image").append(image_val);
       document.getElementById('imageBox').src = image_val;
@@ -219,12 +220,12 @@ function loadBio(startIndex) {
   userDataRef = firebase.database().ref("Users");
   userDataRef.orderByChild("index").equalTo(startIndex)
   .once("value", snapshot => {
-      let bio_val;
-      snapshot.forEach(childSnapshot => {
-          bio_val = childSnapshot.val().bio;
-          $("#bio").append(bio_val);
-          document.getElementById("bio").innerHTML = bio_val;
-      });
+    let bio_val;
+    snapshot.forEach(childSnapshot => {
+      bio_val = childSnapshot.val().bio;
+      $("#bio").append(bio_val);
+      document.getElementById("bio").innerHTML = bio_val;
+    });
   });
 }
 
@@ -233,11 +234,10 @@ function saveUserID() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       let db = firebase.database(),
-       userDataRef = db.ref(`Users/${user.uid}`);
+      userDataRef = db.ref(`Users/${user.uid}`);
       userDataRef.once("value", snapshot => {
-        let currentIndex = snapshot.val().currentIndex;
-
-        db.ref("Users").orderByChild("index").equalTo(currentIndex)
+        db.ref("Users").orderByChild("index")
+        .equalTo(snapshot.val().currentIndex)
         .once("value", data => {
           let userId;
           data.forEach(childData => {

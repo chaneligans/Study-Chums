@@ -124,14 +124,13 @@ function getSearchSubset(source, name_) {
 }
 
 function upperCaseWords(msg) {
-  let bool = true, mstr = "", i = 0, arr = msg.split(" ");
-  arr.forEach(str => {
+  let bool = true, mstr = "", arr = msg.split(" ");
+  arr.forEach((str, i) => {
     if (str !== "" && str !== " ") {
       mstr += str.charAt(0).toUpperCase() + str.slice(1);
       bool = false;
     }
     if (i < arr.length-1) { mstr += " "; }
-    i++;
   });
   return bool ? msg : mstr;
 }
@@ -155,7 +154,7 @@ function isDuplicateOf_In_(source, given_list) {
 
 function showSearchResults(results) {
   firebase.auth().onAuthStateChanged(user => {
-    let index, img, name, major, id, count = 1,length = results.length;
+    let index, img, name, major, id, count = 1, length = results.length;
     let res_html = "";
 
     // iterate through and add a table row for each user (result)
@@ -170,22 +169,21 @@ function showSearchResults(results) {
       }
 
       if (id !== user.uid) {
-        res_html += '<tr class="resultRow">';
-        res_html += `<td class="resultUserImage"><img src="${img}"></td>`;
-        res_html += '<td class="resultUserName"><a href="view_profile.html"';
-        res_html += `onclick="return saveUserID(${id});">`;
-        res_html += `<h2 id="resultUserName${count}">${name}</h2></a></td>`;
-        res_html += '<td class="resultUserMajor">';
-        res_html += `<h3 id="resultUserMajor">${major}</h3></td>`;
-        res_html += '</tr>';
+        res_html += '<tr class="resultRow">'
+        + `<td class="resultUserImage"><img src="${img}"></td>`
+        + '<td class="resultUserName"><a href="view_profile.html"'
+        + `onclick="return saveUserID(${id});">`
+        + `<h2 id="resultUserName${count}">${name}</h2></a></td>`
+        + '<td class="resultUserMajor">'
+        + `<h3 id="resultUserMajor">${major}</h3></td>`
+        + '</tr>';
 
         count++;
 
       } else {
         if (length === 1) {
-          res_html += '<tr class="resultRow">';
-          res_html += '<td class="resultUserName"><h2>No Results Found</h2></td>';
-          res_html += '</tr>';
+          noResultsFound();
+          return;
         }
       }
     });
@@ -209,7 +207,7 @@ function saveUserID(userID) {
 function noResultsFound() {
   $("#searchResults").load("../loaded/no_requests.html", () => {
     $('.resultUserName').html("<h2>No Results Found</h2>");
-    console.log("Load (search results) was performed.");
+    console.log("Load (no search results) was performed.");
     dark_fn();
   });
 }

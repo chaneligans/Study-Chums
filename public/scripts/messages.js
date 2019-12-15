@@ -105,7 +105,7 @@ function openChatRoom(roomID) {
   // console.log('Clicked on chat room: ', roomID);
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      firebase.firestore().collection("Users").doc(user.uid)
+      firebase.firestore().doc(`Users/${user.uid}`)
       .update({
         currentChatRoom: roomID,
       });
@@ -177,7 +177,7 @@ function deleteChat() {
       const db = firebase.firestore();
 
       // get room id to delete from user's currentChatRoom
-      db.collection("Users").doc(user.uid).get()
+      db.doc(`Users/${user.uid}`).get()
       .then(userResult => {
         const roomID = userResult.data().currentChatRoom;
         // console.log("Delete --- room id: ", roomID);
@@ -240,7 +240,7 @@ function deleteChat() {
 
 function addUserToTrash(userID, name, trashID) {
   const db = firebase.firestore();
-  db.collection("Trash").doc(trashID).collection("Users").doc(userID)
+  db.doc(`Trash/${trashID}/Users/${userID}`)
   .set({
     name: name
   });
@@ -248,7 +248,7 @@ function addUserToTrash(userID, name, trashID) {
 
 function deleteChatRoomFromUser(userID, roomID) {
   // if currentChatRoom is roomID, we need to update it to empty
-  let userData = firebase.firestore().collection("Users").doc(userID);
+  let userData = firebase.firestore().doc(`Users/${userID}`);
   userData.get().then(userResult => {
     const currentChatRoom = userResult.data().currentChatRoom;
 
@@ -268,7 +268,7 @@ function deleteChatRoomFromUser(userID, roomID) {
 }
 
 function deleteItemFromCollectionFromChatroom(source_chatroom, collection_, userID) {
-  source_chatroom.collection("Tokens").doc(userID).delete()
+  source_chatroom.doc(`Tokens/${userID}`).delete()
   .then(() => {
     console.log(`${collection_.slice(0,collection_.length-1)} successfully deleted`
                 + ` from ChatRoom/${collection_}!"`);
@@ -278,7 +278,7 @@ function deleteItemFromCollectionFromChatroom(source_chatroom, collection_, user
 }
 
 function deleteChatRoomData(roomID) {
-  firebase.firestore().collection("ChatRooms").doc(roomID).delete()
+  firebase.firestore().doc(`ChatRooms/${roomID}`).delete()
   .then(() => {
     console.log("ChatRoom document successfully deleted from ChatRooms!");
   }).catch(error => {
@@ -289,7 +289,7 @@ function deleteChatRoomData(roomID) {
 function moveMessageToTrash(roomID, trashID) {
   let allMessages = [];
   const db = firebase.firestore();
-  let messageRef = db.collection("ChatRooms").doc(roomID).collection("Messages");
+  let messageRef = db.collection(`ChatRooms/${roomID}/Messages`);
   messageRef.get().then(messages => {
     messages.forEach(message => {
       allMessages.push({
@@ -316,12 +316,12 @@ function addMultipleUsersToChatRoom() {
       const db = firebase.firestore();
       let topic;
 
-      db.collection("Users").doc(user.uid).get()
+      db.doc(`Users/${user.uid}`).get()
       .then(userDoc => {
         return userDoc.data().currentChatRoom;
       })
       .then(chatroomID => {
-        return [chatroomID, db.collection("ChatRooms").doc(chatroomID).get()];
+        return [chatroomID, db.doc(`ChatRooms/${chatroomID}`).get()];
       })
       .then(async res_set => {
         let chatroomID = res_set[0];
@@ -356,7 +356,7 @@ function addUserToChatRoom(friendID, roomID, topic) {
   db.collection("Users").doc(friendID)
   .get().then(friendResult => {
 
-    let chatRoomRef = db.collection("ChatRooms").doc(roomID).collection("Users");
+    let chatRoomRef = db.collection(`ChatRooms/${roomID}/Users`);
     chatRoomRef.doc(friendID).set({
       name: friendResult.data().name
     })
@@ -364,7 +364,7 @@ function addUserToChatRoom(friendID, roomID, topic) {
       console.error(`Error writing to chatrooms: ${error}`);
     });
 
-    let usersRef = db.collection("Users").doc(friendID).collection("ChatRooms");
+    let usersRef = db.collection(`Users/${friendID}/ChatRooms`);
     usersRef.doc(roomID).set({
       topic: topic
     })
@@ -383,7 +383,7 @@ function reloadChatRoomSideBar() {
       const db = firebase.firestore();
       let chatRoomData = [];
 
-      let reloadSideBar = db.collection("Users").doc(user.uid).collection("ChatRooms")
+      let reloadSideBar = db.collection(`Users/${user.uid}/ChatRooms`)
       .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(change => {
           // console.log(change.type, "//", change.doc.id, "//" ,change.doc.data());
@@ -393,7 +393,7 @@ function reloadChatRoomSideBar() {
             topic = change.doc.data().topic;
             let userList = [];
 
-            let roomListener = db.collection("ChatRooms").doc(roomID).collection("Users")
+            let roomListener = db.collection(`ChatRooms/${roomID}/Users`)
             .get().then(querySnapshot => {
               querySnapshot.forEach(doc => {
                 userList.push({
@@ -443,7 +443,7 @@ function reloadChatRoomSideBar() {
                 newRoomID = " ";
               }
 
-              db.collection("Users").doc(user.uid)
+              db.doc(`Users/${user.uid}`)
               .update({
                 currentChatRoom: newRoomID,
                 "currentChatRoom": newRoomID
@@ -558,7 +558,7 @@ function editGroupIcon() {
 
           let tryToUpdateImage = new Promise((resolve, reject) => {
             updateImage.then(fulfilled => {
-              db.collection("Users").doc(user.uid).get()
+              db.doc(`Users/${user.uid}`).get()
               .then(doc => {
                 console.log(`Attempting to upload file ${fileName}`);
                 let chat_ID = doc.data().currentChatRoom;
@@ -590,13 +590,13 @@ function editGroupIcon() {
                     })
                     .then(chatroomID => {
                       return [chatroomID,
-                        db.collection("ChatRooms").doc(chatroomID).get()];
+                        db.collection("ChatRooms").doc(chatroomID)];
                     })
                     .then(async results => {
                       let chatroomID = results[0];
-                      let result = await results[1];
+                      let result = await results[1].get();
                       let topic = result.data().topic;
-                      db.collection("ChatRooms").doc(chatroomID).set({
+                      await results[1].set({
                         icon: photoUrl,
                         topic: topic
                       }), {merge: true};
@@ -628,14 +628,14 @@ function displayHeader() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       const db = firebase.firestore();
-      db.collection("Users").doc(user.uid)
+      db.doc(`Users/${user.uid}`)
       .get().then(userResult => {
         let roomID = userResult.data().currentChatRoom;
 
         if (roomID.length > 2) {
           console.log("Valid currentChatRoom Id!");
           let userLists = [], topic;
-          let chatroomRef = db.collection("ChatRooms").doc(roomID);
+          let chatroomRef = db.doc(`ChatRooms/${roomID}`);
           chatroomRef.get().then(result => {
             let res_data = result.data();
             if (res_data === undefined) {
@@ -667,7 +667,7 @@ function displayHeader() {
                 if (names.length > 1) {
                   let loadImg = new Promise((resolve, reject) => {
                     let icon, genericGroupIcon = "../images/group.png";
-                    let chatDataRef = db.collection("ChatRooms").doc(roomID).get()
+                    let chatDataRef = db.doc(`ChatRooms/${roomID}`).get()
                     .then(doc => {
                       if (!doc.exists) {
                         console.log('No such document!');
@@ -765,14 +765,14 @@ function loadChatHistory() {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
-    db.collection("Users").doc(user.uid).get()
+    db.doc(`Users/${user.uid}`).get()
     .then(result => {
       let roomID = result.data().currentChatRoom;
 
       if (roomID.length > 1) {
         let update_messages = [];
 
-        db.collection("ChatRooms").doc(roomID).collection("Messages")
+        db.collection(`ChatRooms/${roomID}/Messages`)
         .orderBy("time").onSnapshot(querySnapshot => {
           update_messages = [];
           querySnapshot.docChanges().forEach(change => {
@@ -804,13 +804,12 @@ function loadChatHistory() {
                 // intentional error: 'timestamp.toDate' is not a function
               }
             }
-
           });
 
           Promise.all(update_messages).then(results => {
             displayMessages(results);
           });
-        })
+        });
       }
     });
   });
@@ -864,12 +863,12 @@ function sendMessage() {
       if (user) {
         const db = firebase.firestore();
 
-        db.collection("Users").doc(user.uid).get()
+        db.doc(`Users/${user.uid}`).get()
         .then(result => {
           let roomID = result.data().currentChatRoom;
-          let ref = db.collection("ChatRooms").doc(roomID);
+          let ref = db.doc(`ChatRooms/${roomID}`);
 
-          let userRef = ref.collection("Users").doc(user.uid).get()
+          let userRef = db.doc(`ChatRooms/${roomID}/Users/${user.uid}`).get()
           .then(doc => {
             if (doc.exists) {
               let senderName = doc.data().name;

@@ -29,7 +29,6 @@ function updateEmailPreferences() {
 
 function updateEmail(userId, email_in) {
   let ref = firebase.database().ref(`Users/${userId}`);
-
   //realtime database
   ref.update({
     email: email_in,
@@ -63,7 +62,7 @@ function updateSubscription(userId, preference) {
       "subscribed": true
     }, error => {
       if (error) {
-        console.error(`Update failed - email pref to false: ${error}`);
+        console.error(`Update failed - email pref to true: ${error}`);
       } else {
         console.log("Update succeeded - email pref to true");
       }

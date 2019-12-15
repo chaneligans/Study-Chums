@@ -17,8 +17,8 @@ window.fbAsyncInit = function() {
       x = (fb_config.xfbml) ? 1 : 0,
       v = fb_config.version;
 
-    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=" + x +
-      "&version=" + v + "&appId=" + a + "&autoLogAppEvents=1";
+    js.src = 'https://connect.facebook.net/en_US/sdk.js#'
+    + `xfbml=${x}&version=${v}&appId=${a}&autoLogAppEvents=1`;
     fjs.parentNode.insertBefore(js, fjs);
   })(document, 'script', 'facebook-jssdk');
 };

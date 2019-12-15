@@ -165,7 +165,7 @@ function updateName(uid, name_in) {
       });
 
       // update name in firestore
-      let fs_ref = firebase.firestore().collection("Users").doc(user.uid);
+      let fs_ref = firebase.firestore().doc(`Users/${user.uid}`);
       fs_ref.update({
         name: name_in,
         "name": name_in

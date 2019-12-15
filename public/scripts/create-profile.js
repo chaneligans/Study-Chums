@@ -11,16 +11,13 @@ function updateProfile() {
 
       // execute only if something is there
       if (photo_in.value !== "") {updatePhotoURL(user.uid, photo_in);}
-
       if (name_in !== "") {updateName(user.uid, name_in); addUserToFirestore(name_in);}
 
       updateEmail(user.uid);
       updateSubscription(user.uid);
 
       if (major_in !== "") {updateMajor(user.uid, major_in);}
-
       if (bio_in !== "") {updateBio(user.uid, bio_in)};
-
       if (FBprofileLink_in !== "") {updateFBProfileLink(user.uid, FBprofileLink_in);}
 
       if (photo_in.value === "" || name_in === "" || major_in === "" || bio_in === "") {
@@ -281,7 +278,7 @@ function addUserToFirestore(name) {
   firebase.auth().onAuthStateChanged(user => {
     const db = firebase.firestore();
 
-    db.collection("Users").doc(user.uid).set({
+    db.doc(`Users/${user.uid}`).set({
       name: name,
       "name": name,
       currentChatRoom: " ",
