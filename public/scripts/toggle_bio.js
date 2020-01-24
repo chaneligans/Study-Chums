@@ -7,8 +7,11 @@ Array.from(acc).forEach(acc_ => {
     let panel = acc_.nextElementSibling;
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
+      acc_.innerHTML = "Show Bio";
     } else {
-      panel.style.maxHeight = (acc_.id === 'biobutton') ? `${panel.scrollHeight}px` : "300px";
+      panel.style.maxHeight =
+        acc_.id === "biobutton" ? `${panel.scrollHeight}px` : "300px";
+      acc_.innerHTML = "Hide Bio";
     }
   });
 });

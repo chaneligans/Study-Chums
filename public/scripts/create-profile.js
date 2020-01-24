@@ -43,7 +43,7 @@ function updatePhotoURL(uid, photo) {
       let ref = firebase.database().ref(`Users/${user.uid}`);
       let photoUrl = 'Something went wrong!!!';
 
-      let max_width = 800, max_height = 800;
+      let max_width = 400, max_height = 400;
 
       let file = photo.files[0],
        fileName = file.name;

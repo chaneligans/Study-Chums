@@ -25,14 +25,13 @@ let localStorage = window.localStorage,
 	color;
 
 localStorage.setItem('mode',
-  ((localStorage.getItem('mode') || 'dark') === 'dark') ? 'dark' : 'light');
+  ((localStorage.getItem('mode') || 'light') === 'light') ? 'light' : 'dark');
 // Set local storage item 'mode' to 'dark' or 'light' depending on if the
-// current value of 'mode' in local storage ('dark' by default) === 'dark'
+// current value of 'mode' in local storage ('light' by default) === 'light'
 
 // Executes on page-ready.
 // Checks if the user wanted dark mode on or not (defaults to light mode).
 $(document).ready(() => {
-
   // ---------------------------------------------------------------------------
   // The list of vars at the top are assigned here.
   // JQuery selectors can be empty (size 0); these will not throw errors.
@@ -205,6 +204,12 @@ function enableDarkModeSettings() {
     $(this).css('color', 'var(--clr-primary)');
   });
 
+  h2.hover(function() {
+    $(this).css('color', 'var(--clr-primary)');
+  }, function() {
+    $(this).css('color', 'var(--clr-white)');
+  });
+
   card.css('background-color', 'var(--clr-ghost_grey)');
   profilecard.css('background-color', 'var(--clr-ghost_grey)');
 
@@ -301,16 +306,19 @@ function enableLightModeSettings(alert_) {
   li.css('color', 'var(--clr-black)');
 
   a_.hover(function() {
-    $(this).css('color', 'var(--clr-fuchsia)');
+    $(this).css('color', 'var(--clr-light-blue)');
   }, function() {
     $(this).css('color', 'var(--clr-primary)');
   });
 
+  h2.hover(function() {
+    $(this).css('color', 'var(--clr-primary)');
+  }, function() {
+    $(this).css('color', 'var(--clr-black)');
+  });
+
   card.css('background-color', 'var(--clr-primary_light)');
   profilecard.css('background-color', 'var(--clr-primary_light)');
-
-  nav_ul.css('background-color', 'var(--clr-white)');
-  nav_li.css('background-color', 'var(--clr-lightfade_white)');
 
   footer.css('color', 'var(--clr-black)');
 

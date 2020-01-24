@@ -38,7 +38,7 @@ function updatePhotoURL(uid, photo) {
       let ref = firebase.database().ref(`Users/${uid}`);
       let photoUrl = 'Something went wrong!!!';
 
-      let max_width = 800, max_height = 800;
+      let max_width = 400, max_height = 400;
 
       let file = photo.files[0],
        fileName = file.name;
@@ -58,7 +58,6 @@ function updatePhotoURL(uid, photo) {
             if (newImage) {
               let canvas = document.createElement('canvas');
               let width = newImage.width, height = newImage.height;
-              // console.log("Old values: " + width + ", " + height);
 
               if (width > height) {
                 if (width > max_width) {
@@ -73,7 +72,6 @@ function updatePhotoURL(uid, photo) {
               }
 
               canvas.width = width; canvas.height = height;
-              // console.log("New values: " + canvas.width + ", " + canvas.height);
 
               let context = canvas.getContext("2d");
               context.drawImage(newImage, 0, 0, width, height);
